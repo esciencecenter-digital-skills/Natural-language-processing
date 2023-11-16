@@ -6,13 +6,12 @@ exercises: 0
 
 :::::::::::::::::::::::::::::::::::::: questions
 
-- TODO
+- What is a document embedding?
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::: objectives
 
-- TODO
-- TODO
+- Explain what document embedding and TF-IDF is
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
