@@ -61,6 +61,7 @@ contact: 'l . ootes at esciencecenter.nl' # FIXME
 # Order of episodes in your lesson
 episodes: 
 - introduction.md
+- episode01.md
 
 # Information for Learners
 learners: 
