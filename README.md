@@ -1,4 +1,4 @@
-# The Carpentries Workbench Template Markdown Lesson
+# A lesson on Natural language processing in Python
 
 This lesson is a template lesson that uses [The Carpentries Workbench][workbench].
 
