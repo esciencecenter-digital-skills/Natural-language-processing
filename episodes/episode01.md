@@ -6,13 +6,13 @@ exercises: 4
 
 :::::::::::::::::::::::::::::::::::::: questions
 
-- What is a document embedding?
+- What different types of preprocessing steps are there?
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::: objectives
 
-- Explain what document embedding and TF-IDF is
+- Apply tokenization, lower-casing and stopwords removal
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -30,7 +30,6 @@ Import and download the following packages:
 from nltk.tokenize import word_tokenize
 import nltk
 from nltk.corpus import stopwords
-nltk.download('punkt')
 nltk.download('stopwords')
 ```
 Then, lower case the text:
@@ -38,6 +37,18 @@ Then, lower case the text:
 ```python
 text = "Natural language processing (NLP) is an interdisciplinary subfield of computer science and linguistics."
 text.lower()
+```
+::::::
+:::
+
+::: challenge
+A second step in preprocessing the text, apply tokenisation on the lower-cased text.
+If you do not have the lower-cased text available, you can use the input text.
+
+:::::: solution
+
+```python
+words = word_tokenize(text)
 ```
 ::::::
 :::
