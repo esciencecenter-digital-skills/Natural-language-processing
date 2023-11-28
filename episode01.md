@@ -18,12 +18,7 @@ exercises: 4
 
 ::: challenge
 
-In this exercise we will do some preprocessing on the text: 
-"Natural language processing (NLP) is an interdisciplinary subfield of computer science and linguistics."
-
-As a first step; apply lower casing on the given text.
-
-:::::: solution
+Before starting this exercise, a few packages have to be imported. To do this, execute the following:
 
 Import and download the following packages:
 ```python
@@ -32,6 +27,14 @@ import nltk
 from nltk.corpus import stopwords
 nltk.download('stopwords')
 ```
+
+In this exercise we will do some preprocessing on the text: 
+"Natural language processing (NLP) is an interdisciplinary subfield of computer science and linguistics."
+
+- As a first step; apply lower casing on the given text.
+
+:::::: solution
+
 Then, lower case the text:
 
 ```python
