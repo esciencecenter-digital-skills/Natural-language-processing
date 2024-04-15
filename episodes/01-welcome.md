@@ -6,17 +6,15 @@ exercises: 0
 
 :::::::::::::::::::::::::::::::::::::: questions
 
-- What is natural language processing (NLP)?
-- Why is it important to learn about NLP?
-- What are some classic tasks associated with NLP?
+- Who is this lesson for?
+- What will be covered in this lesson?
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::: objectives
 
-- Recognise the importance and benefits of learning about NLP
-- Identify and describe classic tasks and challenges in NLP 
-- Explore practical applications of natural language processing in industry and research
+- Identify the target audience
+- Identify the learning goals of the lesson
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
