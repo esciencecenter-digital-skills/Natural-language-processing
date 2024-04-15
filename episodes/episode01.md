@@ -1,18 +1,21 @@
 ---
-title: "Episode 1: Apply tokenization, clean and pre-process textual data"
+title: "Episode 1: Introduction to Natural Language Processing (NLP)"
 teaching: 0
 exercises: 4
 ---
 
 :::::::::::::::::::::::::::::::::::::: questions
 
-- What different types of preprocessing steps are there?
+- What is natural language processing (NLP)?
+- Why is it important to learn about NLP?
+- What are some classic tasks associated with NLP?
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::: objectives
 
-- Apply tokenization, lower-casing and stopwords removal
+- Recognise the importance and benefits of learning about NLP, identify and describe classic tasks and challenges in NLP,
+Explore pratical applications of natural language processing in industry and research
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
