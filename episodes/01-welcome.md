@@ -30,13 +30,19 @@ skills needed to carry over text-based research projects.
 ## What will we be covering in this lesson?
 
 This lesson provides a high-level introduction to NLP with particular emphasis on applications in the humanities and the social
-sciences.
+sciences. We will focus on solving a particular problem over the lesson, that is how to identify key info in text (such as people,
+places, companies, dates and more) and labeling each one of them with the right category name. Towards the end of the lesson,
+we will cover also other types of applications (such as topic modelling, and text generation).
 
-After following this lessons, learners will be able to:
+After following this lesson, learners will be able to:
 
 - Explain and differentiate what are the core topics in NLP
 - Identify what kinds of tasks NLP techniques excel at, and what are their limitations
-- Summarise and apply the practical, technical steps involved in preparing text (preprocessing)
-- Extract vector representations of individual words, visualise it and manipulate (word embeddings)
-- Solve Named Entity Recognition (NER) with BERT
-- Summarise what other tasks are solvable with large language models
+- Structure a typical NLP pipeline
+- Extract vector representations of individual words, visualise and manipulate it
+- Applying a machine learning algorithm to textual data to extract and categorise names of entities (e.gs., places, people)
+- Apply popular tools and libraries used to solve other tasks in NLP (such as topic modelling, and text generation)
+
+::::::::::::::::::::::::::::::::::::: keypoints 
+- A lesson on Natural language processing in Python is for researchers working in the field of Humanities and/or Social Sciences
+- This lesson is an introduction to NLP and aims at implementing first practical NLP applications from scratch 
