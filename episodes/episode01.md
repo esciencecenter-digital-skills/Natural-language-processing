@@ -14,8 +14,9 @@ exercises: 4
 
 ::::::::::::::::::::::::::::::::::::: objectives
 
-- Recognise the importance and benefits of learning about NLP, identify and describe classic tasks and challenges in NLP,
-Explore pratical applications of natural language processing in industry and research
+- Recognise the importance and benefits of learning about NLP
+- Identify and describe classic tasks and challenges in NLP 
+- Explore practical applications of natural language processing in industry and research
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
