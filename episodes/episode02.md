@@ -1,7 +1,7 @@
 ---
 title: "Episode 2"
-teaching: 10
-exercises: 2
+teaching: 
+exercises: 
 ---
 
 :::::::::::::::::::::::::::::::::::::: questions 
@@ -17,18 +17,21 @@ exercises: 2
 - Demonstrate how to include pieces of code, figures, and nested challenge blocks
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
-
 > ## Learning Objectives
-
-
-
-
-
-
-
-
-from doc:
 > After following this lesson, learners will be able to:
+> - Explain what preprocessing means.
+> - Explain why we need preprocessing.
+> - Do various preprocessing steps: lowercasing, handling new lines, tokenizing, stop word removal, parts of speach, stemming/lemmatizing
+
+
+
+
+
+
+
+---------
+----------
+
 > - Apply tokenization and lemmatization techniques on a specific test case
 > - Clean and pre-process textual data (lower-case text, remove stop-words)
 > - Recall what different preprocessing steps there are
