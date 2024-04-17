@@ -41,6 +41,13 @@ After following this lesson, learners will be able to:
 - Applying a machine learning algorithm to textual data to extract and categorise names of entities (e.gs., places, people)
 - Apply popular tools and libraries used to solve other tasks in NLP (such as topic modelling, and text generation)
 
+## Tools/packages we are going to use
+The lesson is coded entirely in Python. We are going to use Jupyter notebooks throughout the lesson and the following packages:
+
+- spacy
+- gensim
+- transformers
+
 ::::::::::::::::::::::::::::::::::::: keypoints 
 - A lesson on Natural language processing in Python is for researchers working in the field of Humanities and/or Social Sciences
 - This lesson is an introduction to NLP and aims at implementing first practical NLP applications from scratch 
