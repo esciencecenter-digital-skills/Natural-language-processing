@@ -40,11 +40,71 @@ computational stylistics [cit], historical corpora [cit], semantic change detect
 With so many contributions and such impressive advances of recent years, it is an exciting time to start bringing NLP techniques
 in our own work. 
 
-## Tools/packages we are going to use 
+::::::::::::::::::::::::::::::::::::: challenge 
 
+# NLP in the real world
 
+Name three to five products that you use on a daily basis and that rely on NLP techniques. To solve this exercise you can get 
+some help from the web.
 
+:::::: solution
 
+These are some of the most popular NLP-based products that we use on a daily basis:
 
+- Voice-based assistants (e.g., Alexa, Siri, Cortana)
+- Machine translation (e.g., Google translate, Amazon translate)
+- Search engines (e.g., Google, Bing, DuckDuckGo)
+- Keyboard autocompletion on smartphones
+- Spam filtering
+- Spell and grammar checking apps
 
+## What is NLP typically good at?
 
+Here's a collection of fundamental tasks in NLP:
+
+- Text classification
+- Information extraction 
+- NER (named entity recognition)
+- Next word prediction
+- Text summarization
+- Question answering
+- Topic modeling
+- Machine translation
+- Conversational agent
+
+In this lesson we are going to see NER in detail, and learn how to develop solutions that work for this particular use case.
+However, it is useful to have an understanding of the other tasks and its challenges.
+
+### Text classification
+
+This task requires assigning a label category to a text or a document based on its content. This task is used in spam filtering and sentiment analysis.
+
+### Information extraction
+
+With this term we refer to a collection of techniques for extracting relevant information from the text or a document. 
+Useful to discover cause-effects links and populate databases.
+
+### Named Entity Recognition (NER)
+
+The task of detecting names, dates and organisations. We will use this task in the lesson to analyse the books in our dataset. 
+
+### Next word prediction
+
+This task involves predicting what the next word in a sentence will be based on the history of previous words.
+Speech recognition, spelling correction, handwriting recognition all run an implementation of this task.
+
+### Text summarization 
+
+Create short summaries of longer documents while retaining the core content. 
+
+### Question answering 
+
+Task of building a system that answer questions posed in natural (i.e., human) language.
+
+### Topic modeling 
+
+Task of discovering topical structure in documents.
+
+### Machine translation
+
+TAsk of converting a piece of text from one language to another. 
