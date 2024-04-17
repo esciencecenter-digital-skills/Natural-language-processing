@@ -18,8 +18,8 @@ exercises: 0
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
-## Who is this lesson for?
-Natural Language Processing (or NLP) refers to a set of techniques involving the application of statistical methods, 
+# Welcome
+This is a hands-on introduction to Natural Language Processing (or NLP). NLP refers to a set of techniques involving the application of statistical methods, 
 with or without insights from linguistics, to understand natural (i.e, human) language for the sake of solving real-world tasks.
 
 This course is designed to equip researchers in the humanities and social sciences with the foundational
