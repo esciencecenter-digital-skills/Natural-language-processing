@@ -41,12 +41,20 @@ After following this lesson, learners will be able to:
 - Applying a machine learning algorithm to textual data to extract and categorise names of entities (e.gs., places, people)
 - Apply popular tools and libraries used to solve other tasks in NLP (such as topic modelling, and text generation)
 
-## Tools/packages we are going to use
+## Software packages required
 The lesson is coded entirely in Python. We are going to use Jupyter notebooks throughout the lesson and the following packages:
 
 - spacy
+- stanza
 - gensim
 - transformers
+
+## Dataset
+In this lesson, we'll use N books from the [Project Gutenberg](https://www.gutenberg.org/). We will use their Plain Text UTF-8 version.
+
+- The Adventures of Sherlock Holmes by Arthur Conan Doyle - [Full text](https://www.gutenberg.org/cache/epub/1661/pg1661.txt) - [Wikipedia](https://en.wikipedia.org/wiki/The_Adventures_of_Sherlock_Holmes)
+- The Count of Monte Cristo by Alexandre Dumas - [Full text](https://www.gutenberg.org/cache/epub/1184/pg1184.txt) - [Wikipedia](https://en.wikipedia.org/wiki/The_Count_of_Monte_Cristo)
+
 
 ::::::::::::::::::::::::::::::::::::: keypoints 
 - A lesson on Natural language processing in Python is for researchers working in the field of Humanities and/or Social Sciences
