@@ -1,24 +1,20 @@
 ---
-title: "Episode 2"
+title: "Episode 1"
 teaching: 10
 exercises: 2
 ---
 
-:::::::::::::::::::::::::::::::::::::: questions 
-
+:::::: questions 
 - What is natural language processing (NLP)?
 - Why is it important to learn about NLP?
 - What are some classic tasks associated with NLP?
+::::::
 
-::::::::::::::::::::::::::::::::::::::::::::::::
-
-::::::::::::::::::::::::::::::::::::: objectives
-
+:::::: objectives
 - Recognise the importance and benefits of learning about NLP
 - Identify and describe classic tasks and challenges in NLP 
 - Explore practical applications of natural language processing in industry and research
-
-::::::::::::::::::::::::::::::::::::::::::::::::
+::::::
 
 ## Introducing NLP
 
@@ -40,15 +36,14 @@ computational stylistics [cit], historical corpora [cit], semantic change detect
 With so many contributions and such impressive advances of recent years, it is an exciting time to start bringing NLP techniques
 in our own work. 
 
-::::::::::::::::::::::::::::::::::::: challenge 
-
-# NLP in the real world
+:::::::::::: challenge 
+## NLP in the real world
 
 Name three to five products that you use on a daily basis and that rely on NLP techniques. To solve this exercise you can get 
 some help from the web.
 
-:::::: solution
 
+:::::: solution
 These are some of the most popular NLP-based products that we use on a daily basis:
 
 - Voice-based assistants (e.g., Alexa, Siri, Cortana)
@@ -57,6 +52,8 @@ These are some of the most popular NLP-based products that we use on a daily bas
 - Keyboard autocompletion on smartphones
 - Spam filtering
 - Spell and grammar checking apps
+::::::
+::::::::::::
 
 ## What is NLP typically good at?
 
@@ -72,7 +69,8 @@ Here's a collection of fundamental tasks in NLP:
 - Machine translation
 - Conversational agent
 
-In this lesson we are going to see NER in detail, and learn how to develop solutions that work for this particular use case.
+In this lesson we are going to see the NER and topic modeling tasks in detail, and learn how to develop solutions that work for these particular use cases.
+Specifically, our goal in this lesson will be to identify characters and locations in novels, and see what are the most relevant topics in these books.
 However, it is useful to have an understanding of the other tasks and its challenges.
 
 ### Text classification
@@ -86,7 +84,7 @@ Useful to discover cause-effects links and populate databases.
 
 ### Named Entity Recognition (NER)
 
-The task of detecting names, dates and organisations. We will use this task in the lesson to analyse the books in our dataset. 
+The task of detecting names, dates and organisations. 
 
 ### Next word prediction
 

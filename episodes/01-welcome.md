@@ -4,19 +4,15 @@ teaching: 5
 exercises: 0
 ---
 
-:::::::::::::::::::::::::::::::::::::: questions
-
+:::::: questions
 - Who is this lesson for?
 - What will be covered in this lesson?
+::::::
 
-::::::::::::::::::::::::::::::::::::::::::::::::
-
-::::::::::::::::::::::::::::::::::::: objectives
-
+:::::: objectives
 - Identify the target audience
 - Identify the learning goals of the lesson
-
-::::::::::::::::::::::::::::::::::::::::::::::::
+::::::
 
 # Welcome
 This is a hands-on introduction to Natural Language Processing (or NLP). NLP refers to a set of techniques involving the application of statistical methods, 
@@ -56,6 +52,8 @@ In this lesson, we'll use N books from the [Project Gutenberg](https://www.guten
 - The Count of Monte Cristo by Alexandre Dumas - [Full text](https://www.gutenberg.org/cache/epub/1184/pg1184.txt) - [Wikipedia](https://en.wikipedia.org/wiki/The_Count_of_Monte_Cristo)
 
 
-::::::::::::::::::::::::::::::::::::: keypoints 
+:::::: keypoints 
 - A lesson on Natural language processing in Python is for researchers working in the field of Humanities and/or Social Sciences
 - This lesson is an introduction to NLP and aims at implementing first practical NLP applications from scratch 
+::::::
+
