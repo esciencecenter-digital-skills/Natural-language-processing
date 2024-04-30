@@ -161,7 +161,7 @@ To continue getting the individual words:
 We did all these steps by hand, to get an understanding of what is needed to create the tokens. However these steps can also be done with a Python package, where these things happen behind the scenes. We will now start using this package to look at the resilts of the preprocessing steps of stop word removal, stemming and part-of-speech tagging.
 
 ## Spacy NLP pipeline
-There are multiple python packages that can be used to for NLP, such as Spacy, NLTK, XXX. Here we will be using the Spacy package.
+There are multiple python packages that can be used to for NLP, such as Spacy, NLTK, Gensim and PyTorch. Here we will be using the Spacy package.
 
 Let's first load a few packages that we will be using.
 ```Python
