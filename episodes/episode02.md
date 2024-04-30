@@ -25,6 +25,7 @@ have a list of words in a piece of text arranged with their parts of speech and 
 In order to start analyzing out text we will first do some preprocessing. Preprocessing means that we take a number of steps to put our data in a form that is analyzable; that there is no noise in the data and that we have some features of the text.
 
 Examples of preprocessing steps are:
+
 - tokenization: this means splitting up the text into individual tokens. You can for example create sentence tokens or words tokens.
 - lowercasing
 - stop words removal, where you remove common words such as `the` or `a` that you would note need in some further analysis steps.
@@ -41,7 +42,7 @@ import io
 import matplotlib.pyplot as plt
 ```
 
-We can then open the text file that contains the text and save it in a variable called corpus_full.
+We can then open the text file that contains the text and save it in a variable called `corpus_full`.
 
 ```python
 # Load the book The case-book of Sherlock Holmes by Arthur Conan Doyle
@@ -55,7 +56,7 @@ Let's check out the start of the corpus
 print(corpus_full[0:1000])
 ```
 
-This shows that the corpus contains a lot of text before the actual first story starts. Let's therefore select the part of the corpus_full that contains the first story. We determined beforehand which part of the string corpus_full catches the first story, and we can save it in the parameter corpus:
+This shows that the corpus contains a lot of text before the actual first story starts. Let's therefore select the part of the `corpus_full` that contains the first story. We determined beforehand which part of the string `corpus_full` catches the first story, and we can save it in the parameter corpus:
 
 ```python
 # Select the first story
@@ -78,15 +79,15 @@ This shows that there are things in there sich as `\n` which defines new lines. 
 # Tokenization
 We will now start by splitting the text up into individual sentences and words. This process is referred to as tokenizing; instead of having one long text we will create individual tokens.
 
-Tokens can be defined in different ways: here we will first split text up into  sentence tokens, so that each token represents one sentence in the text. Then we will extract the word tokens, where each token is one word.
+Tokens can be defined in different ways: here we will first split text up into sentence tokens, so that each token represents one sentence in the text. Then we will extract the word tokens, where each token is one word.
 
 ## Individual words and sentences 
-Sentences are separated by points, and words are separed by spaces, we can use this information to split the text. However, we saw that when we printed the corpus, that the text is not so 'clean'. If we were to split the text now using points, there would be a lot of redundant symbols that we do not want to include in the individual sentences and words, such as the \n symbols, but also we do not want to include punctuation symbols in our sentences and words. So let's remove these from the text before splitting it up based on. 
+Sentences are separated by points, and words are separated by spaces, we can use this information to split the text. However, we saw that when we printed the corpus, that the text is not so 'clean'. If we were to split the text now using points, there would be a lot of redundant symbols that we do not want to include in the individual sentences and words, such as the `\n` symbols, but also we do not want to include punctuation symbols in our sentences and words. So let's remove these from the text before splitting it up based on. 
 
 ### Sentences
-The text can be split into sentences based on points. From the corpus as we have it, we do not want to include the end of line symbols, backslashes before apostrophes, and any double spaces that might occur from new alineas or new pages.
+The text can be split into sentences based on points. From the corpus as we have it, we do not want to include the end of line symbols, backslashes before apostrophes, and any double spaces that might occur from new lines or new pages.
 
-We will define `corpus_sentences` to do all preprocessing steps we need to split the text into individual sentences. First we replace the end of lines and backslashes.
+We will define `corpus_sentences` to do all preprocessing steps we need to split the text into individual sentences. First we replace the end of lines and backslashes:
 
 ```python
 # Replace newlines with spaces:
@@ -96,7 +97,7 @@ corpus_sentences = corpus.replace("\n", " ")
 corpus_sentences = corpus_sentences.replace("\"", "")
 ```
 
-Then we can replace the double spaces with single spaces. However, there might be multiple double spaces in the text after one another. To catch these, we can repeat the action of replacing double spaces a couple of times, using a loop 
+Then we can replace the double spaces with single spaces. However, there might be multiple double spaces in the text after one another. To catch these, we can repeat the action of replacing double spaces a couple of times, using a loop: 
 
 ```python
 # Replace double spaces with single spaces
@@ -111,11 +112,11 @@ for i in range(10):
 ```
 Indeed there a no more double spaces.
 
-Now we are ready to split the text into sentences based on points.
+Now we are ready to split the text into sentences based on points:
 ```python
 sentences = corpus_sentences.split(". ")
 ```
-What this does it that the corpus_sentences is split up every time a `. `is found, and the results are stored in a python list.
+What this does it that the `corpus_sentences` is split up every time a `. `is found, and the results are stored in a python list.
 
 If we print the first 20 items in the resulting list, we can see that indeed the data is split up into sentences, but there are some mistakes, where for example a new sentence is defined because the word 'mister' was abbreviated which also resulted in a new sentence definition. This shows that these kind of steps will never be fully perfect, but it good enough to proceed.
 
@@ -132,7 +133,7 @@ Let's first define the punctuation marks we want to remove:
 punctuation = (".", ",", ":", ";", "(", ")", "!", "?", "\"")
 ```
 
-Then we go over all these punctuation symbols one by one using a loop to replae them:
+Then we go over all these punctuation symbols one by one using a loop to replace them:
 
 ```python
 # Loop over the punctuation symbols to remove them
@@ -147,13 +148,13 @@ for i in range(10):
       i = i + 1
 ```
 
-Next, we should lowercase all text so that we don't get a word in two forms in the list, once with captial, once without, and have a consistent list of words:
+Next, we should lowercase all text so that we don't get a word in two forms in the list, once with capital, once without, and have a consistent list of words:
 ```python
 # Lowercase the text
 corpus_words = corpus_words.lower()
 ```
 
-Now can we split the text into individual words based by splitting them up on every space:
+Now we can split the text into individual words based by splitting them up on every space:
 ```python
 words = corpus_words.split(" ")
 word
@@ -172,20 +173,21 @@ To continue getting the individual words:
 - removed double spaces
 - we lowercased the text
 - We split the text into a list of words based on spaces.
-- We selected all indidivual words by converting the list into a set.
+- We selected all individual words by converting the list into a set.
 
-We did all these steps by hand, to get an understanding of what is needed to create the tokens. However these steps can also be done with a Python package, where these things happen behind the scenes. We will now start using this package to look at the resilts of the preprocessing steps of stop word removal, stemming and part-of-speech tagging.
+We did all these steps by hand, to get an understanding of what is needed to create the tokens. However these steps can also be done with a Python package, where these things happen behind the scenes. We will now start using this package to look at the results of the preprocessing steps of stop word removal, stemming and part-of-speech tagging.
 
 ## Spacy NLP pipeline
-There are multiple python packages that can be used to for NLP, such as Spacy, NLTK, Gensim and PyTorch. Here we will be using the Spacy package.
+There are multiple python packages that can be used to for NLP, such as `Spacy`, `NLTK`, `Gensim` and `PyTorch`. Here we will be using the `Spacy` package.
 
-Let's first load a few packages that we will be using.
+Let's first load a few packages that we will be using:
+
 ```Python
 import spacy
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 ```
 
-We load the pipeline that we are going to use which is `en_code_web_md`. This a pipeline that is pretrained to do a number of NLP tasks for English texts. It is important to realize that in many cases you can use a pretrained model such as this one. You then do not have to do any training of your data. This is very nice, because training a model takes requires a whole lot of data, that would have to  analyzed by hand before you can start. It also requires a lot of specific understanding of NLP and a lot of time, and often it is simply not neccesary. These available models are trained on a lot of data, and have very good accuracies.
+We load the pipeline that we are going to use which is `en_code_web_md`. This a pipeline that is pretrained to do a number of NLP tasks for English texts. It is important to realize that in many cases you can use a pretrained model such as this one. You then do not have to do any training of your data. This is very nice, because training a model requires a whole lot of data, that would have to be analyzed by hand before you can start. It also requires a lot of specific understanding of NLP and a lot of time, and often it is simply not neccesary. These available models are trained on a lot of data, and have very good accuracy.
 
 <em>Maybe something on when you do not want to use pretrained models and train of finetune.</em>
 
@@ -200,7 +202,8 @@ We can check out which components are available in this pipeline:
 print("components:", nlp.component_names)
 ```
 
-Let's now apply this pipeline on our data. Remember that we as a first step before the break we loaded the data in the variable called corpus. We now give this as an argument to the pipeline; this will apply the model to our specific data; such that we have all components of the pipeline available on our specific corpus.
+Let's now apply this pipeline on our data. Remember that we as a first step before the break we loaded the data in the variable called corpus. We now give this as an argument to the pipeline; this will apply the model to our specific data; such that we have all components of the pipeline available on our specific corpus:
+
 ```python
 # apply model to our corpus
 doc = nlp(corpus)
@@ -258,6 +261,7 @@ This shows that Holmes is the most common word in the text, as one might expect.
 
 ## Lemmatization
 Let's now have a look at the lemmatization. From the wordcloud, we can see that one of the most common words in the text is the word `said`. This is past tense of the word `say`. If we want all the words referring to the word `say` we should look at the lemmatized text. We saw in the pipeline that this is also one of the components of the pipeline, so we already have all the lemmas available. We can check them out using:
+
 ```python
 # Lemmas
 for token in doc:
@@ -267,7 +271,7 @@ for token in doc:
 Here we can for example see that even the `n't` is recognized as not.
 
 ## Part-of-speech tagging 
-The last thing we want to look at right now is part-of-speech tagging. The loaded model can tell for each word token what type of word it is grammatically. We can acces these as follows:
+The last thing we want to look at right now is part-of-speech tagging. The loaded model can tell for each word token what type of word it is grammatically. We can access these as follows:
 
 ```python
 # Part-of-speech tags
@@ -279,6 +283,6 @@ It recognizes determiners, nouns, adpositions, and more. But we can also see tha
 
 :::::::::: key points
 
-blabla
+- to do
 
 :::::::::: 
