@@ -6,6 +6,7 @@ exercises: 0
 :::::::::::::::::::::::::::::::::::::::::::::::: questions
 
 - What different types of preprocessing steps are there?
+- Why we need preprocessing?
 
 :::::::::::::::::::::::::::::::::::::::::::::::: 
 
@@ -17,6 +18,7 @@ After following this lesson, learners will be able to:
 - Explain why we need preprocessing.
 - Do various preprocessing steps: lowercasing, handling new lines, tokenizing, stop word removal, parts-of-speech tagging, stemming/lemmatizing such that they: 
 have a list of words in a piece of text arranged with their parts of speech and lemmas or stems, and with very frequent words removed
+
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -32,8 +34,9 @@ Examples of preprocessing steps are:
 - lemmatization: here you would get the lemma of each word. You would get the form in which you find the word in the dictionary, such as the singular version of a plural of a noun, or the first person present tense of a verb instead of the past principle. You are making sure that you do not get different versions of the same word: you would convert `words` into `word` and `talking` into `talk`
 - part of speech tagging. This means that you identify what type of word each is; such as nouns and verbs.
 
+
 # The corpus
-In order to start the preprocssing we first load in the data. For that we need a number of python packages
+In order to start the preprocessing we first load in the data. For that we need a number of python packages
 
 ```python
 # import packages
@@ -280,6 +283,21 @@ for token in doc:
 ```
 
 It recognizes determiners, nouns, adpositions, and more. But we can also see that it is not perfect and mistakes are made. That is something important to remember; any model, pretrained or if you train it yourself: there are always mistakes in it.
+
+
+:::::::::::::::::::: challenge
+
+We have gone through all the data preprocessing techniques in this episode. Now that you know how to apply them all, let's see how their applications influence the final output.
+
+Choose two or more preprocessing steps and apply them in two different orders. For example, try removing stop words before applying lemmatisation and the reverse. Plot the output in a word cloud.
+
+::::::::: solution
+
+:::::::::
+
+
+::::::::::::::::::::
+
 
 :::::::::: key points
 
