@@ -19,7 +19,7 @@ Examples of preprocessing steps are:
 - tokenization: this means splitting up the text into individual tokens. You can for example create sentence tokens or words tokens.
 - lowercasing
 - stop words removal, where you remove common words such as `the` or `a` that you would note need in some further analysis steps.
-- lemmatization/stemming: here you would get a root of each word, such that you do not get different versions of the same word: you would convert `words` into `word` and `talking` into `talk`
+- lemmatization: here you would get the lemma of each word. You would get the form in which you find the word in the dictionary, such as the singular version of a plural of a noun, or the first person present tense of a verb instead of the past principle. You are making sure that you do not get different versions of the same word: you would convert `words` into `word` and `talking` into `talk`
 - part of speech tagging. This means that you identify what type of word each is; such as nouns and verbs.
 
 In order to start the preprocssing we first load in the data:
@@ -137,11 +137,6 @@ Now can we split the text into individual words based by splitting them up on ev
 word_list = corpus_words.split(" ")
 word_list
 ```
-The list of the words that we now have contains a lot of duplicates. We can get the unique words by converting the list into a set:
-```python
-words = set(word_list)
-```
-
 
 # Break
 
@@ -157,3 +152,99 @@ To continue getting the individual words:
 - we lowercased the text
 - We split the text into a list of words based on spaces.
 - We selected all indidivual words by converting the list into a set.
+
+We did all these steps by hand, to get an understanding of what is needed to create the tokens. However these steps can also be done with a Python package, where these things happen behind the scenes. We will now start using this package to look at the resilts of the preprocessing steps of stop word removal, stemming and part-of-speech tagging.
+
+## Spacy NLP pipeline
+There are multiple python packages that can be used to for NLP, such as Spacy, NLTK, XXX. Here we will be using the Spacy package.
+
+Let's first load a few packages that we will be using.
+```Python
+import spacy
+from collections import Counter
+from PIL import Image
+from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+```
+
+We load the pipeline that we are going to use which is `en_code_web_md`. This a pipeline that is pretrained to do a number of NLP tasks for English texts. It is important to realize that in many cases you can use a pretrained model such as this one. You then do not have to do any training of your data. This is very nice, because training a model takes requires a whole lot of data, that would have to  analyzed by hand before you can start. It also requires a lot of specific understanding of NLP and a lot of time, and often it is simply not neccesary. These available models are trained on a lot of data, and have very good accuracies.
+
+<em>Maybe something on when you do not want to use pretrained models and train of finetune.</em>
+
+```python
+nlp = spacy.load('en_code_web_md')
+
+```
+
+We can check out which components are available in this pipeline:
+```python
+# loaded components
+print(f"components:", nlp.component_names)
+```
+
+Let's now apply this pipeline on our data. Remember that we as a first step before the break we loaded the data in the variable called corpus. We now give this as an argument to the pipeline; this will apply the model to our specific data; such that we have all components of the pipeline available on our specific corpus.
+```python
+# apply model to our corpus
+doc = nlp(corpus)
+```
+
+On of the things that the pipeline does, is tokenization as we did in the first part. We can now check out the sentence tokens like this:
+
+```python
+# Get sentences
+for sentence in doc.sents:
+    print(sentence)
+```
+
+and the word tokens like this:
+```python
+# Get word tokens
+for token in doc[0:6]:
+    print(token.text)
+```
+
+## Stop word removal
+If we want to get an idea of what the text is about we can visualize the word tokens in a word cloud to see which words are most common.
+
+PUT THIS  IN A SEPARATE FUNCTION THAT IS LOADED INTO THE NOTEBOOK
+```python
+from wordcloud import WordCloud
+# put this in a separate function
+def plot_wordcloud(sw = (""), doc = doc):
+      wc = WordCloud(stopwords=sw).generate(str(doc))
+      plt.imshow(wc, interpolation='bilinear')
+      plt.axis("off")
+      return plt.show()
+```
+
+```python
+plot_wordcloud(doc = doc)
+```
+
+From this we get no idea what the text is about because the most common words are word such as 'the', 'a', and 'I', which are referred to as stopwords. We could therefore want to remove these stopwords. The spacy package has a list of stopwords available. Let's have a look at these:
+
+```python
+# Stop word removal
+stopwords = nlp.Defaults.stop_words
+
+print(len(stopwords))
+print(stopwords)
+```
+The pipeline has 326 stopwords, and if we have a look at them you could indeed say that these words do not add much if we want to get an idea of what the text is about. So let's create the word cloud again, but without the stopwords:
+
+```python
+plot_wordcloud(sw= stopwords, doc = doc)
+```
+
+This shows that Holmes is the most common word in the text, as one might expect. There are also words in this word cloud that would also consider as stop words in this case, such as `said` and `know`. If you would want to remove these as well you can add them to the list of stopwords that we used.
+
+## Stemming
+
+```python
+
+```
+
+## Part-of-speech tagging 
+
+```python
+
+```
