@@ -13,6 +13,7 @@ exercises:
 have a list of words in a piece of text arranged with their parts of speech and lemmas or stems, and with very frequent words removed
 
 :::::::::::::::::::::::::::::::::::::::::::::::: Preprocessing
+
 In order to start analyzing out text we will first do some preprocessing. Preprocessing means that we take a number of steps to put our data in a form that is analyzable; that there is no noise in the data and that we have some features of the text.
 
 Examples of preprocessing steps are:
@@ -22,8 +23,8 @@ Examples of preprocessing steps are:
 - lemmatization: here you would get the lemma of each word. You would get the form in which you find the word in the dictionary, such as the singular version of a plural of a noun, or the first person present tense of a verb instead of the past principle. You are making sure that you do not get different versions of the same word: you would convert `words` into `word` and `talking` into `talk`
 - part of speech tagging. This means that you identify what type of word each is; such as nouns and verbs.
 
-In order to start the preprocssing we first load in the data:
 # The corpus
+In order to start the preprocssing we first load in the data. For that we need a number of python packages
 ```python
 # import packages
 import spacy
@@ -31,29 +32,33 @@ import io
 import matplotlib.pyplot as plt
 ```
 
+We can then open the text file that contains the text and save it in a variable called corpus_full.
 ```python
 # Load the book The case-book of Sherlock Holmes by Arthur Conan Doyle
 path = "../pg69700.txt"
 f = io.open(path, mode="r", encoding="utf-8-sig")
-corpus = f.read()
+corpus_full = f.read()
 ```
-
+Let's check out the start of the corpus
 ```python
 # Print the text
-print(corpus[0:1000])
+print(corpus_full[0:1000])
 ```
-
+This shows that the corpus contains a lot of text before the actual first story starts. Let's therefore select the part of the corpus_full that contains the first story. We determined beforehand which part of the string corpus_full catches the first story, and we can save it in the parameter corpus:
 ```python
 # Select the first story
 corpus = corpus[5049:200000]
-# Show the text formatted
+```
+Let's again have a look at what the text looks like:
+```python
 print(corpus)
 ```
 
+The print statement automatically formats the text. We can also have a look at what the unformatted text looks like:
 ```python
-# Unformatted text
 corpus
 ```
+This shows that there are things in there sich as `\n` which defines new lines. This is one of the things we want to eliminate from the text in the preprocessing steps so that we have a more analyzable text to work with.
 
 # Tokenization
 We will now start by splitting the text up into individual sentences and words. This process is referred to as tokenizing; instead of having one long text we will create individual tokens.
@@ -257,3 +262,5 @@ for token in doc:
 ```
 
 It recognizes determiners, nouns, adpositions, and more. But we can also see that it is not perfect and mistakes are made. That is something important to remember; any model, pretrained or if you train it yourself: there are always mistakes in it.
+
+:::::::::: Wrap up
