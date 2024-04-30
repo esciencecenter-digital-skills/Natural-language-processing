@@ -1,18 +1,26 @@
 ---
-title: "Episode 2"
-teaching: 
-exercises: 
+title: "Episode 2: Preprocessing"
+teaching: 10 
+exercises: 0
 ---
+:::::::::::::::::::::::::::::::::::::::::::::::: questions
 
-:::::::::::::::::::::::::::::::::::::::::::::::: Learning Objectives
-> ## Learning Objectives
-> After following this lesson, learners will be able to:
-> - Explain what preprocessing means.
-> - Explain why we need preprocessing.
-> - Do various preprocessing steps: lowercasing, handling new lines, tokenizing, stop word removal, parts-of-speech tagging, stemming/lemmatizing such that they: 
+- What different types of preprocessing steps are there?
+
+:::::::::::::::::::::::::::::::::::::::::::::::: 
+
+:::::::::::::::::::::::::::::::::::::::::::::::: objectives
+
+After following this lesson, learners will be able to:
+
+- Explain what preprocessing means.
+- Explain why we need preprocessing.
+- Do various preprocessing steps: lowercasing, handling new lines, tokenizing, stop word removal, parts-of-speech tagging, stemming/lemmatizing such that they: 
 have a list of words in a piece of text arranged with their parts of speech and lemmas or stems, and with very frequent words removed
 
-:::::::::::::::::::::::::::::::::::::::::::::::: Preprocessing
+::::::::::::::::::::::::::::::::::::::::::::::::
+
+# Preprocessing
 
 In order to start analyzing out text we will first do some preprocessing. Preprocessing means that we take a number of steps to put our data in a form that is analyzable; that there is no noise in the data and that we have some features of the text.
 
@@ -25,6 +33,7 @@ Examples of preprocessing steps are:
 
 # The corpus
 In order to start the preprocssing we first load in the data. For that we need a number of python packages
+
 ```python
 # import packages
 import spacy
@@ -33,6 +42,7 @@ import matplotlib.pyplot as plt
 ```
 
 We can then open the text file that contains the text and save it in a variable called corpus_full.
+
 ```python
 # Load the book The case-book of Sherlock Holmes by Arthur Conan Doyle
 path = "../pg69700.txt"
@@ -44,20 +54,25 @@ Let's check out the start of the corpus
 # Print the text
 print(corpus_full[0:1000])
 ```
+
 This shows that the corpus contains a lot of text before the actual first story starts. Let's therefore select the part of the corpus_full that contains the first story. We determined beforehand which part of the string corpus_full catches the first story, and we can save it in the parameter corpus:
+
 ```python
 # Select the first story
 corpus = corpus[5049:200000]
 ```
+
 Let's again have a look at what the text looks like:
 ```python
 print(corpus)
 ```
 
 The print statement automatically formats the text. We can also have a look at what the unformatted text looks like:
+
 ```python
 corpus
 ```
+
 This shows that there are things in there sich as `\n` which defines new lines. This is one of the things we want to eliminate from the text in the preprocessing steps so that we have a more analyzable text to work with.
 
 # Tokenization
@@ -82,6 +97,7 @@ corpus_sentences = corpus_sentences.replace("\"", "")
 ```
 
 Then we can replace the double spaces with single spaces. However, there might be multiple double spaces in the text after one another. To catch these, we can repeat the action of replacing double spaces a couple of times, using a loop 
+
 ```python
 # Replace double spaces with single spaces
 for i in range(10):
@@ -261,4 +277,8 @@ for token in doc:
 
 It recognizes determiners, nouns, adpositions, and more. But we can also see that it is not perfect and mistakes are made. That is something important to remember; any model, pretrained or if you train it yourself: there are always mistakes in it.
 
-:::::::::: Wrap up
+:::::::::: key points
+
+blabla
+
+:::::::::: 
