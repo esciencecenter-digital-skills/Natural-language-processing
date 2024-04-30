@@ -166,8 +166,6 @@ There are multiple python packages that can be used to for NLP, such as Spacy, N
 Let's first load a few packages that we will be using.
 ```Python
 import spacy
-from collections import Counter
-from PIL import Image
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 ```
 
