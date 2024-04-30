@@ -134,8 +134,8 @@ corpus_words = corpus_words.lower()
 
 Now can we split the text into individual words based by splitting them up on every space:
 ```python
-word_list = corpus_words.split(" ")
-word_list
+words = corpus_words.split(" ")
+word
 ```
 
 # Break
@@ -178,7 +178,7 @@ nlp = spacy.load('en_code_web_md')
 We can check out which components are available in this pipeline:
 ```python
 # loaded components
-print(f"components:", nlp.component_names)
+print("components:", nlp.component_names)
 ```
 
 Let's now apply this pipeline on our data. Remember that we as a first step before the break we loaded the data in the variable called corpus. We now give this as an argument to the pipeline; this will apply the model to our specific data; such that we have all components of the pipeline available on our specific corpus.
@@ -237,14 +237,23 @@ plot_wordcloud(sw= stopwords, doc = doc)
 
 This shows that Holmes is the most common word in the text, as one might expect. There are also words in this word cloud that would also consider as stop words in this case, such as `said` and `know`. If you would want to remove these as well you can add them to the list of stopwords that we used.
 
-## Stemming
-
+## Lemmatization
+Let's now have a look at the lemmatization. From the wordcloud, we can see that one of the most common words in the text is the word `said`. This is past tense of the word `say`. If we want all the words referring to the word `say` we should look at the lemmatized text. We saw in the pipeline that this is also one of the components of the pipeline, so we already have all the lemmas available. We can check them out using:
 ```python
-
+# Lemmas
+for token in doc:
+      print(token.text, token.lemma_)
 ```
+
+Here we can for example see that even the `n't` is recognized as not.
 
 ## Part-of-speech tagging 
+The last thing we want to look at right now is part-of-speech tagging. The loaded model can tell for each word token what type of word it is grammatically. We can acces these as follows:
 
 ```python
-
+# Part-of-speech tags
+for token in doc:
+    print(token.text, token.pos_)
 ```
+
+It recognizes determiners, nouns, adpositions, and more. But we can also see that it is not perfect and mistakes are made. That is something important to remember; any model, pretrained or if you train it yourself: there are always mistakes in it.
