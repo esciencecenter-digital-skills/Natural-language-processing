@@ -23,7 +23,7 @@ Natural language processing (NLP) aims to develop methods for solving practical 
 In literature, it is common to see a crossover with the field of Computational Linguistics (CL), whereby the focus
 is on employing computational methods to understand properties of human language. In recent years, the field of NLP
 has undergone a dramatic shift, both in terms of methodology and of the applications supported thanks to the advances
-in computer hardware. This made possible several other crossovers with a number of related fields, among which: Computer science,
+in computer hardware. This made several other crossovers with related fields possible, among which: Computer science,
 artificial intelligence, machine learning, statistics, psycholinguistics, neuroscience and many others.
 
 ### Why do we care?
