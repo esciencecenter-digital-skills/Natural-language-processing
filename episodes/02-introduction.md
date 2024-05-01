@@ -105,4 +105,4 @@ Task of discovering topical structure in documents.
 
 ### Machine translation
 
-TAsk of converting a piece of text from one language to another. 
+The task of converting a piece of text from one language to another. 
