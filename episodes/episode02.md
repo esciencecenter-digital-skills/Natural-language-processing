@@ -7,6 +7,7 @@ exercises: 0
 
 - What different types of preprocessing steps are there?
 - Why we need preprocessing?
+- What are the consequences of applying data preprocessing on our text? 
 
 :::::::::::::::::::::::::::::::::::::::::::::::: 
 
@@ -287,9 +288,9 @@ It recognizes determiners, nouns, adpositions, and more. But we can also see tha
 
 :::::::::::::::::::: challenge
 
-We have gone through all the data preprocessing techniques in this episode. Now that you know how to apply them all, let's see how their applications influence the final output.
+We have gone through various data preprocessing techniques in this episode. Now that you know how to apply them all, let's see how they affect each other.
 
-Choose two or more preprocessing steps and apply them in two different orders. For example, try removing stop words before applying lemmatisation and the reverse. Plot the output in a word cloud.
+Choose two or more preprocessing steps and apply them both in two different orders. For example, try removing stop words and then apply lemmatisation to the result and the reverse. Plot the output in a word cloud.
 
 ::::::::: solution
 
