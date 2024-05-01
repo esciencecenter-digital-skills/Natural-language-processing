@@ -338,6 +338,10 @@ plot_wordcloud(doc=lemmas, sw=new_stopwords)
 
 :::::::::: key points
 
-- to do
+- Preprocessing involves a number of steps that one can apply to their text to prepare it for further processing.
+- Preprocessing is important because it can improve your results
+- You do not always need to do all preprocessing steps. It depends on the task at hand which preprocessing steps are important.
+- A number of preprocessing steps are: lowercasing, tokenization, stop word removal, lemmatization, part-of-speech tagging.
+- Often you can use a pretrained model to process and analyse your data.
 
 :::::::::: 
