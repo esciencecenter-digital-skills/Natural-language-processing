@@ -69,8 +69,13 @@ Here's a collection of fundamental tasks in NLP:
 - Machine translation
 - Conversational agent
 
+<<<<<<< HEAD
 In this lesson we will dive into named entitiy recognition and topic modelling and how we can use these NLP tasks to answer questions about texts.
 Specifically, our goal in this lesson will be to identify characters and locations in novels, and see what are the most relevant topics in these books.
+=======
+In this lesson we are going to see the NER and topic modeling tasks in detail, and learn how to develop solutions that work for these particular use cases.
+Specifically, our goal in this lesson will be to identify characters and locations in novels, and determine what are the most relevant topics in these books.
+>>>>>>> 31c6fcd (implement git status)
 However, it is useful to have an understanding of the other tasks and its challenges.
 
 ### Text classification
