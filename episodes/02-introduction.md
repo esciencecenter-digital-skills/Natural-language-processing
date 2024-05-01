@@ -73,7 +73,7 @@ With this term we refer to a collection of techniques for extracting relevant in
 
 ### Named Entity Recognition (NER)
 
-The task of detecting names, dates, language names, events, work of arts, organisations, and many more.
+The task of detecting names, dates, language names, events, work of arts, countries, organisations, and many more.
 
 ### Next word prediction
 
