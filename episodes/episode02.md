@@ -63,12 +63,11 @@ Let's check out the start of the corpus
 # Print the text
 print(corpus_full[0:1000])
 ```
-
-This shows that the corpus contains a lot of text before the actual first story starts. Let's therefore select the part of the `corpus_full` that contains the first story. We determined beforehand which part of the string `corpus_full` catches the first story, and we can save it in the parameter corpus:
+This shows that the corpus contains a lot of text before the actual first story starts. Let's therefore select the part of the `corpus_full` that contains the first story. We determined beforehand which part of the string `corpus_full` catches the first story, and we can save it in the parameter `corpus`:
 
 ```python
 # Select the first story
-corpus = corpus[5049:200000]
+corpus = corpus_full[5048:200000]
 ```
 
 Let's again have a look at what the text looks like:
