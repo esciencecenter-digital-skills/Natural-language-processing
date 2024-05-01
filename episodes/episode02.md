@@ -23,20 +23,25 @@ After following this lesson, learners will be able to:
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
 # Preprocessing
-
-In order to start analyzing out text we will first do some preprocessing. Preprocessing means that we take a number of steps to put our data in a form that is analyzable; that there is no noise in the data and that we have some features of the text.
+NLP models work by learning the statistical regularities within the constituent parts of the language (i.e, letters, digits, words and sentences) in a text. Before applying these models, the input text must often be modified to make it into a format that is better interpretable by the model. This operation is known as `data preprocessing` and its goal is to make the text ready to be processed by the model. Applying these preprocessing steps will give better results in the end.
 
 Examples of preprocessing steps are:
 
-- tokenization: this means splitting up the text into individual tokens. You can for example create sentence tokens or words tokens.
+- tokenization: this means splitting up the text into individual tokens. You can for example create sentence tokens or words tokens, or any others.
 - lowercasing
 - stop words removal, where you remove common words such as `the` or `a` that you would note need in some further analysis steps.
-- lemmatization: here you would get the lemma of each word. You would get the form in which you find the word in the dictionary, such as the singular version of a plural of a noun, or the first person present tense of a verb instead of the past principle. You are making sure that you do not get different versions of the same word: you would convert `words` into `word` and `talking` into `talk`
-- part of speech tagging. This means that you identify what type of word each is; such as nouns and verbs.
+- lemmatization: with this step you obtain the lemma of each word. You would get the form in which you find the word in the dictionary, such as the singular version of a plural of a noun, or the first person present tense of a verb instead of the past principle. You are making sure that you do not get different versions of the same word: you would convert `words` into `word` and `talking` into `talk`
+- part of speech tagging: This means that you identify what type of word each is; such as nouns and verbs.
 
+The above examples of techniques of data preprocessing modify the input text to make it interpretable and analyzable by the NLP model of our choice. 
+Here we will go through all these steps to be aware of which steps can be performed and what are their consequences. 
+However, It is important to realize that you do not always need to do all the preprocessing steps, and which ones you should do depends on what you want to do. 
+For example, if you want to extract entities from the text using named entity recognition, you explicitly do not want to lowercase the text, as captials are one component in the odentification. 
+Another important thing is that NLP tasks and the preprocessing steps can be very diffent for different languages. 
+This is even more so if you are comparing steps for alphabetical languages such as English to those for non-alphabetical languages such as Chinese.
 
-# The corpus
-In order to start the preprocessing we first load in the data. For that we need a number of python packages
+## Loading the corpus
+In order to start the preprocessing we first load in the data. For that we need a number of python packages.
 
 ```python
 # import packages
@@ -79,12 +84,12 @@ corpus
 
 This shows that there are things in there sich as `\n` which defines new lines. This is one of the things we want to eliminate from the text in the preprocessing steps so that we have a more analyzable text to work with.
 
-# Tokenization
+## Tokenization
 We will now start by splitting the text up into individual sentences and words. This process is referred to as tokenizing; instead of having one long text we will create individual tokens.
 
 Tokens can be defined in different ways: here we will first split text up into sentence tokens, so that each token represents one sentence in the text. Then we will extract the word tokens, where each token is one word.
 
-## Individual words and sentences 
+### Individual sentences and words
 Sentences are separated by points, and words are separated by spaces, we can use this information to split the text. However, we saw that when we printed the corpus, that the text is not so 'clean'. If we were to split the text now using points, there would be a lot of redundant symbols that we do not want to include in the individual sentences and words, such as the `\n` symbols, but also we do not want to include punctuation symbols in our sentences and words. So let's remove these from the text before splitting it up based on. 
 
 ### Sentences
@@ -163,9 +168,8 @@ words = corpus_words.split(" ")
 word
 ```
 
-# Break
 
-# Using a spacy pipeline to analyse texts
+## Using a spacy pipeline to analyse texts
 Before the break we did a number of preprocessing steps to get the sentence tokens and word tokens. We took the following steps:
 
 - We loaded the corpus into one long string and selected the part of the string that we wanted to analyse, which is the first story
