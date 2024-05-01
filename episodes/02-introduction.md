@@ -84,8 +84,7 @@ The goal of text classification is to assign a label category to a text or a doc
 
 ### Information extraction
 
-With this term we refer to a collection of techniques for extracting relevant information from the text or a document. 
-Useful to discover cause-effects links and populate databases.
+With this term we refer to a collection of techniques for extracting relevant information from the text or a document and finding relationships between those. This task is useful to discover cause-effects links and populate databases. For instance, finding and classifying relations among entities mentioned in a text (e.g., X is the child of Y) or geospatial relations (e.g., Amsterdam is north of Bruxelles).
 
 ### Named Entity Recognition (NER)
 
