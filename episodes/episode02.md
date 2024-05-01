@@ -240,12 +240,12 @@ for token in doc[0:6]:
 ```
 
 ## Stop word removal
-If we want to get an idea of what the text is about we can visualize the word tokens in a word cloud to see which words are most common.
+If we want to get an idea of what the text is about we can visualize the word tokens in a word cloud to see which words are most common. To do this we can define a function:
 
-PUT THIS  IN A SEPARATE FUNCTION THAT IS LOADED INTO THE NOTEBOOK
 ```python
 from wordcloud import WordCloud
-# put this in a separate function
+
+# Define function that returns a word cloud
 def plot_wordcloud(sw = (""), doc = doc):
       wc = WordCloud(stopwords=sw).generate(str(doc))
       plt.imshow(wc, interpolation='bilinear')
@@ -254,7 +254,7 @@ def plot_wordcloud(sw = (""), doc = doc):
 ```
 
 ```python
-plot_wordcloud(doc = doc)
+plot_wordcloud(doc=doc)
 ```
 
 From this we get no idea what the text is about because the most common words are word such as 'the', 'a', and 'I', which are referred to as stopwords. We could therefore want to remove these stopwords. The spacy package has a list of stopwords available. Let's have a look at these:
