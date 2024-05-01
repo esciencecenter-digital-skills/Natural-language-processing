@@ -52,7 +52,7 @@ In this lesson, we'll use N books from the [Project Gutenberg](https://www.guten
 
 
 :::::: keypoints 
-- A lesson on Natural language processing in Python is for researchers working in the field of Humanities and/or Social Sciences
+- This lesson on Natural language processing in Python is for researchers working in the field of Humanities and/or Social Sciences
 - This lesson is an introduction to NLP and aims at implementing first practical NLP applications from scratch 
 ::::::
 
