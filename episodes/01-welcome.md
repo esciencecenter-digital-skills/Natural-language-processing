@@ -24,7 +24,7 @@ skills needed to carry over text-based research projects.
 ## What will we be covering in this lesson?
 
 This lesson provides a high-level introduction to NLP with particular emphasis on applications in the humanities and the social
-sciences. We will focus on solving a particular problem over the lesson, that is how to identify key info in text (such as people,
+sciences. We will focus on solving a particular problem over the lesson, that is how to identify key entities in text (such as people,
 places, companies, dates and more) and labeling each one of them with the right category name. Towards the end of the lesson,
 we will cover also other types of applications (such as topic modelling, and text generation).
 
