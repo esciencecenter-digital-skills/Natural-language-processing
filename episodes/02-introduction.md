@@ -75,7 +75,7 @@ However, it is useful to have an understanding of the other tasks and its challe
 
 ### Text classification
 
-This task requires assigning a label category to a text or a document based on its content. This task is used in spam filtering and sentiment analysis.
+The goal of text classification is to assign a label category to a text or a document based on its content. This task is for example used in spam filtering - is this email spam or not - and sentiment analysis; is this text positive or negative.
 
 ### Information extraction
 
