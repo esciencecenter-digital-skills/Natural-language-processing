@@ -81,7 +81,7 @@ The print statement automatically formats the text. We can also have a look at w
 corpus
 ```
 
-This shows that there are things in there sich as `\n` which defines new lines. This is one of the things we want to eliminate from the text in the preprocessing steps so that we have a more analyzable text to work with.
+This shows that there are things in there such as `\n` which defines new lines. This is one of the things we want to eliminate from the text in the preprocessing steps so that we have a more analyzable text to work with.
 
 ## Tokenization
 We will now start by splitting the text up into individual sentences and words. This process is referred to as tokenizing; instead of having one long text we will create individual tokens.
@@ -164,7 +164,7 @@ corpus_words = corpus_words.lower()
 Now we can split the text into individual words based by splitting them up on every space:
 ```python
 words = corpus_words.split(" ")
-word
+words
 ```
 
 
@@ -193,12 +193,21 @@ import spacy
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 ```
 
-We load the pipeline that we are going to use which is `en_code_web_md`. This a pipeline that is pretrained to do a number of NLP tasks for English texts. It is important to realize that in many cases you can use a pretrained model such as this one. You then do not have to do any training of your data. This is very nice, because training a model requires a whole lot of data, that would have to be analyzed by hand before you can start. It also requires a lot of specific understanding of NLP and a lot of time, and often it is simply not neccesary. These available models are trained on a lot of data, and have very good accuracy.
+The pipeline that we are going to 
 
-<em>Maybe something on when you do not want to use pretrained models and train of finetune.</em>
+The pipeline that we are going to use is called `en_core_web_md`. This a [pipeline from Spacy](https://spacy.io/models/en/) that is pretrained to do a number of NLP tasks for English texts. We first have to download this model model from the Spacy library:
 
 ```python
-nlp = spacy.load('en_code_web_md')
+!python -m spacy download en_core_web_sm
+```
+
+It is important to realize that in many cases you can use a pretrained model such as this one. You then do not have to do any training of your data. This is very nice, because training a model requires a whole lot of data, that would have to be analyzed by hand before you can start. It also requires a lot of specific understanding of NLP and a lot of time, and often it is simply not neccesary. These available models are trained on a lot of data, and have very good accuracy.
+
+Free available pretrained models can be found on [Hugging Face](https://huggingface.co/), along with instructions on how to use them. This website contains a lot of models trained for specific tasks and use cases. It also contains data sets that can be used to train new models.
+
+Let's load the model:
+```python
+nlp = spacy.load('en_core_web_md')
 
 ```
 
