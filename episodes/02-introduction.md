@@ -19,22 +19,14 @@ exercises: 2
 ## Introducing NLP
 
 ### What is NLP?
-Natural language processing (NLP) aims to develop methods for solving practical problems involving language.
-In literature, it is common to see a crossover with the field of Computational Linguistics (CL), whereby the focus
-is on employing computational methods to understand properties of human language. In recent years, the field of NLP
-has undergone a dramatic shift, both in terms of methodology and of the applications supported thanks to the advances
-in computer hardware. This made several other crossovers with related fields possible, among which: Computer science,
-artificial intelligence, machine learning, statistics, psycholinguistics, neuroscience and many others.
+Natural language processing (NLP) is an area of research and application that focuses on making natural (i.e., human) language accessible to computers so that they can be used to perform useful tasks (Chowdhury & Chowdhury, 2023). Research in NLP is highly interdisciplinary, drawing on concepts from computer science, linguistics, logic, mathematics, psychology, etc. In the past decade, NLP has evolved significantly with advances in technology to the point that it has become embedded in our daily lives: automatic language translation or chatGPT are only some examples. This evolution has enhanced its applications and expanded its interaction with fields like artificial intelligence, machine learning, reaching practically any other research field.
 
 ### Why do we care?
-The past decade's breakthroughs have resulted in NLP being increasingly used in a range of diverse domains such as retail,
-healthcare, finance, law, marketing and many more. At the same time, an increased interest in Digital Humanities and Social
-Sciences textual datasets within the NLP community has prompted the development of computational techniques to analyse and model
-humanities and social sciences data. To date, a number of successful results have been achieved, in the area of handwriting recognition [cit],
-computational stylistics [cit], historical corpora [cit], semantic change detection [cit] and sentiment analysis [in social media, cit, in politics, cit], to name a few examples.
+The past decade's breakthroughs have resulted in NLP being increasingly used in a range of diverse domains such as retail (e.g., customer service chatbots), healthcare (e.g., AI-assisted hearing devices), finance (e.g., anomaly detection in monetary transactions), law (e.g., legal research), and many more. These applications are possible because NLP researchers developed (and constantly do so) tools and techniques to make computers understand and manipulate language effectively.
 
-With so many contributions and such impressive advances of recent years, it is an exciting time to start bringing NLP techniques
-in our own work. 
+With so many contributions and such impressive advances of recent years, it is an exciting time to start bringing NLP techniques in your own work. Thanks to dedicated python libraries, these tools are now more accessible. They offer modularity, allowing you to integrate them easily in your code, and scalability, i.e., capable of processing vast amounts of text efficiently. 
+
+These tools are easily accessible via dedicated python libraries that allow for modularity (i.e., you can build upon those in your code) and scalability (i.e., you can process vast amount of text) without necessarily being an advanced python programmer. Whether dealing with text or audio, NLP tools provide a means to handle and interpret language data to meet specific needs and objectives. Even those without advanced programming skills can leverage these tools to address problems in social sciences, humanities, or any field where language plays a crucial role. In a nutshell, NLP opens up possibilities, making sophisticated techniques accessible to a broad audience. 
 
 :::::::::::: challenge 
 ## NLP in the real world
@@ -84,7 +76,7 @@ The goal of text classification is to assign a label category to a text or a doc
 
 ### Information extraction
 
-With this term we refer to a collection of techniques for extracting relevant information from the text or a document and finding relationships between those. This task is useful to discover cause-effects links and populate databases. For instance, finding and classifying relations among entities mentioned in a text (e.g., X is the child of Y) or geospatial relations (e.g., Amsterdam is north of Bruxelles).
+With this term we refer to a collection of techniques for extracting relevant information from the text or a document and finding relationships between those. This task is useful to discover cause-effects links and populate databases. For instance, finding and classifying relations among entities mentioned in a text (e.g., X is the child of Y) or geospatial relations (e.g., Amsterdam is north of Bruxelles)
 
 ### Named Entity Recognition (NER)
 
