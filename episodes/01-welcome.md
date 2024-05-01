@@ -41,7 +41,6 @@ After following this lesson, learners will be able to:
 The lesson is coded entirely in Python. We are going to use Jupyter notebooks throughout the lesson and the following packages:
 
 - spacy
-- stanza
 - gensim
 - transformers
 
