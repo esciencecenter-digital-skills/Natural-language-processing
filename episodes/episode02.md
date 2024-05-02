@@ -308,35 +308,31 @@ We have gone through various data preprocessing techniques in this episode. Now 
 
 * Lemmatized word cloud
 
-The doc can be create to consist only of lemma's as follows:
+The doc can be created to consist only of lemma's as follows:
 ```python
 lemmas = ' '.join([token.lemma_ for token in doc])
 ```
 
-Create to word cloud using the lemmatized text and the stopwords we defined earlier.
+Create the word cloud using the lemmatized text and the stopwords we defined earlier.
 ```python
 plot_wordcloud(doc=lemmas, sw=stopwords)
 ```
 
 * Additional stop words
 
-An example of words to add to the stopwords are:
+Add some more words to the stopwords set:
 ```python
 add_stopwords = ['ask', 'tell', 'like', 'want', 'case', 'come']
 new_stopwords = stopwords.update(set(add_stopwords))
 ```
 
+Create the word cloud:
 ```python
 plot_wordcloud(doc=lemmas, sw=new_stopwords)
 ```
 
-:::::::::
 
-
-::::::::::::::::::::
-
-
-:::::::::: key points
+::::::::::::::::::::::::::::::::::::: keypoints
 
 - Preprocessing involves a number of steps that one can apply to their text to prepare it for further processing.
 - Preprocessing is important because it can improve your results
@@ -344,4 +340,4 @@ plot_wordcloud(doc=lemmas, sw=new_stopwords)
 - A number of preprocessing steps are: lowercasing, tokenization, stop word removal, lemmatization, part-of-speech tagging.
 - Often you can use a pretrained model to process and analyse your data.
 
-:::::::::: 
+::::::::::::::::::::::::::::::::::::::::::::::::
