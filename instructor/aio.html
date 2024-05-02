@@ -531,7 +531,7 @@ science and linguistics.”</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution1" aria-expanded="false" aria-controls="collapseSolution1">
   <h4 class="accordion-header" id="headingSolution1">Show me the solution</h4>
 </button>
-<div id="collapseSolution1" class="accordion-collapse collapse" aria-labelledby="headingSolution1" data-bs-parent="#accordionSolution1">
+<div id="collapseSolution1" class="accordion-collapse collapse" data-bs-parent="#accordionSolution1" aria-labelledby="headingSolution1">
 <div class="accordion-body">
 <p>Then, lower case the text:</p>
 <div class="codewrapper sourceCode" id="cb2">
@@ -563,7 +563,7 @@ can use the input text.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution2" aria-expanded="false" aria-controls="collapseSolution2">
   <h4 class="accordion-header" id="headingSolution2">Show me the solution</h4>
 </button>
-<div id="collapseSolution2" class="accordion-collapse collapse" aria-labelledby="headingSolution2" data-bs-parent="#accordionSolution2">
+<div id="collapseSolution2" class="accordion-collapse collapse" data-bs-parent="#accordionSolution2" aria-labelledby="headingSolution2">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb3">
 <h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -1070,18 +1070,18 @@ represents to subject of the text.</li>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution1" aria-expanded="false" aria-controls="collapseSolution1">
   <h4 class="accordion-header" id="headingSolution1">Show me the solution</h4>
 </button>
-<div id="collapseSolution1" class="accordion-collapse collapse" aria-labelledby="headingSolution1" data-bs-parent="#accordionSolution1">
+<div id="collapseSolution1" class="accordion-collapse collapse" data-bs-parent="#accordionSolution1" aria-labelledby="headingSolution1">
 <div class="accordion-body">
 <ul>
 <li>Lemmatized word cloud</li>
 </ul>
-<p>The doc can be create to consist only of lemma’s as follows:</p>
+<p>The doc can be created to consist only of lemma’s as follows:</p>
 <div class="codewrapper sourceCode" id="cb29">
 <h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
 <pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a>lemmas <span class="op">=</span> <span class="st">' '</span>.join([token.lemma_ <span class="cf">for</span> token <span class="kw">in</span> doc])</span></code></pre>
 </div>
-<p>Create to word cloud using the lemmatized text and the stopwords we
+<p>Create the word cloud using the lemmatized text and the stopwords we
 defined earlier.</p>
 <div class="codewrapper sourceCode" id="cb30">
 <h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -1091,13 +1091,14 @@ defined earlier.</p>
 <ul>
 <li>Additional stop words</li>
 </ul>
-<p>An example of words to add to the stopwords are:</p>
+<p>Add some more words to the stopwords set:</p>
 <div class="codewrapper sourceCode" id="cb31">
 <h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
 <pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a>add_stopwords <span class="op">=</span> [<span class="st">'ask'</span>, <span class="st">'tell'</span>, <span class="st">'like'</span>, <span class="st">'want'</span>, <span class="st">'case'</span>, <span class="st">'come'</span>]</span>
 <span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a>new_stopwords <span class="op">=</span> stopwords.update(<span class="bu">set</span>(add_stopwords))</span></code></pre>
 </div>
+<p>Create the word cloud:</p>
 <div class="codewrapper sourceCode" id="cb32">
 <h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
@@ -1107,7 +1108,14 @@ defined earlier.</p>
 </div>
 </div>
 </div>
-<p>:::::::::: key points</p>
+<div id="keypoints1" class="callout keypoints">
+<div class="callout-square">
+<i class="callout-icon" data-feather="key"></i>
+</div>
+<div class="callout-inner">
+<h3 class="callout-title">Key Points<a class="anchor" aria-label="anchor" href="#keypoints1"></a>
+</h3>
+<div class="callout-content">
 <ul>
 <li>Preprocessing involves a number of steps that one can apply to their
 text to prepare it for further processing.</li>
@@ -1119,7 +1127,9 @@ word removal, lemmatization, part-of-speech tagging.</li>
 <li>Often you can use a pretrained model to process and analyse your
 data.</li>
 </ul>
-<p>::::::::::</p>
+</div>
+</div>
+</div>
 <!-- 
 Place links that you need to refer to multiple times across pages here. Delete
 any links that you are not going to use. 
