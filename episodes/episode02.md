@@ -331,6 +331,10 @@ Create the word cloud:
 plot_wordcloud(doc=lemmas, sw=new_stopwords)
 ```
 
+:::::::::
+
+
+::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::: keypoints
 
