@@ -18,7 +18,7 @@ created: 2023-11-16 # FIXME
 
 # Comma-separated list of keywords for the lesson
 keywords: 'software, data, lesson, The Carpentries, NLP, English,
-social sciences, pre-alpha' # 
+social sciences, pre-alpha' #
 
 # Life cycle stage of the lesson
 # possible values: pre-alpha, alpha, beta, stable
@@ -28,13 +28,13 @@ life_cycle: 'pre-alpha' # FIXME
 license: 'CC-BY 4.0'
 
 # Link to the source repository for this lesson
-source: 'https://github.com/carpentries/workbench-template-md' # FIXME
+source: 'https://github.com/esciencecenter-digital-skills/Natural-language-processing'
 
 # Default branch of your lesson
 branch: 'main'
 
 # Who to contact if there are any issues
-contact: 'l . ootes at esciencecenter.nl' # FIXME
+contact: 'l . ootes at esciencecenter.nl'
 
 # Navigation ------------------------------------------------
 #
@@ -59,19 +59,19 @@ contact: 'l . ootes at esciencecenter.nl' # FIXME
 # - another-learner.md
 
 # Order of episodes in your lesson
-episodes: 
-- introduction.md
-- episode01.md
+episodes:
+- 00-welcome.md
+- 01-introduction.md
 - episode02.md
 
 # Information for Learners
-learners: 
+learners:
 
 # Information for Instructors
-instructors: 
+instructors:
 
 # Learner Profiles
-profiles: 
+profiles:
 
 # Customisation ---------------------------------------------
 #
