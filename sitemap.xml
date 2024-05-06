@@ -1,93 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/01-introduction.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/00-welcome.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/404.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/01-introduction.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/CODE_OF_CONDUCT.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/404.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/LICENSE.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/CODE_OF_CONDUCT.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/_2.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/aio.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/_2.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/episode01.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/aio.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/episode02.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/episode01.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/images.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/episode02.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/index.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/images.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/instructor/01-introduction.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/index.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/instructor/404.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/00-welcome.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/instructor/CODE_OF_CONDUCT.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/01-introduction.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/instructor/LICENSE.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/404.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/instructor/_2.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/CODE_OF_CONDUCT.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/instructor/aio.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/instructor/episode01.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/_2.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/instructor/episode02.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/aio.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/instructor/images.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/episode01.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/instructor/index.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/episode02.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/instructor/instructor-notes.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/images.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/instructor/introduction.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/index.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/instructor/key-points.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/instructor-notes.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/instructor/profiles.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/introduction.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/instructor/reference.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/key-points.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/instructor-notes.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/profiles.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/introduction.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/reference.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/key-points.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor-notes.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/profiles.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/introduction.html</loc>
   </url>
   <url>
-    <loc>https://carpentries.github.io/workbench-template-md/reference.html</loc>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/key-points.html</loc>
+  </url>
+  <url>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/profiles.html</loc>
+  </url>
+  <url>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/reference.html</loc>
   </url>
 </urlset>
