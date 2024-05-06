@@ -60,8 +60,9 @@ contact: 'l . ootes at esciencecenter.nl'
 
 # Order of episodes in your lesson
 episodes:
-- 01-welcome.md
-- 02-introduction.md
+- 00-welcome.md
+- 01-introduction.md
+- episode02.md
 
 # Information for Learners
 learners:
