@@ -1,5 +1,5 @@
 ---
-title: "Episode 1"
+title: "Episode 1: Introducing NLP"
 teaching: 10
 exercises: 2
 ---
@@ -19,14 +19,14 @@ exercises: 2
 ## Introducing NLP
 
 ### What is NLP?
-Natural language processing (NLP) is an area of research and application that focuses on making natural (i.e., human) language accessible to computers so that they can be used to perform useful tasks (Chowdhury & Chowdhury, 2023). Research in NLP is highly interdisciplinary, drawing on concepts from computer science, linguistics, logic, mathematics, psychology, etc. In the past decade, NLP has evolved significantly with advances in technology to the point that it has become embedded in our daily lives: automatic language translation or chatGPT are only some examples. This evolution has enhanced its applications and expanded its interaction with fields like artificial intelligence, machine learning, reaching practically any other research field.
+Natural language processing (NLP) is an area of research and application that focuses on making natural (i.e., human) language accessible to computers so that they can be used to perform useful tasks (Chowdhury & Chowdhury, 2023). Research in NLP is highly interdisciplinary, drawing on concepts from computer science, linguistics, logic, mathematics, psychology, etc. In the past decade, NLP has evolved significantly with advances in technology to the point that it has become embedded in our daily lives: automatic language translation or chatGPT are only some examples. 
 
 ### Why do we care?
-The past decade's breakthroughs have resulted in NLP being increasingly used in a range of diverse domains such as retail (e.g., customer service chatbots), healthcare (e.g., AI-assisted hearing devices), finance (e.g., anomaly detection in monetary transactions), law (e.g., legal research), and many more. These applications are possible because NLP researchers developed (and constantly do so) tools and techniques to make computers understand and manipulate language effectively.
+The past decade's breakthroughs have resulted in NLP being increasingly used in a range of diverse domains such as retail (e.g., customer service chatbots), healthcare (e.g., AI-assisted hearing devices), finance (e.g., anomaly detection in monetary transactions), law (e.g., legal research), and many more. These applications are possible because NLP researchers developed tools and techniques to make computers understand and manipulate language effectively.
 
-With so many contributions and such impressive advances of recent years, it is an exciting time to start bringing NLP techniques in your own work. Thanks to dedicated python libraries, these tools are now more accessible. They offer modularity, allowing you to integrate them easily in your code, and scalability, i.e., capable of processing vast amounts of text efficiently. 
+With so many contributions and such impressive advances of recent years, it is an exciting time to start bringing NLP techniques in your own work. Thanks to dedicated python libraries, these tools are now more accessible. They offer modularity, allowing you to integrate them easily in your code, and scalability, i.e., capable of processing vast amounts of text efficiently. Even those without advanced programming skills can leverage these tools to address problems in social sciences, humanities, or any field where language plays a crucial role. 
 
-These tools are easily accessible via dedicated python libraries that allow for modularity (i.e., you can build upon those in your code) and scalability (i.e., you can process vast amount of text) without necessarily being an advanced python programmer. Whether dealing with text or audio, NLP tools provide a means to handle and interpret language data to meet specific needs and objectives. Even those without advanced programming skills can leverage these tools to address problems in social sciences, humanities, or any field where language plays a crucial role. In a nutshell, NLP opens up possibilities, making sophisticated techniques accessible to a broad audience. 
+In a nutshell, NLP opens up possibilities, making sophisticated techniques accessible to a broad audience. 
 
 :::::::::::: challenge 
 ## NLP in the real world
