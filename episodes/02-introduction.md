@@ -86,11 +86,11 @@ Create short summaries of longer documents while retaining the core content.
 
 ### Question answering 
 
-Task of building a system that answer questions posed in natural (i.e., human) language.
+Task of building a system that answer questions posed in natural (i.e., human) language. For example, many websites nowadays offer customer service in the form of a chatbot.
 
 ### Topic modeling 
 
-Task of discovering topical structure in documents.
+Task of discovering topical structure in documents. Topics describe the content of a document, for instance, the output of a topic model run on a document narrating the events of the WWII might result in topics covering: the war, troops, geographical locations, weapons, etc.
 
 ### Machine translation
 
