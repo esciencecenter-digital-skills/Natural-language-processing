@@ -63,6 +63,7 @@ episodes:
 - 00-welcome.md
 - 01-introduction.md
 - 02-preprocessing.md
+- 03-embeddings.md
 
 # Information for Learners
 learners:
