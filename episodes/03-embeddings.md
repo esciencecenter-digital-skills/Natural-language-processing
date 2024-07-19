@@ -95,9 +95,9 @@ sentence = [4, 0, 3, 2, 4, 1]
 This approach is much more efficient as it links each word to one numeric identifier. However, the choice for this identifier is quite arbitrary -- why does it mean that cat is 0? Does it change anything if it is encoded as 2? Moreover, there is no way to represent the relationship among words, e.g., how `cat`/0 relates to `mat`/1 ? So with this approach we gain in efficiency, but still we don't solve the problem of encoding semantic and syntactic information present in the text.
 
 ## Word embeddings
-A Word Embedding is a word representation type that maps words in a numerical manner, however, differently from the approaches above, it organises information into an *efficient*, i.e., *dense*, representation in which semantic and syntactic features in the text are preserved. In this representation, words are described in a multidimensional space whereby similar words have a similar encoding. This allows us to describe them fully, and make comparison among words.
+A Word Embedding is a word representation type that maps words in a numerical manner (i.e., into vectors), however, differently from the approaches above, it organises information into an *efficient*, i.e., *dense*, representation in which semantic and syntactic features in the text are preserved. In this representation, words are described in a multidimensional space whereby similar words have a similar encoding. This allows us to describe them fully, and make comparison among words.
 
-Let's see an example to get familiar with the concept of word embeddings. Let's use again the word `cat`. We want to describe this animal based on its characteristics. For instance, its furriness. Let's say that we measure the cat's furriness (in some magical way) and we found out that a cat has a score of `70` in furriness.
+Since word embeddings are essentially vectors, let's see an example to get familiar with the idea of representing things into vectors. We use again the word `cat` and we try to describe this animal based on its characteristics. For instance, its furriness. Let's say that we measured the cat's furriness (in some magical way) and we found out that a cat has a score of `70` in furriness.
 
 ![Embedding of a cat - We measured its furriness and found out it's 70!](fig/emb1.png){alt=""}
 
@@ -223,7 +223,7 @@ The most similar couple is the cat and the tarantula: `array([[0.99822302]])`
 
 Once we add multiple dimensions the animals' description become more complex, but also richer, therefore our comparisons become much more precise. 
 
-The downside with this approach is that once we get more than 3 dimensions it becomes very difficult to represent the relationships among words with little arrows. However, the `cosine_similarity()` will always work, regardless of the number of dimensions. Bearing this example of an embedding in mind, let's move now to explore a model that returns us those embeddings.
+The downside of this approach is that once we get more than 3 dimensions it becomes very difficult to represent the relationships among words with little arrows. However, the `cosine_similarity()` will always work, regardless of the number of dimensions. Bearing this example of an embedding in mind, let's move now to explore a model that returns us those embeddings.
 
 
 :::: callout
