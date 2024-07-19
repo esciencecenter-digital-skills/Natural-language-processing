@@ -44,9 +44,9 @@ We could transform this sentence into a matrix in Python. The matrix will have t
 import numpy as np
 import matplotlib.pyplot as plt
 
-words = ["the", "cat", "sat", "on", "the","mat"]
+sentence = ["the", "cat", "sat", "on", "the","mat"]
 
-sentence = ["cat", "mat", "on", "sat", "the"]
+words = ["cat", "mat", "on", "sat", "the"]
 
 data = np.array([
     [0, 0, 0, 0, 1],
@@ -59,7 +59,7 @@ data = np.array([
 
 fig, ax = plt.subplots()
 
-table = ax.table(cellText=data, rowLabels=words, colLabels=sentence, cellLoc='center', loc='center')
+table = ax.table(cellText=data, rowLabels=sentence, colLabels=words, cellLoc='center', loc='center')
 ax.axis('off')
 plt.title('the cat sat on the mat')
 plt.show()
