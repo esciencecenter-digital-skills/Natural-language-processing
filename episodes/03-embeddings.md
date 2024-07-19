@@ -447,7 +447,7 @@ Output:
 [('euro', 0.5166667103767395)]
 ```
 
-This one also works, and it is based on the orthography of the words:
+This analogy also works, and it is based on the orthography of the words:
 
 $$
 \overrightarrow{\text{apple}} - \overrightarrow{\text{apples}} + \overrightarrow{\text{cars}} \approx \overrightarrow{\text{car}}
