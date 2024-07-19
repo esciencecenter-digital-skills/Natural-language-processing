@@ -21,7 +21,7 @@ After following this lesson, learners will be able to:
 - Explain what word embeddings are
 - Get familiar with using vectors to represent things
 - Compute the cosine similarity to get the most similar words 
-- Use Word2vec to generate word embeddings
+- Use Word2vec to return word embeddings
 - Extract word embeddings from a pre-trained Word2vec
 - Explore properties of word embeddings
 - Visualise word embeddings
@@ -92,10 +92,11 @@ So that the sentence can be mapped as:
 sentence = [4, 0, 3, 2, 4, 1]
 ```
 
-This approach is much more efficient as it links each word to one numeric identifier. However, the choice for this identifier is quite arbitrary -- why does it mean that cat is 0? Does it change anything if it is encoded as 2? Moreover, there is no way to represent the relationship among words, e.g., how `cat`/0 relates to `mat`/1 ? So with this approach we gain in efficiency, but still we don't solve the problem of encoding semantic and syntactic information present in the text.
+This approach is much more efficient as it links each word to one numeric identifier. However, the choice for this identifier is quite arbitrary -- what does it mean that cat is 0? Does it change anything if it is encoded as 2? Moreover, there is no way to represent the relationship among words, e.g., how `cat`/0 relates to `mat`/1 ? So with this approach we gain in efficiency, but still we don't solve the problem of encoding semantic and syntactic information present in the text.
 
 ## Word embeddings
-A Word Embedding is a word representation type that maps words in a numerical manner (i.e., into vectors), however, differently from the approaches above, it organises information into an *efficient*, i.e., *dense*, representation in which semantic and syntactic features in the text are preserved. In this representation, words are described in a multidimensional space whereby similar words have a similar encoding. This allows us to describe them fully, and make comparison among words.
+
+A Word Embedding is a word representation type that maps words in a numerical manner (i.e., into vectors), however, differently from the approaches above, it organises information into an *efficient*, i.e., *dense*, representation in which semantic and syntactic features in the text are preserved. In this representation, words are described in a multidimensional space whereby similar words have a similar encoding. This allows us to describe them fully, and make comparisons among words.
 
 Since word embeddings are essentially vectors, let's see an example to get familiar with the idea of representing things into vectors. We use again the word `cat` and we try to describe this animal based on its characteristics. For instance, its furriness. Let's say that we measured the cat's furriness (in some magical way) and we found out that a cat has a score of `70` in furriness.
 
@@ -223,12 +224,13 @@ The most similar couple is the cat and the tarantula: `array([[0.99822302]])`
 
 Once we add multiple dimensions the animals' description become more complex, but also richer, therefore our comparisons become much more precise. 
 
-The downside of this approach is that once we get more than 3 dimensions it becomes very difficult to represent the relationships among words with little arrows. However, the `cosine_similarity()` will always work, regardless of the number of dimensions. Bearing this example of an embedding in mind, let's move now to explore a model that returns us those embeddings.
+The downside of this approach is that once we get more than 3 dimensions it becomes very difficult to represent the relationships among words with little arrows. However, the `cosine_similarity()` will always work, regardless of the number of dimensions. 
 
+This example showed us an intuitive way of representing things into vectors. An embedding is after all a way to translate words into vectors. However, this is the extent to which this example tells us something about what word embeddings are. The reason for this is that the way embeddings are constructed is of course not that straight-forward. We'll see how these are built in the next section, whereby we introduce the `word2vec` model.
 
 :::: callout
 
-In this example we have built our "embeddings" of a cat, dog and caterpillar with dimensions that we chose arbitrarily. Those dimensions were chosen because they were easy to measure and to see with our own eyes. However, when we deal with word embeddings trained on a corpus, it's difficult to know what the dimensions stand for. These can be many (the number must be limited by us) and it's unknown what they map to in the text. 
+In this example we have made our own translation of the word cat, dog and caterpillar into vectors, with dimensions that we chose arbitrarily. Those dimensions were chosen because they were easy to measure and to see with our own eyes. However, when we deal with word embeddings trained on a corpus, it's not clear how words relate their vector structure. That is, it's difficult to know what the dimensions stand for. These can be many (the number must be limited by us) and it's unknown what they map to in the text. 
 
 ::::
 
@@ -237,13 +239,26 @@ In this example we have built our "embeddings" of a cat, dog and caterpillar wit
 - We can represent text as vectors of numbers (which makes it interpretable for machines)
 - The most efficient and useful way is to use word embeddings
 - We can easily compute how words are similar to each other with the cosine similarity
-- Dimensions in word embeddings are many and not transparent
+- Dimensions in corpus-based word embeddings are many and not transparent
 
 :::::::::::::::::::::::::::::::::::::
 
 # Word2vec model
 
-Word2Vec is a two-layer neural network that processes raw text and returns us the respective word-vectors (i.e., *word embeddings*). To use it, we have two choices: Train a word2vec model on our own or use a pre-trained one.
+Word2Vec is a two-layer neural network that processes raw text and returns us the respective word-vectors (i.e., *word embeddings*). Published in 2013 by Tomas Mikolov et al., it has been one of the most influential deep-learning techniques in NLP. 
+
+To produce word embeddings, the training task of the `word2vec` consists of predicting words. The authors propose two possible ways (and therefore architectures) to solve this task:
+
+- The continuous bag-of-words (CBOW) model: In this architecture, the task consists in predicting the correct target word, given a certain context (words coming before and after the target word). Order of context words does not matter.
+
+- The continuous skip-gram model: In this architecture, the task consists in predicting the correct context words, given a target word.
+
+
+![Schematic representations of the different prediction tasks that CBOW and Skip-gram try to solve](fig/emb7.png){alt=""}
+
+In both architectures, increasing the *context size* (i.e., number of context words) leads to better embeddings but also increases the training time, this is especially true for the Skip-gram architecture, which is much more training intensive.
+
+we have two choices: Train a word2vec model on our own or use a pre-trained one.
 
 Word embeddings become better and better at representing the words (i.e., a word vector becomes more specific) within the text with the size of the training material. Think of all the books, articles, Wikipedia content, and other forms of text data we have lying around. These massive amount of text can be used to train a word2vec model and extract the relative embeddings, which will be particularly informative due to the size of the training input. If we were to train a word2vec model on this amount of data, we would first need the raw text, a powerful machine to process it, and some spare time to wait for the model to complete training. However, luckily for us someone else has done this training already, and we can load the output of this training (i.e., their pretrained word2vec model) on our local machine. 
 
