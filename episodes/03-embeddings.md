@@ -485,7 +485,7 @@ While we don't know which dimension code for what, we can see that some columns 
 ## Analogies
 A word analogy is a statement of the type: “*a* is to *b* as *x* is to *y*”, which means that *a* and *x* can be transformed in the same way to get *b* and *y*, respectively. Vice versa, *b* and *y* can be inversely transformed to get *a* and *x*. 
 
-A famous analogy (King - man + woman ~= queen) shows an incredible property of word embeddings: That is, since words are encoded as vectors, we can often solve analogies with vector arithmetic. 
+A famous analogy (King - man + woman ~= queen) shows an incredible property of `word2vec` embeddings: That is, since words are encoded as vectors, we can often solve analogies with vector arithmetic. 
 
 Let's consider this in detail:
 
@@ -504,7 +504,7 @@ In the line of code above, we have added the word vectors of: $$ \overrightarrow
 The output:
 
 ```python
-[('queen', 0.8523604273796082)]
+[('queen', 0.7118192911148071)]
 ```
 
 We can visualize this analogy as we did previously:
@@ -576,7 +576,7 @@ So, in this case this analogy is not solved very well by our model. I expected t
 
 ## Linguistic categories, dimensionality reduction and the challenge of polysemy
 
-In addition to analogies, we can explore how good word2vec is in capturing the syntactic and semantic similarity between words (and pairs of words), via the exploration of linguistic categories.
+In addition to analogies, we can explore how good `word2vec` is in capturing the syntactic and semantic similarity between words (and pairs of words), via the exploration of linguistic categories.
 
 Linguistic categories are groups of words that describe high-level properties that all those words have in common. Consider the following words:
 
@@ -594,7 +594,7 @@ What do they have in common? They are all `vehicles`. Consider now these words:
                'fly', 'crane', 'bug','seal','cougar', 'jaguar']
 ```
 
-All those words belong to the category of `animals`. Let's group those vectors in their respective category label:
+All those words belong to the category of `animals`. Let's group those vectors in their respective category labels:
 
 ```python
 animal_words = ['dog', 'cat', 'horse', 'lion', 'tiger', 'elephant', 'bear', 'wolf', 'fox', 'deer', 
@@ -605,7 +605,7 @@ vehicle_words = ['car', 'truck', 'bus', 'bicycle', 'motorcycle', 'scooter', 'tra
                  'trailer', 'jeep', 'minivan', 'skateboard', 'tank', 'bobcat']
 ```
 
-Let's extract now their vectors from our pre-trained word2vec model:
+Let's extract their vectors from our pre-trained word2vec model:
 
 ```python
 all_words = animal_words + vehicle_words 
@@ -669,9 +669,8 @@ The visualisation confirms our real world knowledge:
 
 ### Polysemy 
 
-At a closer inspection, however, there is also an interesting phenomenon visible: The words `fly` (for animals) and `bobcat` (for vehicles) are somewhat confused. They are represented closer to the vehicles and animals, respectively. The reason for this "confusion" is due to the fact that `fly` and `bobcat` are polysemous words, i.e., they have multiple meanings. A vast majority of words, especially frequent ones, are polysemous, with each word taking on anywhere from two to a dozen different senses in many natural languages. We are able to disambiguate words based on the context in which they occur. Word2vec however is not able to do it.
+At a closer inspection, however, there is also an interesting phenomenon visible: The words `crane` (for animals) and `bobcat` (for vehicles) are somewhat confused. They are represented closer to the vehicles and animals, respectively. The reason for this "confusion" is due to the fact that `crane` and `bobcat` are polysemous words, i.e., they have multiple meanings. A `cran`e is a large, tall machine used for moving heavy objects and a tall, long-legged, long-necked bird. A bobcat is both a wildcat with a short tail and spotted coat and an excavator used for digging. A vast majority of words, especially frequent ones, are polysemous, with each word taking on anywhere from two to a dozen different senses in many natural languages. We are able to disambiguate words based on the context in which they occur. Word2vec however is not able to do it. The reason for this is that word2vec assigns a single vector to each word regardless of its multiple meanings. This means that all contexts in which a polysemous word appears contribute to a single representation, in which all meanings are blended together.
 
-Note this problem in the word `crane`. A crane is a large, tall machine used for moving heavy objects and a tall, long-legged, long-necked bird. This word is categorised as animal, and it falls closer indeed to the animal realm. However it would have been better to represent it half-way through a vehicle and an animal, since it's also some sort of vehicle. 
 
 ::::::::::::::::::::::::::::::::::::: keypoints
 
@@ -794,8 +793,10 @@ def read_input(book_ids):
         doc = nlp(raw_text)
         
         for sentence in doc.sents:
-            # Tokenize, lowercase, remove stop words and punctuation
-            tokens = [token.text.lower() for token in sentence if not token.is_stop and not token.is_punct]
+            # Tokenize, lowercase, use lemmatization
+            tokens = [token.lemma_.lower() for token in sentence 
+            # remove stop words punctuation and words starting with uppercase (to avoid entities), 
+                      if not token.is_stop and not token.is_punct and not token.text[0].isupper()]
             if tokens:
                 yield tokens
                 
@@ -812,14 +813,16 @@ logging.info("Done reading and preprocessing data")
 We initialise the word2vec model:
 
 ```python
-model = gensim.models.Word2Vec(documents, vector_size=50, window=10, min_count=2, workers=4)
+model = gensim.models.Word2Vec(documents, vector_size=50, window=4, min_count=2, workers=4)
 ```
 
 Note that: 
 
+- By default, the architecture used by `gensim.models.Word2Vec()` is CBOW. You have to explicitly state `sg=1` if you intend to use skip-gram.
+
 - we set `vector_size` to 50. This means that each word will be represented by a 50-dimensional vector in the embedding space. Higher dimensions can capture more semantic nuances but require more computational resources. 
 
-- In addition, we set `window` to 10. This setting ensures that the model consider up to 10 words to the left and 10 words to the right of the target word for context. Larger windows can capture broader context but might introduce noise. 
+- In addition, we set `window` to 4. This setting ensures that the model consider up to 4 words to the left and 4 words to the right of the target word for context. Larger windows can capture broader context but might introduce noise. 
 
 - We ignore all words with total frequency lower than a predifined threshold by setting `min_count` to 2. This helps to remove infrequent words that may not provide useful information and could potentially introduce noise.
 
@@ -831,7 +834,7 @@ Now that we are all set, we start training on the polished dataset:
 model.train(documents,total_examples=len(documents),epochs=10)
 ```
 
-We can then explore the embedding space as we did for the `GloVE` model.
+We can then explore the embedding space as we did for the `word2vec-google-news-300` model.
 
 
 
@@ -855,11 +858,11 @@ model.wv.most_similar(positive=['king', 'woman'], negative=['man'], topn=5)
 Output:
 
 ```python
-[('tranquo', 0.6235862970352173),
- ('weyard', 0.6232213377952576),
- ('sicily', 0.6137406229972839),
- ('allemaine', 0.6106457710266113),
- ('bridewell', 0.597455620765686)]
+[('rich', 0.6688281893730164),
+ ('brave', 0.6251468062400818),
+ ('widow', 0.6215934753417969),
+ ('farmer', 0.6200089454650879),
+ ('nursery', 0.6171179413795471)]
 ```
 
 - If you ask for the top 10 words most similar to `King` what's the output? 
@@ -873,16 +876,16 @@ model.wv.most_similar(w1, topn=10)
 Output:
 
 ```python
-[('allemaine', 0.6935099363327026),
- ('saul', 0.6925671696662903),
- ('david', 0.6918837428092957),
- ('tranquo', 0.6515917181968689),
- ('robber', 0.6457288265228271),
- ('lords', 0.6413857936859131),
- ('sourse', 0.6361883878707886),
- ('commons', 0.6356653571128845),
- ('liued', 0.6342921853065491),
- ('queene', 0.6335513591766357)]
+[('queen', 0.6963975429534912),
+ ('royal', 0.6770277619361877),
+ ('brave', 0.6549012660980225),
+ ('evangelist', 0.6369228959083557),
+ ('warrior', 0.6366517543792725),
+ ('god', 0.6336646676063538),
+ ('crop', 0.6331022381782532),
+ ('bachelor', 0.6304036974906921),
+ ('mystick', 0.6260853409767151),
+ ('auction', 0.614545464515686)]
 ```
 
 - Difference in performance is due to (1) different trained corpus and (2) different size of the corpus. 
