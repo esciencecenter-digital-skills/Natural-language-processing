@@ -117,6 +117,14 @@ And what about a caterpillar?
 
 Which of these two animals (dog vs caterpillar) is more similar to a cat? We can compute the similarity among those vectors with the function `cosine_similarity()` in Python, from the `sklearn` library.
 
+:::: callout
+
+[cosine similarity](https://en.wikipedia.org/wiki/Cosine_similarity) ranges between [`-1` and `1`]. It is the cosine of the angle between two vectors, divided by the product of their length. It is a useful metric to measure how similar two vectors are likely to be.
+
+![](fig/emb12.png){alt=""}
+
+:::: 
+
 
 ```python
 from sklearn.metrics.pairwise import cosine_similarity
@@ -228,11 +236,10 @@ The downside of this approach is that once we get more than 3 dimensions it beco
 
 This example showed us an intuitive way of representing things into vectors. An embedding is after all a way to translate words into vectors. However, this is the extent to which this example tells us something about what word embeddings are. The reason for this is that the way embeddings are constructed is of course not that straight-forward. We'll see how these are built in the next section, whereby we introduce the `word2vec` model.
 
-:::: callout
+### Conclusion
 
 In this example we have made our own translation of the word cat, dog and caterpillar into vectors, with dimensions that we chose arbitrarily. Those dimensions were chosen because they were easy to measure and to see with our own eyes. However, when we deal with word embeddings trained on a corpus, it's not clear how words relate their vector structure. That is, it's difficult to know what the dimensions stand for. These can be many (the number must be limited by us) and it's unknown what they map to in the text. 
 
-::::
 
 ::::::::::::::::::::::::::::::::::::: keypoints
 
@@ -249,14 +256,15 @@ Word2Vec is a two-layer neural network that processes raw text and returns us th
 
 To produce word embeddings, the training task of the `word2vec` consists of predicting words. The authors propose two possible ways (and therefore architectures) to solve this task:
 
-- The continuous bag-of-words (CBOW) model: In this architecture, the task consists in predicting the correct target word, given a certain context (words coming before and after the target word). Order of context words does not matter.
+- The continuous bag-of-words (CBOW) model: In this architecture, the task consists in predicting the correct target word, given a certain context (words coming before and after the target word). 
 
 - The continuous skip-gram model: In this architecture, the task consists in predicting the correct context words, given a target word.
 
+![Schematic representations of the different prediction tasks that CBOW and Skip-gram try to solve](fig/emb13.png){alt=""}
 
-![Schematic representations of the different prediction tasks that CBOW and Skip-gram try to solve](fig/emb7.png){alt=""}
+In general, CBOW is faster to train, but the Skip-gram is more accurate thanks to its ability to learn infrequent words. In both architectures, increasing the *context size* (i.e., number of context words) leads to better embeddings but also increases the training time.
 
-In both architectures, increasing the *context size* (i.e., number of context words) leads to better embeddings but also increases the training time, this is especially true for the Skip-gram architecture, which is much more training intensive.
+Regardless of the architecture, however, words that appear in the same context will end up having very similar vectors. Let's now look at the created embeddings.
 
 we have two choices: Train a word2vec model on our own or use a pre-trained one.
 
