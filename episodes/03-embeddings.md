@@ -272,16 +272,17 @@ Word embeddings become better and better at representing the words (i.e., a word
 
 In this section we are going to look at a pre-trained word2vec model (that is, pre-computed *word embeddings*) and at some of their properties. Towards the end of the section we're going to compare this model with a word2vec model that we trained on our own on a small subset of the Gutenberg books we introduced in the previous episode.
 
-We use the trained word2vec model named `GloVe` from the `gensim` library. The GloVe embeddings was trained on an English Wikipedia dump and English Gigaword 5th Edition dataset. It has 6B tokens. The original source of the embeddings can be found here: https://nlp.stanford.edu/projects/glove/
+We use the trained word2vec model named `word2vec-google-news-300` from the `gensim` library. This model is trained on a part of the Google News dataset (about 100 billion words). The model contains 300-dimensional vectors for 3 million words and phrases. 
 
 We can download this model locally with this code:
 
 ```python
 import gensim.downloader
-google_vectors = gensim.downloader.load('glove-wiki-gigaword-50')
+google_vectors = gensim.downloader.load('word2vec-google-news-300')
 ```
 
 ::::::: callout
+Note that `gensim` includes various models for word representations, not just `Word2Vec`. These include `FastText`, `Glove`, `ConceptNet`, etc. These methods capture different aspects of word and subword information. 
 
 You can see how many (and which) pretrained model the `gensim` library contains with the following code snippet:
 
@@ -294,6 +295,8 @@ Output:
 ```python
 ['fasttext-wiki-news-subwords-300', 'conceptnet-numberbatch-17-06-300', 'word2vec-ruscorpora-300', 'word2vec-google-news-300', 'glove-wiki-gigaword-50', 'glove-wiki-gigaword-100', 'glove-wiki-gigaword-200', 'glove-wiki-gigaword-300', 'glove-twitter-25', 'glove-twitter-50', 'glove-twitter-100', 'glove-twitter-200', '__testing_word2vec-matrix-synopsis']
 ```
+
+In the context of this episode we focus on `Word2Vec` only, as this is the most famous.
 :::::::
 
 Next, we can look at the embedding of the word `king`:
@@ -304,17 +307,84 @@ print(google_vectors['king'])
 
 Output:
 ```python
-[ 0.50451   0.68607  -0.59517  -0.022801  0.60046  -0.13498  -0.08813
-  0.47377  -0.61798  -0.31012  -0.076666  1.493    -0.034189 -0.98173
-  0.68229   0.81722  -0.51874  -0.31503  -0.55809   0.66421   0.1961
- -0.13495  -0.11476  -0.30344   0.41177  -2.223    -1.0756   -1.0783
- -0.34354   0.33505   1.9927   -0.04234  -0.64319   0.71125   0.49159
-  0.16754   0.34344  -0.25663  -0.8523    0.1661    0.40102   1.1685
- -1.0137   -0.21585  -0.15155   0.78321  -0.91241  -1.6106   -0.64426
- -0.51042 ]
+[ 1.25976562e-01  2.97851562e-02  8.60595703e-03  1.39648438e-01
+ -2.56347656e-02 -3.61328125e-02  1.11816406e-01 -1.98242188e-01
+  5.12695312e-02  3.63281250e-01 -2.42187500e-01 -3.02734375e-01
+ -1.77734375e-01 -2.49023438e-02 -1.67968750e-01 -1.69921875e-01
+  3.46679688e-02  5.21850586e-03  4.63867188e-02  1.28906250e-01
+  1.36718750e-01  1.12792969e-01  5.95703125e-02  1.36718750e-01
+  1.01074219e-01 -1.76757812e-01 -2.51953125e-01  5.98144531e-02
+  3.41796875e-01 -3.11279297e-02  1.04492188e-01  6.17675781e-02
+  1.24511719e-01  4.00390625e-01 -3.22265625e-01  8.39843750e-02
+  3.90625000e-02  5.85937500e-03  7.03125000e-02  1.72851562e-01
+  1.38671875e-01 -2.31445312e-01  2.83203125e-01  1.42578125e-01
+  3.41796875e-01 -2.39257812e-02 -1.09863281e-01  3.32031250e-02
+ -5.46875000e-02  1.53198242e-02 -1.62109375e-01  1.58203125e-01
+ -2.59765625e-01  2.01416016e-02 -1.63085938e-01  1.35803223e-03
+ -1.44531250e-01 -5.68847656e-02  4.29687500e-02 -2.46582031e-02
+  1.85546875e-01  4.47265625e-01  9.58251953e-03  1.31835938e-01
+  9.86328125e-02 -1.85546875e-01 -1.00097656e-01 -1.33789062e-01
+ -1.25000000e-01  2.83203125e-01  1.23046875e-01  5.32226562e-02
+ -1.77734375e-01  8.59375000e-02 -2.18505859e-02  2.05078125e-02
+ -1.39648438e-01  2.51464844e-02  1.38671875e-01 -1.05468750e-01
+  1.38671875e-01  8.88671875e-02 -7.51953125e-02 -2.13623047e-02
+  1.72851562e-01  4.63867188e-02 -2.65625000e-01  8.91113281e-03
+  1.49414062e-01  3.78417969e-02  2.38281250e-01 -1.24511719e-01
+ -2.17773438e-01 -1.81640625e-01  2.97851562e-02  5.71289062e-02
+ -2.89306641e-02  1.24511719e-02  9.66796875e-02 -2.31445312e-01
+  5.81054688e-02  6.68945312e-02  7.08007812e-02 -3.08593750e-01
+ -2.14843750e-01  1.45507812e-01 -4.27734375e-01 -9.39941406e-03
+  1.54296875e-01 -7.66601562e-02  2.89062500e-01  2.77343750e-01
+ -4.86373901e-04 -1.36718750e-01  3.24218750e-01 -2.46093750e-01
+ -3.03649902e-03 -2.11914062e-01  1.25000000e-01  2.69531250e-01
+  2.04101562e-01  8.25195312e-02 -2.01171875e-01 -1.60156250e-01
+ -3.78417969e-02 -1.20117188e-01  1.15234375e-01 -4.10156250e-02
+ -3.95507812e-02 -8.98437500e-02  6.34765625e-03  2.03125000e-01
+  1.86523438e-01  2.73437500e-01  6.29882812e-02  1.41601562e-01
+ -9.81445312e-02  1.38671875e-01  1.82617188e-01  1.73828125e-01
+  1.73828125e-01 -2.37304688e-01  1.78710938e-01  6.34765625e-02
+  2.36328125e-01 -2.08984375e-01  8.74023438e-02 -1.66015625e-01
+ -7.91015625e-02  2.43164062e-01 -8.88671875e-02  1.26953125e-01
+ -2.16796875e-01 -1.73828125e-01 -3.59375000e-01 -8.25195312e-02
+ -6.49414062e-02  5.07812500e-02  1.35742188e-01 -7.47070312e-02
+ -1.64062500e-01  1.15356445e-02  4.45312500e-01 -2.15820312e-01
+ -1.11328125e-01 -1.92382812e-01  1.70898438e-01 -1.25000000e-01
+  2.65502930e-03  1.92382812e-01 -1.74804688e-01  1.39648438e-01
+  2.92968750e-01  1.13281250e-01  5.95703125e-02 -6.39648438e-02
+  9.96093750e-02 -2.72216797e-02  1.96533203e-02  4.27246094e-02
+ -2.46093750e-01  6.39648438e-02 -2.25585938e-01 -1.68945312e-01
+  2.89916992e-03  8.20312500e-02  3.41796875e-01  4.32128906e-02
+  1.32812500e-01  1.42578125e-01  7.61718750e-02  5.98144531e-02
+ -1.19140625e-01  2.74658203e-03 -6.29882812e-02 -2.72216797e-02
+ -4.82177734e-03 -8.20312500e-02 -2.49023438e-02 -4.00390625e-01
+ -1.06933594e-01  4.24804688e-02  7.76367188e-02 -1.16699219e-01
+  7.37304688e-02 -9.22851562e-02  1.07910156e-01  1.58203125e-01
+  4.24804688e-02  1.26953125e-01  3.61328125e-02  2.67578125e-01
+ -1.01074219e-01 -3.02734375e-01 -5.76171875e-02  5.05371094e-02
+  5.26428223e-04 -2.07031250e-01 -1.38671875e-01 -8.97216797e-03
+ -2.78320312e-02 -1.41601562e-01  2.07031250e-01 -1.58203125e-01
+  1.27929688e-01  1.49414062e-01 -2.24609375e-02 -8.44726562e-02
+  1.22558594e-01  2.15820312e-01 -2.13867188e-01 -3.12500000e-01
+ -3.73046875e-01  4.08935547e-03  1.07421875e-01  1.06933594e-01
+  7.32421875e-02  8.97216797e-03 -3.88183594e-02 -1.29882812e-01
+  1.49414062e-01 -2.14843750e-01 -1.83868408e-03  9.91210938e-02
+  1.57226562e-01 -1.14257812e-01 -2.05078125e-01  9.91210938e-02
+  3.69140625e-01 -1.97265625e-01  3.54003906e-02  1.09375000e-01
+  1.31835938e-01  1.66992188e-01  2.35351562e-01  1.04980469e-01
+ -4.96093750e-01 -1.64062500e-01 -1.56250000e-01 -5.22460938e-02
+  1.03027344e-01  2.43164062e-01 -1.88476562e-01  5.07812500e-02
+ -9.37500000e-02 -6.68945312e-02  2.27050781e-02  7.61718750e-02
+  2.89062500e-01  3.10546875e-01 -5.37109375e-02  2.28515625e-01
+  2.51464844e-02  6.78710938e-02 -1.21093750e-01 -2.15820312e-01
+ -2.73437500e-01 -3.07617188e-02 -3.37890625e-01  1.53320312e-01
+  2.33398438e-01 -2.08007812e-01  3.73046875e-01  8.20312500e-02
+  2.51953125e-01 -7.61718750e-02 -4.66308594e-02 -2.23388672e-02
+  2.99072266e-02 -5.93261719e-02 -4.66918945e-03 -2.44140625e-01
+ -2.09960938e-01 -2.87109375e-01 -4.54101562e-02 -1.77734375e-01
+ -2.79296875e-01 -8.59375000e-02  9.13085938e-02  2.51953125e-01]
 ```
 
-This vector has 50 entries, i.e., 50 dimensions. We can't say much about what those dimensions map. 
+This vector has 300 entries, i.e., 300 dimensions. We can't say much about what those dimensions map. 
 We can represent this vector with a heatmap:
 
 ```python
@@ -337,7 +407,7 @@ plt.tight_layout()
 plt.show()
 
 ```
-![Embedding of king - Glove word2vec model](fig/emb7.png){alt=""}
+![Embedding of king - word2vec model](fig/emb7.png){alt=""}
 
 
 And compare it with other words, like "queen":
@@ -361,17 +431,18 @@ plt.tight_layout()
 plt.show()
 ```
 
-![Embedding of king vs queen - Glove word2vec model](fig/emb8.png){alt=""}
+![Embedding of king vs queen - word2vec model](fig/emb8.png){alt=""}
 
-We can see that although both vectors have the same number of dimensions, they seem to have similar values (i.e., colours) for some of them. Does this mean that they map the same features?
+
+This visualization shows that the the embeddings for `king` and `queen` share similar values in some dimensions. What do those dimension mean? It's risky to attribute specific features or meanings to individual dimensions based on their values. Individual dimensions in word embeddings are not directly interpretable: The similarities we observe are influenced by the corpus and the hyperparameters used during training. 
+
 
 :::::::::::::::::::: challenge
 Let's explore the dimensions of the embeddings.
+Even though we cannot be sure of what the dimensions mean, we can make some hypotheses comparing other embeddings, for similar meanings.
 
 - Add the vectors for ['boy','king','man', 'queen', 'woman', 'girl', 'daughter'] and plot it using the code above
 - Compare the vectors by vertically scanning the columns looking for columns with similar colors. What similarities do you see? What characteristics do you think they map?
-
-- Can you find the column that in your opinion points to `royalty`? and the one that codes for `gender`?
 
 :::::: solution
 
@@ -403,15 +474,9 @@ plt.show()
 ```
 2. Compare the vectors by vertically scanning the columns looking for columns with similar colors.
 
-![Exercise solution - Glove word2vec model](fig/emb9.png){alt=""}
+![Exercise solution - word2vec model](fig/emb9.png){alt=""}
 
 While we don't know which dimension code for what, we can see that some columns are similar for all words, while other seem to distinguish the characteristic of being royal and gender. We could add more words and get a better understanding of what they code, however ultimately these would be always guesses.
-
-3. Can you find the column that in your opinion points to a vague concept of `royalty`? and the one that codes for `gender`?
-
-Royalty might be tracked by the dimension n. 5, but I can't find the dimension that code for gender. 
-
-
 
 ::::::
 
