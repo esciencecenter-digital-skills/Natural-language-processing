@@ -277,6 +277,18 @@
 </div>
 <!--/div.accordion-flush-->
 
+<div class="accordion accordion-flush" id="accordionFlush5">
+  <div class="accordion-item">
+    <div class="accordion-header" id="flush-heading5">
+        <a href="03-embeddings.html">4. Episode 3: Word embeddings</a>
+    </div>
+<!--/div.accordion-header-->
+
+  </div>
+<!--/div.accordion-item-->
+</div>
+<!--/div.accordion-flush-->
+
                 </div>
               </div>
             </div>
@@ -545,7 +557,7 @@ from the web.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution1" aria-expanded="false" aria-controls="collapseSolution1">
   <h4 class="accordion-header" id="headingSolution1"> Show me the solution </h4>
 </button>
-<div id="collapseSolution1" class="accordion-collapse collapse" data-bs-parent="#accordionSolution1" aria-labelledby="headingSolution1">
+<div id="collapseSolution1" class="accordion-collapse collapse" aria-labelledby="headingSolution1" data-bs-parent="#accordionSolution1">
 <div class="accordion-body">
 <p>These are some of the most popular NLP-based products that we use on
 a daily basis:</p>
@@ -1210,6 +1222,1310 @@ Place links that you need to refer to multiple times across pages here. Delete
 any links that you are not going to use.
  -->
 </div>
+</div></section><section id="aio-03-embeddings"><p>Content from <a href="03-embeddings.html">Episode 3: Word embeddings</a></p>
+<hr>
+<p>Last updated on 2024-07-25 |
+
+        <a href="https://github.com/esciencecenter-digital-skills/Natural-language-processing/edit/main/episodes/03-embeddings.md" class="external-link">Edit this page <i aria-hidden="true" data-feather="edit"></i></a></p>
+<p>Estimated time: <i aria-hidden="true" data-feather="clock"></i> 10 minutes</p>
+<div class="text-end">
+          <button role="button" aria-pressed="false" tabindex="0" id="expand-code" class="pull-right" data-expand="Expand All Solutions " data-collapse="Collapse All Solutions "> Expand All Solutions <i aria-hidden="true" data-feather="plus"></i></button>
+        </div>
+<div class="overview card">
+<h2 class="card-header">Overview</h2>
+<div class="row g-0">
+<div class="col-md-4">
+<div class="card-body">
+<div class="inner">
+<h3 class="card-title">Questions</h3>
+<ul>
+<li>What are word embeddings?</li>
+<li>What properties word embeddings have?</li>
+<li>What is a word2vec model?</li>
+<li>Can we inspect word embeddings?</li>
+<li>(Optional) How do we train a word2vec model?</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="col-md-8">
+<div class="card-body">
+<div class="inner bordered">
+<h3 class="card-title">Objectives</h3>
+<p>After following this lesson, learners will be able to:</p>
+<ul>
+<li>Explain what word embeddings are</li>
+<li>Get familiar with using vectors to represent things</li>
+<li>Compute the cosine similarity to get the most similar words</li>
+<li>Use Word2vec to return word embeddings</li>
+<li>Extract word embeddings from a pre-trained Word2vec</li>
+<li>Explore properties of word embeddings</li>
+<li>Visualise word embeddings</li>
+<li>Solve analogies</li>
+<li>(Optional) Train your own word2vec model</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section level1">
+<h1 id="what-are-word-embeddings">What are word embeddings?<a class="anchor" aria-label="anchor" href="#what-are-word-embeddings"></a>
+</h1>
+<p><strong>You shall know a word by the company it keeps</strong> - J.
+R. Firth, 1957</p>
+<p>In this episode, we’ll go over the concept of embedding, and the
+steps to generate and explore word embeddings with Word2vec.</p>
+<p>We know that computers understand the language of numbers, so in
+order to let the computer process natural language, we must encode words
+in a sentence to numbers (i.e., vectors). Ideally, you can “transform”
+text in numbers in many ways. For instance, take the sentence
+<code>the cat sat on the mat</code>.</p>
+<p>We could transform this sentence into a matrix in Python. The matrix
+will have the number of columns equals to the length of unique words in
+the corpus (i.e., 5 in our case) and number of words we are encoding
+(i.e., 6 in this example).</p>
+<div class="codewrapper sourceCode" id="cb1">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>sentence <span class="op">=</span> [<span class="st">"the"</span>, <span class="st">"cat"</span>, <span class="st">"sat"</span>, <span class="st">"on"</span>, <span class="st">"the"</span>,<span class="st">"mat"</span>]</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>words <span class="op">=</span> [<span class="st">"cat"</span>, <span class="st">"mat"</span>, <span class="st">"on"</span>, <span class="st">"sat"</span>, <span class="st">"the"</span>]</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>data <span class="op">=</span> np.array([</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>    [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>],</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>    [<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>],</span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>    [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>],</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>    [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>],</span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>    [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>],</span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>    [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>],</span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>])</span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>table <span class="op">=</span> ax.table(cellText<span class="op">=</span>data, rowLabels<span class="op">=</span>sentence, colLabels<span class="op">=</span>words, cellLoc<span class="op">=</span><span class="st">'center'</span>, loc<span class="op">=</span><span class="st">'center'</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a>ax.axis(<span class="st">'off'</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a>plt.title(<span class="st">'the cat sat on the mat'</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a>plt.show()</span></code></pre>
+</div>
+<p>and count how many times we encounter a word by putting 1s (present)
+and 0s (absent). This approach is described as one-hot encoding:</p>
+<table class="table">
+<thead><tr class="header">
+<th></th>
+<th>cat</th>
+<th>mat</th>
+<th>on</th>
+<th>sat</th>
+<th>the</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>the</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>cat</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>sat</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>on</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>the</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>mat</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>To encode the word <code>cat</code> into a vector, you may
+concatenate each value in the vector cat = [1, 0, 0, 0, 0]. This would
+give us a unique fingerprint describing the word cat, and
+differentiating it from the other ones in the sentence. The downside of
+this approach is that you get a vector that is very sparse, i.e., it
+will contain a lot of 0s and only very few 1s. For very long documents
+(imagine billion of words) this approach becomes inefficient very
+quickly. In addition, we don’t get any information about the syntactic
+and semantic relationship of the words.</p>
+<p>Another strategy, is to map each word to a number. This approach is
+referred to as ordinal encoding:</p>
+<table class="table">
+<thead><tr class="header">
+<th>cat</th>
+<th>mat</th>
+<th>on</th>
+<th>sat</th>
+<th>the</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+</tr></tbody>
+</table>
+<p>So that the sentence can be mapped as:</p>
+<div class="codewrapper sourceCode" id="cb2">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>sentence <span class="op">=</span> [<span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">1</span>]</span></code></pre>
+</div>
+<p>This approach is much more efficient as it links each word to one
+numeric identifier. However, the choice for this identifier is quite
+arbitrary – what does it mean that cat is 0? Does it change anything if
+it is encoded as 2? Moreover, there is no way to represent the
+relationship among words, e.g., how <code>cat</code>/0 relates to
+<code>mat</code>/1 ? So with this approach we gain in efficiency, but
+still we don’t solve the problem of encoding semantic and syntactic
+information present in the text.</p>
+<div class="section level2">
+<h2 id="word-embeddings">Word embeddings<a class="anchor" aria-label="anchor" href="#word-embeddings"></a>
+</h2>
+<p>A Word Embedding is a word representation type that maps words in a
+numerical manner (i.e., into vectors), however, differently from the
+approaches above, it organises information into an <em>efficient</em>,
+i.e., <em>dense</em>, representation in which semantic and syntactic
+features in the text are preserved. In this representation, words are
+described in a multidimensional space whereby similar words have a
+similar encoding. This allows us to describe them fully, and make
+comparisons among words.</p>
+<p>Since word embeddings are essentially vectors, let’s see an example
+to get familiar with the idea of representing things into vectors. We
+use again the word <code>cat</code> and we try to describe this animal
+based on its characteristics. For instance, its furriness. Let’s say
+that we measured the cat’s furriness (in some magical way) and we found
+out that a cat has a score of <code>70</code> in furriness.</p>
+<figure><img src="../fig/emb1.png" class="figure mx-auto d-block"><div class="figcaption">Embedding of a cat - We measured its furriness
+and found out it’s 70!</div>
+</figure><p>Do you think we have described sufficiently this animal? Perhaps we
+can add another characteristic: Number of legs.</p>
+<figure><img src="../fig/emb3.png" class="figure mx-auto d-block"><div class="figcaption">Embedding of a cat - We have described it along
+two dimensions: furriness and number of legs</div>
+</figure><p>We have now at least two characteristics that describe this animal.
+This is certainly not enough to describe this animal in
+<strong>full</strong>, however this approximation becomes helpful when
+we have to compare other animals, such as a dog.</p>
+<figure><img src="../fig/emb4.png" class="figure mx-auto d-block"><div class="figcaption">Embeddings of a cat and a dog</div>
+</figure><p>And what about a caterpillar?</p>
+<figure><img src="../fig/emb5.png" class="figure mx-auto d-block"><div class="figcaption">Embeddings of a cat and a dog and a
+caterpillar</div>
+</figure><p>Which of these two animals (dog vs caterpillar) is more similar to a
+cat? We can compute the similarity among those vectors with the function
+<code>cosine_similarity()</code> in Python, from the
+<code>sklearn</code> library.</p>
+<div id="callout1" class="callout">
+<div class="callout-square">
+<i class="callout-icon" data-feather="bell"></i>
+</div>
+<div class="callout-inner">
+<h3 class="callout-title">Callout<a class="anchor" aria-label="anchor" href="#callout1"></a>
+</h3>
+<div class="callout-content">
+<p><a href="https://en.wikipedia.org/wiki/Cosine_similarity" class="external-link">cosine
+similarity</a> ranges between [<code>-1</code> and <code>1</code>]. It
+is the cosine of the angle between two vectors, divided by the product
+of their length. It is a useful metric to measure how similar two
+vectors are likely to be.</p>
+<figure><img src="../fig/emb12.png" alt="" class="figure mx-auto d-block"></figure>
+</div>
+</div>
+</div>
+<div class="codewrapper sourceCode" id="cb3">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="im">from</span> sklearn.metrics.pairwise <span class="im">import</span> cosine_similarity</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>cat <span class="op">=</span> np.asarray([[<span class="dv">70</span>, <span class="dv">4</span>]])</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>dog <span class="op">=</span> np.asarray([[<span class="dv">56</span>, <span class="dv">4</span>]])</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>caterpillar <span class="op">=</span> np.asarray([[<span class="dv">70</span>, <span class="dv">100</span>]])</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>cosine_similarity(cat, dog)</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>cosine_similarity(cat, caterpillar)</span></code></pre>
+</div>
+<p>Output:</p>
+<div class="codewrapper sourceCode" id="cb4">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>array([[<span class="fl">0.9998988</span>]])</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>array([[<span class="fl">0.61926538</span>]])</span></code></pre>
+</div>
+<ul>
+<li>Cosine similarity between cat and dog: 0.9998988</li>
+<li>Cosine similarity between cat and caterpillar: 0.61926538</li>
+</ul>
+<p>So the similarity between a cat and a dog is <em>higher</em> than a
+cat and a caterpillar. Therefore, based on these two traits, we can
+conclude that a cat is much more similar to a dog than a
+caterpillar.</p>
+<p>We can of course add other dimensions to describe these animals:</p>
+<figure><img src="../fig/emb6.png" class="figure mx-auto d-block"><div class="figcaption">Embeddings of a cat and a dog and a caterpillar
+- We can describe these animals in many dimensions!</div>
+</figure><div id="challenge1" class="callout challenge">
+<div class="callout-square">
+<i class="callout-icon" data-feather="zap"></i>
+</div>
+<div class="callout-inner">
+<h3 class="callout-title">Challenge<a class="anchor" aria-label="anchor" href="#challenge1"></a>
+</h3>
+<div class="callout-content">
+<ul>
+<li>Add one of two other dimensions. What characteristics could they
+map?</li>
+<li>Add another animal and map their dimensions</li>
+<li>Compute again the cosine similarity among those animals and find the
+couple that is the least similar and the most similar</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="accordionSolution1" class="accordion challenge-accordion accordion-flush">
+<div class="accordion-item">
+<button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution1" aria-expanded="false" aria-controls="collapseSolution1">
+  <h4 class="accordion-header" id="headingSolution1"> Show me the solution </h4>
+</button>
+<div id="collapseSolution1" class="accordion-collapse collapse" data-bs-parent="#accordionSolution1" aria-labelledby="headingSolution1">
+<div class="accordion-body">
+<ol style="list-style-type: decimal">
+<li>Add one of two other dimensions</li>
+</ol>
+<p>We could add the dimension of “velocity” or “speed” that goes from 0
+to 100 meters/second.</p>
+<ul>
+<li>Caterpillar: 0.001 m/s</li>
+<li>Cat: 1.5 m/s</li>
+<li>Dog: 2.5 m/s</li>
+</ul>
+<p>(just as an example, actual speeds may vary)</p>
+<div class="codewrapper sourceCode" id="cb5">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>cat <span class="op">=</span> np.asarray([[<span class="dv">70</span>, <span class="dv">4</span>, <span class="fl">1.5</span>]])</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>dog <span class="op">=</span> np.asarray([[<span class="dv">56</span>, <span class="dv">4</span>, <span class="fl">2.5</span>]])</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>caterpillar <span class="op">=</span> np.asarray([[<span class="dv">70</span>, <span class="dv">100</span>, <span class="fl">.001</span>]])</span></code></pre>
+</div>
+<p>Another dimension could be weight in Kg:</p>
+<ul>
+<li>Caterpillar: .05 Kg</li>
+<li>Cat: 4 Kg</li>
+<li>Dog: 15 Kg</li>
+</ul>
+<p>(just as an example, actual weight may vary)</p>
+<div class="codewrapper sourceCode" id="cb6">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>cat <span class="op">=</span> np.asarray([[<span class="dv">70</span>, <span class="dv">4</span>, <span class="fl">1.5</span>, <span class="dv">4</span>]])</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>dog <span class="op">=</span> np.asarray([[<span class="dv">56</span>, <span class="dv">4</span>, <span class="fl">2.5</span>, <span class="dv">15</span>]])</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>caterpillar <span class="op">=</span> np.asarray([[<span class="dv">70</span>, <span class="dv">100</span>, <span class="fl">.001</span>, <span class="fl">.05</span>]])</span></code></pre>
+</div>
+<p>Then the cosine similarity would be:</p>
+<div class="codewrapper sourceCode" id="cb7">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>cosine_similarity(cat, caterpillar)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>cosine_similarity(cat, dog)</span></code></pre>
+</div>
+<p>Output:</p>
+<div class="codewrapper sourceCode" id="cb8">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>array([[<span class="fl">0.61814254</span>]])</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>array([[<span class="fl">0.97893809</span>]])</span></code></pre>
+</div>
+<ol start="2" style="list-style-type: decimal">
+<li>Add another animal and map their dimensions</li>
+</ol>
+<p>Another animal that we could add is the Tarantula!</p>
+<div class="codewrapper sourceCode" id="cb9">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>cat <span class="op">=</span> np.asarray([[<span class="dv">70</span>, <span class="dv">4</span>, <span class="fl">1.5</span>, <span class="dv">4</span>]])</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>dog <span class="op">=</span> np.asarray([[<span class="dv">56</span>, <span class="dv">4</span>, <span class="fl">2.5</span>, <span class="dv">15</span>]])</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>caterpillar <span class="op">=</span> np.asarray([[<span class="dv">70</span>, <span class="dv">100</span>, <span class="fl">.001</span>, <span class="fl">.05</span>]])</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>tarantula <span class="op">=</span> np.asarray([[<span class="dv">80</span>, <span class="dv">6</span>, <span class="fl">.1</span>, <span class="fl">.3</span>]])</span></code></pre>
+</div>
+<ol start="3" style="list-style-type: decimal">
+<li>Compute again the cosine similarity among those animals - find out
+the most and least similar couple</li>
+</ol>
+<p>Given the values above, the least similar couple is the dog and the
+caterpillar, whose cosine similarity is
+<code>array([[0.60855407]])</code>.</p>
+<p>The most similar couple is the cat and the tarantula:
+<code>array([[0.99822302]])</code></p>
+</div>
+</div>
+</div>
+</div>
+<p>Once we add multiple dimensions the animals’ description become more
+complex, but also richer, therefore our comparisons become much more
+precise.</p>
+<p>The downside of this approach is that once we get more than 3
+dimensions it becomes very difficult to represent the relationships
+among words with little arrows. However, the
+<code>cosine_similarity()</code> will always work, regardless of the
+number of dimensions.</p>
+<p>This example showed us an intuitive way of representing things into
+vectors. An embedding is after all a way to translate words into
+vectors. However, this is the extent to which this example tells us
+something about what word embeddings are. The reason for this is that
+the way embeddings are constructed is of course not that
+straight-forward. We’ll see how these are built in the next section,
+whereby we introduce the <code>word2vec</code> model.</p>
+<div class="section level3">
+<h3 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
+</h3>
+<p>In this example we have made our own translation of the word cat, dog
+and caterpillar into vectors, with dimensions that we chose arbitrarily.
+Those dimensions were chosen because they were easy to measure and to
+see with our own eyes. However, when we deal with word embeddings
+trained on a corpus, it’s not clear how words relate their vector
+structure. That is, it’s difficult to know what the dimensions stand
+for. These can be many (the number must be limited by us) and it’s
+unknown what they map to in the text.</p>
+<div id="keypoints1" class="callout keypoints">
+<div class="callout-square">
+<i class="callout-icon" data-feather="key"></i>
+</div>
+<div class="callout-inner">
+<h3 class="callout-title">Key Points<a class="anchor" aria-label="anchor" href="#keypoints1"></a>
+</h3>
+<div class="callout-content">
+<ul>
+<li>We can represent text as vectors of numbers (which makes it
+interpretable for machines)</li>
+<li>The most efficient and useful way is to use word embeddings</li>
+<li>We can easily compute how words are similar to each other with the
+cosine similarity</li>
+<li>Dimensions in corpus-based word embeddings are many and not
+transparent</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section level1">
+<h1 id="word2vec-model">Word2vec model<a class="anchor" aria-label="anchor" href="#word2vec-model"></a>
+</h1>
+<p>Word2Vec is a two-layer neural network that processes raw text and
+returns us the respective word-vectors (i.e., <em>word embeddings</em>).
+Published in 2013 by Tomas Mikolov et al., it has been one of the most
+influential deep-learning techniques in NLP.</p>
+<p>To produce word embeddings, the training task of the
+<code>word2vec</code> consists of predicting words. The authors propose
+two possible ways (and therefore architectures) to solve this task:</p>
+<ul>
+<li><p>The continuous bag-of-words (CBOW) model: In this architecture,
+the task consists in predicting the correct target word, given a certain
+context (words coming before and after the target word).</p></li>
+<li><p>The continuous skip-gram model: In this architecture, the task
+consists in predicting the correct context words, given a target
+word.</p></li>
+</ul>
+<figure><img src="../fig/emb13.png" class="figure mx-auto d-block"><div class="figcaption">Schematic representations of the different
+prediction tasks that CBOW and Skip-gram try to solve</div>
+</figure><p>In general, CBOW is faster to train, but the Skip-gram is more
+accurate thanks to its ability to learn infrequent words. In both
+architectures, increasing the <em>context size</em> (i.e., number of
+context words) leads to better embeddings but also increases the
+training time.</p>
+<p>Regardless of the architecture, however, words that appear in the
+same context will end up having very similar vectors. Let’s now look at
+the created embeddings.</p>
+<p>we have two choices: Train a word2vec model on our own or use a
+pre-trained one.</p>
+<p>Word embeddings become better and better at representing the words
+(i.e., a word vector becomes more specific) within the text with the
+size of the training material. Think of all the books, articles,
+Wikipedia content, and other forms of text data we have lying around.
+These massive amount of text can be used to train a word2vec model and
+extract the relative embeddings, which will be particularly informative
+due to the size of the training input. If we were to train a word2vec
+model on this amount of data, we would first need the raw text, a
+powerful machine to process it, and some spare time to wait for the
+model to complete training. However, luckily for us someone else has
+done this training already, and we can load the output of this training
+(i.e., their pretrained word2vec model) on our local machine.</p>
+<p>In this section we are going to look at a pre-trained word2vec model
+(that is, pre-computed <em>word embeddings</em>) and at some of their
+properties. Towards the end of the section we’re going to compare this
+model with a word2vec model that we trained on our own on a small subset
+of the Gutenberg books we introduced in the previous episode.</p>
+<p>We use the trained word2vec model named
+<code>word2vec-google-news-300</code> from the <code>gensim</code>
+library. This model is trained on a part of the Google News dataset
+(about 100 billion words). The model contains 300-dimensional vectors
+for 3 million words and phrases.</p>
+<p>We can download this model locally with this code:</p>
+<div class="codewrapper sourceCode" id="cb10">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="im">import</span> gensim.downloader</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>google_vectors <span class="op">=</span> gensim.downloader.load(<span class="st">'word2vec-google-news-300'</span>)</span></code></pre>
+</div>
+<div id="callout2" class="callout">
+<div class="callout-square">
+<i class="callout-icon" data-feather="bell"></i>
+</div>
+<div class="callout-inner">
+<h3 class="callout-title">Callout<a class="anchor" aria-label="anchor" href="#callout2"></a>
+</h3>
+<div class="callout-content">
+<p>Note that <code>gensim</code> includes various models for word
+representations, not just <code>Word2Vec</code>. These include
+<code>FastText</code>, <code>Glove</code>, <code>ConceptNet</code>, etc.
+These methods capture different aspects of word and subword
+information.</p>
+<p>You can see how many (and which) pretrained model the
+<code>gensim</code> library contains with the following code
+snippet:</p>
+<div class="codewrapper sourceCode" id="cb11">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">list</span>(gensim.downloader.info()[<span class="st">'models'</span>].keys()))</span></code></pre>
+</div>
+<p>Output:</p>
+<div class="codewrapper sourceCode" id="cb12">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>[<span class="st">'fasttext-wiki-news-subwords-300'</span>, <span class="st">'conceptnet-numberbatch-17-06-300'</span>, <span class="st">'word2vec-ruscorpora-300'</span>, <span class="st">'word2vec-google-news-300'</span>, <span class="st">'glove-wiki-gigaword-50'</span>, <span class="st">'glove-wiki-gigaword-100'</span>, <span class="st">'glove-wiki-gigaword-200'</span>, <span class="st">'glove-wiki-gigaword-300'</span>, <span class="st">'glove-twitter-25'</span>, <span class="st">'glove-twitter-50'</span>, <span class="st">'glove-twitter-100'</span>, <span class="st">'glove-twitter-200'</span>, <span class="st">'__testing_word2vec-matrix-synopsis'</span>]</span></code></pre>
+</div>
+<p>In the context of this episode we focus on <code>Word2Vec</code>
+only, as this is the most famous.</p>
+</div>
+</div>
+</div>
+<p>Next, we can look at the embedding of the word <code>king</code>:</p>
+<div class="codewrapper sourceCode" id="cb13">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="bu">print</span>(google_vectors[<span class="st">'king'</span>])</span></code></pre>
+</div>
+<p>Output:</p>
+<div class="codewrapper sourceCode" id="cb14">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>[ <span class="fl">1.25976562e-01</span>  <span class="fl">2.97851562e-02</span>  <span class="fl">8.60595703e-03</span>  <span class="fl">1.39648438e-01</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a> <span class="op">-</span><span class="fl">2.56347656e-02</span> <span class="op">-</span><span class="fl">3.61328125e-02</span>  <span class="fl">1.11816406e-01</span> <span class="op">-</span><span class="fl">1.98242188e-01</span></span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>  <span class="fl">5.12695312e-02</span>  <span class="fl">3.63281250e-01</span> <span class="op">-</span><span class="fl">2.42187500e-01</span> <span class="op">-</span><span class="fl">3.02734375e-01</span></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a> <span class="op">-</span><span class="fl">1.77734375e-01</span> <span class="op">-</span><span class="fl">2.49023438e-02</span> <span class="op">-</span><span class="fl">1.67968750e-01</span> <span class="op">-</span><span class="fl">1.69921875e-01</span></span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>  <span class="fl">3.46679688e-02</span>  <span class="fl">5.21850586e-03</span>  <span class="fl">4.63867188e-02</span>  <span class="fl">1.28906250e-01</span></span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>  <span class="fl">1.36718750e-01</span>  <span class="fl">1.12792969e-01</span>  <span class="fl">5.95703125e-02</span>  <span class="fl">1.36718750e-01</span></span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a>  <span class="fl">1.01074219e-01</span> <span class="op">-</span><span class="fl">1.76757812e-01</span> <span class="op">-</span><span class="fl">2.51953125e-01</span>  <span class="fl">5.98144531e-02</span></span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a>  <span class="fl">3.41796875e-01</span> <span class="op">-</span><span class="fl">3.11279297e-02</span>  <span class="fl">1.04492188e-01</span>  <span class="fl">6.17675781e-02</span></span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a>  <span class="fl">1.24511719e-01</span>  <span class="fl">4.00390625e-01</span> <span class="op">-</span><span class="fl">3.22265625e-01</span>  <span class="fl">8.39843750e-02</span></span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a>  <span class="fl">3.90625000e-02</span>  <span class="fl">5.85937500e-03</span>  <span class="fl">7.03125000e-02</span>  <span class="fl">1.72851562e-01</span></span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a>  <span class="fl">1.38671875e-01</span> <span class="op">-</span><span class="fl">2.31445312e-01</span>  <span class="fl">2.83203125e-01</span>  <span class="fl">1.42578125e-01</span></span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a>  <span class="fl">3.41796875e-01</span> <span class="op">-</span><span class="fl">2.39257812e-02</span> <span class="op">-</span><span class="fl">1.09863281e-01</span>  <span class="fl">3.32031250e-02</span></span>
+<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a> <span class="op">-</span><span class="fl">5.46875000e-02</span>  <span class="fl">1.53198242e-02</span> <span class="op">-</span><span class="fl">1.62109375e-01</span>  <span class="fl">1.58203125e-01</span></span>
+<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a> <span class="op">-</span><span class="fl">2.59765625e-01</span>  <span class="fl">2.01416016e-02</span> <span class="op">-</span><span class="fl">1.63085938e-01</span>  <span class="fl">1.35803223e-03</span></span>
+<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a> <span class="op">-</span><span class="fl">1.44531250e-01</span> <span class="op">-</span><span class="fl">5.68847656e-02</span>  <span class="fl">4.29687500e-02</span> <span class="op">-</span><span class="fl">2.46582031e-02</span></span>
+<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a>  <span class="fl">1.85546875e-01</span>  <span class="fl">4.47265625e-01</span>  <span class="fl">9.58251953e-03</span>  <span class="fl">1.31835938e-01</span></span>
+<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a>  <span class="fl">9.86328125e-02</span> <span class="op">-</span><span class="fl">1.85546875e-01</span> <span class="op">-</span><span class="fl">1.00097656e-01</span> <span class="op">-</span><span class="fl">1.33789062e-01</span></span>
+<span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a> <span class="op">-</span><span class="fl">1.25000000e-01</span>  <span class="fl">2.83203125e-01</span>  <span class="fl">1.23046875e-01</span>  <span class="fl">5.32226562e-02</span></span>
+<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a> <span class="op">-</span><span class="fl">1.77734375e-01</span>  <span class="fl">8.59375000e-02</span> <span class="op">-</span><span class="fl">2.18505859e-02</span>  <span class="fl">2.05078125e-02</span></span>
+<span id="cb14-20"><a href="#cb14-20" tabindex="-1"></a> <span class="op">-</span><span class="fl">1.39648438e-01</span>  <span class="fl">2.51464844e-02</span>  <span class="fl">1.38671875e-01</span> <span class="op">-</span><span class="fl">1.05468750e-01</span></span>
+<span id="cb14-21"><a href="#cb14-21" tabindex="-1"></a>  <span class="fl">1.38671875e-01</span>  <span class="fl">8.88671875e-02</span> <span class="op">-</span><span class="fl">7.51953125e-02</span> <span class="op">-</span><span class="fl">2.13623047e-02</span></span>
+<span id="cb14-22"><a href="#cb14-22" tabindex="-1"></a>  <span class="fl">1.72851562e-01</span>  <span class="fl">4.63867188e-02</span> <span class="op">-</span><span class="fl">2.65625000e-01</span>  <span class="fl">8.91113281e-03</span></span>
+<span id="cb14-23"><a href="#cb14-23" tabindex="-1"></a>  <span class="fl">1.49414062e-01</span>  <span class="fl">3.78417969e-02</span>  <span class="fl">2.38281250e-01</span> <span class="op">-</span><span class="fl">1.24511719e-01</span></span>
+<span id="cb14-24"><a href="#cb14-24" tabindex="-1"></a> <span class="op">-</span><span class="fl">2.17773438e-01</span> <span class="op">-</span><span class="fl">1.81640625e-01</span>  <span class="fl">2.97851562e-02</span>  <span class="fl">5.71289062e-02</span></span>
+<span id="cb14-25"><a href="#cb14-25" tabindex="-1"></a> <span class="op">-</span><span class="fl">2.89306641e-02</span>  <span class="fl">1.24511719e-02</span>  <span class="fl">9.66796875e-02</span> <span class="op">-</span><span class="fl">2.31445312e-01</span></span>
+<span id="cb14-26"><a href="#cb14-26" tabindex="-1"></a>  <span class="fl">5.81054688e-02</span>  <span class="fl">6.68945312e-02</span>  <span class="fl">7.08007812e-02</span> <span class="op">-</span><span class="fl">3.08593750e-01</span></span>
+<span id="cb14-27"><a href="#cb14-27" tabindex="-1"></a> <span class="op">-</span><span class="fl">2.14843750e-01</span>  <span class="fl">1.45507812e-01</span> <span class="op">-</span><span class="fl">4.27734375e-01</span> <span class="op">-</span><span class="fl">9.39941406e-03</span></span>
+<span id="cb14-28"><a href="#cb14-28" tabindex="-1"></a>  <span class="fl">1.54296875e-01</span> <span class="op">-</span><span class="fl">7.66601562e-02</span>  <span class="fl">2.89062500e-01</span>  <span class="fl">2.77343750e-01</span></span>
+<span id="cb14-29"><a href="#cb14-29" tabindex="-1"></a> <span class="op">-</span><span class="fl">4.86373901e-04</span> <span class="op">-</span><span class="fl">1.36718750e-01</span>  <span class="fl">3.24218750e-01</span> <span class="op">-</span><span class="fl">2.46093750e-01</span></span>
+<span id="cb14-30"><a href="#cb14-30" tabindex="-1"></a> <span class="op">-</span><span class="fl">3.03649902e-03</span> <span class="op">-</span><span class="fl">2.11914062e-01</span>  <span class="fl">1.25000000e-01</span>  <span class="fl">2.69531250e-01</span></span>
+<span id="cb14-31"><a href="#cb14-31" tabindex="-1"></a>  <span class="fl">2.04101562e-01</span>  <span class="fl">8.25195312e-02</span> <span class="op">-</span><span class="fl">2.01171875e-01</span> <span class="op">-</span><span class="fl">1.60156250e-01</span></span>
+<span id="cb14-32"><a href="#cb14-32" tabindex="-1"></a> <span class="op">-</span><span class="fl">3.78417969e-02</span> <span class="op">-</span><span class="fl">1.20117188e-01</span>  <span class="fl">1.15234375e-01</span> <span class="op">-</span><span class="fl">4.10156250e-02</span></span>
+<span id="cb14-33"><a href="#cb14-33" tabindex="-1"></a> <span class="op">-</span><span class="fl">3.95507812e-02</span> <span class="op">-</span><span class="fl">8.98437500e-02</span>  <span class="fl">6.34765625e-03</span>  <span class="fl">2.03125000e-01</span></span>
+<span id="cb14-34"><a href="#cb14-34" tabindex="-1"></a>  <span class="fl">1.86523438e-01</span>  <span class="fl">2.73437500e-01</span>  <span class="fl">6.29882812e-02</span>  <span class="fl">1.41601562e-01</span></span>
+<span id="cb14-35"><a href="#cb14-35" tabindex="-1"></a> <span class="op">-</span><span class="fl">9.81445312e-02</span>  <span class="fl">1.38671875e-01</span>  <span class="fl">1.82617188e-01</span>  <span class="fl">1.73828125e-01</span></span>
+<span id="cb14-36"><a href="#cb14-36" tabindex="-1"></a>  <span class="fl">1.73828125e-01</span> <span class="op">-</span><span class="fl">2.37304688e-01</span>  <span class="fl">1.78710938e-01</span>  <span class="fl">6.34765625e-02</span></span>
+<span id="cb14-37"><a href="#cb14-37" tabindex="-1"></a>  <span class="fl">2.36328125e-01</span> <span class="op">-</span><span class="fl">2.08984375e-01</span>  <span class="fl">8.74023438e-02</span> <span class="op">-</span><span class="fl">1.66015625e-01</span></span>
+<span id="cb14-38"><a href="#cb14-38" tabindex="-1"></a> <span class="op">-</span><span class="fl">7.91015625e-02</span>  <span class="fl">2.43164062e-01</span> <span class="op">-</span><span class="fl">8.88671875e-02</span>  <span class="fl">1.26953125e-01</span></span>
+<span id="cb14-39"><a href="#cb14-39" tabindex="-1"></a> <span class="op">-</span><span class="fl">2.16796875e-01</span> <span class="op">-</span><span class="fl">1.73828125e-01</span> <span class="op">-</span><span class="fl">3.59375000e-01</span> <span class="op">-</span><span class="fl">8.25195312e-02</span></span>
+<span id="cb14-40"><a href="#cb14-40" tabindex="-1"></a> <span class="op">-</span><span class="fl">6.49414062e-02</span>  <span class="fl">5.07812500e-02</span>  <span class="fl">1.35742188e-01</span> <span class="op">-</span><span class="fl">7.47070312e-02</span></span>
+<span id="cb14-41"><a href="#cb14-41" tabindex="-1"></a> <span class="op">-</span><span class="fl">1.64062500e-01</span>  <span class="fl">1.15356445e-02</span>  <span class="fl">4.45312500e-01</span> <span class="op">-</span><span class="fl">2.15820312e-01</span></span>
+<span id="cb14-42"><a href="#cb14-42" tabindex="-1"></a> <span class="op">-</span><span class="fl">1.11328125e-01</span> <span class="op">-</span><span class="fl">1.92382812e-01</span>  <span class="fl">1.70898438e-01</span> <span class="op">-</span><span class="fl">1.25000000e-01</span></span>
+<span id="cb14-43"><a href="#cb14-43" tabindex="-1"></a>  <span class="fl">2.65502930e-03</span>  <span class="fl">1.92382812e-01</span> <span class="op">-</span><span class="fl">1.74804688e-01</span>  <span class="fl">1.39648438e-01</span></span>
+<span id="cb14-44"><a href="#cb14-44" tabindex="-1"></a>  <span class="fl">2.92968750e-01</span>  <span class="fl">1.13281250e-01</span>  <span class="fl">5.95703125e-02</span> <span class="op">-</span><span class="fl">6.39648438e-02</span></span>
+<span id="cb14-45"><a href="#cb14-45" tabindex="-1"></a>  <span class="fl">9.96093750e-02</span> <span class="op">-</span><span class="fl">2.72216797e-02</span>  <span class="fl">1.96533203e-02</span>  <span class="fl">4.27246094e-02</span></span>
+<span id="cb14-46"><a href="#cb14-46" tabindex="-1"></a> <span class="op">-</span><span class="fl">2.46093750e-01</span>  <span class="fl">6.39648438e-02</span> <span class="op">-</span><span class="fl">2.25585938e-01</span> <span class="op">-</span><span class="fl">1.68945312e-01</span></span>
+<span id="cb14-47"><a href="#cb14-47" tabindex="-1"></a>  <span class="fl">2.89916992e-03</span>  <span class="fl">8.20312500e-02</span>  <span class="fl">3.41796875e-01</span>  <span class="fl">4.32128906e-02</span></span>
+<span id="cb14-48"><a href="#cb14-48" tabindex="-1"></a>  <span class="fl">1.32812500e-01</span>  <span class="fl">1.42578125e-01</span>  <span class="fl">7.61718750e-02</span>  <span class="fl">5.98144531e-02</span></span>
+<span id="cb14-49"><a href="#cb14-49" tabindex="-1"></a> <span class="op">-</span><span class="fl">1.19140625e-01</span>  <span class="fl">2.74658203e-03</span> <span class="op">-</span><span class="fl">6.29882812e-02</span> <span class="op">-</span><span class="fl">2.72216797e-02</span></span>
+<span id="cb14-50"><a href="#cb14-50" tabindex="-1"></a> <span class="op">-</span><span class="fl">4.82177734e-03</span> <span class="op">-</span><span class="fl">8.20312500e-02</span> <span class="op">-</span><span class="fl">2.49023438e-02</span> <span class="op">-</span><span class="fl">4.00390625e-01</span></span>
+<span id="cb14-51"><a href="#cb14-51" tabindex="-1"></a> <span class="op">-</span><span class="fl">1.06933594e-01</span>  <span class="fl">4.24804688e-02</span>  <span class="fl">7.76367188e-02</span> <span class="op">-</span><span class="fl">1.16699219e-01</span></span>
+<span id="cb14-52"><a href="#cb14-52" tabindex="-1"></a>  <span class="fl">7.37304688e-02</span> <span class="op">-</span><span class="fl">9.22851562e-02</span>  <span class="fl">1.07910156e-01</span>  <span class="fl">1.58203125e-01</span></span>
+<span id="cb14-53"><a href="#cb14-53" tabindex="-1"></a>  <span class="fl">4.24804688e-02</span>  <span class="fl">1.26953125e-01</span>  <span class="fl">3.61328125e-02</span>  <span class="fl">2.67578125e-01</span></span>
+<span id="cb14-54"><a href="#cb14-54" tabindex="-1"></a> <span class="op">-</span><span class="fl">1.01074219e-01</span> <span class="op">-</span><span class="fl">3.02734375e-01</span> <span class="op">-</span><span class="fl">5.76171875e-02</span>  <span class="fl">5.05371094e-02</span></span>
+<span id="cb14-55"><a href="#cb14-55" tabindex="-1"></a>  <span class="fl">5.26428223e-04</span> <span class="op">-</span><span class="fl">2.07031250e-01</span> <span class="op">-</span><span class="fl">1.38671875e-01</span> <span class="op">-</span><span class="fl">8.97216797e-03</span></span>
+<span id="cb14-56"><a href="#cb14-56" tabindex="-1"></a> <span class="op">-</span><span class="fl">2.78320312e-02</span> <span class="op">-</span><span class="fl">1.41601562e-01</span>  <span class="fl">2.07031250e-01</span> <span class="op">-</span><span class="fl">1.58203125e-01</span></span>
+<span id="cb14-57"><a href="#cb14-57" tabindex="-1"></a>  <span class="fl">1.27929688e-01</span>  <span class="fl">1.49414062e-01</span> <span class="op">-</span><span class="fl">2.24609375e-02</span> <span class="op">-</span><span class="fl">8.44726562e-02</span></span>
+<span id="cb14-58"><a href="#cb14-58" tabindex="-1"></a>  <span class="fl">1.22558594e-01</span>  <span class="fl">2.15820312e-01</span> <span class="op">-</span><span class="fl">2.13867188e-01</span> <span class="op">-</span><span class="fl">3.12500000e-01</span></span>
+<span id="cb14-59"><a href="#cb14-59" tabindex="-1"></a> <span class="op">-</span><span class="fl">3.73046875e-01</span>  <span class="fl">4.08935547e-03</span>  <span class="fl">1.07421875e-01</span>  <span class="fl">1.06933594e-01</span></span>
+<span id="cb14-60"><a href="#cb14-60" tabindex="-1"></a>  <span class="fl">7.32421875e-02</span>  <span class="fl">8.97216797e-03</span> <span class="op">-</span><span class="fl">3.88183594e-02</span> <span class="op">-</span><span class="fl">1.29882812e-01</span></span>
+<span id="cb14-61"><a href="#cb14-61" tabindex="-1"></a>  <span class="fl">1.49414062e-01</span> <span class="op">-</span><span class="fl">2.14843750e-01</span> <span class="op">-</span><span class="fl">1.83868408e-03</span>  <span class="fl">9.91210938e-02</span></span>
+<span id="cb14-62"><a href="#cb14-62" tabindex="-1"></a>  <span class="fl">1.57226562e-01</span> <span class="op">-</span><span class="fl">1.14257812e-01</span> <span class="op">-</span><span class="fl">2.05078125e-01</span>  <span class="fl">9.91210938e-02</span></span>
+<span id="cb14-63"><a href="#cb14-63" tabindex="-1"></a>  <span class="fl">3.69140625e-01</span> <span class="op">-</span><span class="fl">1.97265625e-01</span>  <span class="fl">3.54003906e-02</span>  <span class="fl">1.09375000e-01</span></span>
+<span id="cb14-64"><a href="#cb14-64" tabindex="-1"></a>  <span class="fl">1.31835938e-01</span>  <span class="fl">1.66992188e-01</span>  <span class="fl">2.35351562e-01</span>  <span class="fl">1.04980469e-01</span></span>
+<span id="cb14-65"><a href="#cb14-65" tabindex="-1"></a> <span class="op">-</span><span class="fl">4.96093750e-01</span> <span class="op">-</span><span class="fl">1.64062500e-01</span> <span class="op">-</span><span class="fl">1.56250000e-01</span> <span class="op">-</span><span class="fl">5.22460938e-02</span></span>
+<span id="cb14-66"><a href="#cb14-66" tabindex="-1"></a>  <span class="fl">1.03027344e-01</span>  <span class="fl">2.43164062e-01</span> <span class="op">-</span><span class="fl">1.88476562e-01</span>  <span class="fl">5.07812500e-02</span></span>
+<span id="cb14-67"><a href="#cb14-67" tabindex="-1"></a> <span class="op">-</span><span class="fl">9.37500000e-02</span> <span class="op">-</span><span class="fl">6.68945312e-02</span>  <span class="fl">2.27050781e-02</span>  <span class="fl">7.61718750e-02</span></span>
+<span id="cb14-68"><a href="#cb14-68" tabindex="-1"></a>  <span class="fl">2.89062500e-01</span>  <span class="fl">3.10546875e-01</span> <span class="op">-</span><span class="fl">5.37109375e-02</span>  <span class="fl">2.28515625e-01</span></span>
+<span id="cb14-69"><a href="#cb14-69" tabindex="-1"></a>  <span class="fl">2.51464844e-02</span>  <span class="fl">6.78710938e-02</span> <span class="op">-</span><span class="fl">1.21093750e-01</span> <span class="op">-</span><span class="fl">2.15820312e-01</span></span>
+<span id="cb14-70"><a href="#cb14-70" tabindex="-1"></a> <span class="op">-</span><span class="fl">2.73437500e-01</span> <span class="op">-</span><span class="fl">3.07617188e-02</span> <span class="op">-</span><span class="fl">3.37890625e-01</span>  <span class="fl">1.53320312e-01</span></span>
+<span id="cb14-71"><a href="#cb14-71" tabindex="-1"></a>  <span class="fl">2.33398438e-01</span> <span class="op">-</span><span class="fl">2.08007812e-01</span>  <span class="fl">3.73046875e-01</span>  <span class="fl">8.20312500e-02</span></span>
+<span id="cb14-72"><a href="#cb14-72" tabindex="-1"></a>  <span class="fl">2.51953125e-01</span> <span class="op">-</span><span class="fl">7.61718750e-02</span> <span class="op">-</span><span class="fl">4.66308594e-02</span> <span class="op">-</span><span class="fl">2.23388672e-02</span></span>
+<span id="cb14-73"><a href="#cb14-73" tabindex="-1"></a>  <span class="fl">2.99072266e-02</span> <span class="op">-</span><span class="fl">5.93261719e-02</span> <span class="op">-</span><span class="fl">4.66918945e-03</span> <span class="op">-</span><span class="fl">2.44140625e-01</span></span>
+<span id="cb14-74"><a href="#cb14-74" tabindex="-1"></a> <span class="op">-</span><span class="fl">2.09960938e-01</span> <span class="op">-</span><span class="fl">2.87109375e-01</span> <span class="op">-</span><span class="fl">4.54101562e-02</span> <span class="op">-</span><span class="fl">1.77734375e-01</span></span>
+<span id="cb14-75"><a href="#cb14-75" tabindex="-1"></a> <span class="op">-</span><span class="fl">2.79296875e-01</span> <span class="op">-</span><span class="fl">8.59375000e-02</span>  <span class="fl">9.13085938e-02</span>  <span class="fl">2.51953125e-01</span>]</span></code></pre>
+</div>
+<p>This vector has 300 entries, i.e., 300 dimensions. We can’t say much
+about what those dimensions map. We can represent this vector with a
+heatmap:</p>
+<div class="codewrapper sourceCode" id="cb15">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="im">import</span> matplotlib.colors <span class="im">as</span> mcolors</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>vectors<span class="op">=</span> google_vectors[<span class="st">'king'</span>]</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">1</span>))</span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>cmap <span class="op">=</span> ax.imshow([vectors], aspect<span class="op">=</span><span class="st">'auto'</span>,cmap<span class="op">=</span>plt.cm.coolwarm)</span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a>ax.set_yticks([<span class="dv">0</span>])</span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a>ax.set_xticks([])</span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a>ax.set_yticklabels([<span class="st">'king'</span>])</span>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Embedding dimension'</span>)</span>
+<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a>plt.colorbar(cmap)</span>
+<span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb15-16"><a href="#cb15-16" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="#cb15-17" tabindex="-1"></a>plt.show()</span></code></pre>
+</div>
+<figure><img src="../fig/emb7.png" class="figure mx-auto d-block"><div class="figcaption">Embedding of king - word2vec model</div>
+</figure><p>And compare it with other words, like “queen”:</p>
+<div class="codewrapper sourceCode" id="cb16">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>vectors<span class="op">=</span> google_vectors[<span class="st">'king'</span>,<span class="st">'queen'</span>]</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">1</span>))</span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a>cmap <span class="op">=</span> ax.imshow(vectors, aspect<span class="op">=</span><span class="st">'auto'</span>,cmap<span class="op">=</span>plt.cm.coolwarm)</span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a>ax.set_yticks([<span class="dv">0</span>,<span class="dv">1</span>])</span>
+<span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a>ax.set_xticks([])</span>
+<span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a>ax.set_yticklabels([<span class="st">'king'</span>,<span class="st">'queen'</span>])</span>
+<span id="cb16-10"><a href="#cb16-10" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Embedding dimension'</span>)</span>
+<span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="fl">.5</span>, c<span class="op">=</span><span class="st">'k'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb16-12"><a href="#cb16-12" tabindex="-1"></a>plt.colorbar(cmap)</span>
+<span id="cb16-13"><a href="#cb16-13" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="#cb16-14" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb16-15"><a href="#cb16-15" tabindex="-1"></a></span>
+<span id="cb16-16"><a href="#cb16-16" tabindex="-1"></a>plt.show()</span></code></pre>
+</div>
+<figure><img src="../fig/emb8.png" class="figure mx-auto d-block"><div class="figcaption">Embedding of king vs queen - word2vec
+model</div>
+</figure><p>This visualization shows that the the embeddings for
+<code>king</code> and <code>queen</code> share similar values in some
+dimensions. What do those dimension mean? It’s risky to attribute
+specific features or meanings to individual dimensions based on their
+values. Individual dimensions in word embeddings are not directly
+interpretable: The similarities we observe are influenced by the corpus
+and the hyperparameters used during training.</p>
+<div id="challenge2" class="callout challenge">
+<div class="callout-square">
+<i class="callout-icon" data-feather="zap"></i>
+</div>
+<div class="callout-inner">
+<h3 class="callout-title">Challenge<a class="anchor" aria-label="anchor" href="#challenge2"></a>
+</h3>
+<div class="callout-content">
+<p>Let’s explore the dimensions of the embeddings. Even though we cannot
+be sure of what the dimensions mean, we can make some hypotheses
+comparing other embeddings, for similar meanings.</p>
+<ul>
+<li>Add the vectors for [‘boy’,‘king’,‘man’, ‘queen’, ‘woman’, ‘girl’,
+‘daughter’] and plot it using the code above</li>
+<li>Compare the vectors by vertically scanning the columns looking for
+columns with similar colors. What similarities do you see? What
+characteristics do you think they map?</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="accordionSolution2" class="accordion challenge-accordion accordion-flush">
+<div class="accordion-item">
+<button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution2" aria-expanded="false" aria-controls="collapseSolution2">
+  <h4 class="accordion-header" id="headingSolution2"> Show me the solution </h4>
+</button>
+<div id="collapseSolution2" class="accordion-collapse collapse" data-bs-parent="#accordionSolution2" aria-labelledby="headingSolution2">
+<div class="accordion-body">
+<ol style="list-style-type: decimal">
+<li>add vectors [‘boy’,‘king’,‘man’, ‘queen’, ‘woman’, ‘girl’,
+‘daughter’] and plot it</li>
+</ol>
+<div class="codewrapper sourceCode" id="cb17">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>vectors<span class="op">=</span> google_vectors[<span class="st">'boy'</span>, <span class="st">'king'</span>, <span class="st">'man'</span>, <span class="st">'queen'</span>, <span class="st">'woman'</span>, <span class="st">'girl'</span>, <span class="st">'daughter'</span>]</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">3</span>))</span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a>cmap <span class="op">=</span> ax.imshow(vectors, aspect<span class="op">=</span><span class="st">'auto'</span>,cmap<span class="op">=</span>plt.cm.coolwarm)</span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a>ax.set_yticks([<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>])</span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a>ax.set_xticks([])</span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a>ax.set_yticklabels([<span class="st">'boy'</span>,<span class="st">'king'</span>,<span class="st">'man'</span>, <span class="st">'queen'</span>, <span class="st">'woman'</span>, <span class="st">'girl'</span>, <span class="st">'daughter'</span>])</span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Embedding dimension'</span>)</span>
+<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="fl">.5</span>, c<span class="op">=</span><span class="st">'k'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb17-12"><a href="#cb17-12" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="fl">1.5</span>, c<span class="op">=</span><span class="st">'k'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb17-13"><a href="#cb17-13" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="fl">2.5</span>, c<span class="op">=</span><span class="st">'k'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb17-14"><a href="#cb17-14" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="fl">3.5</span>, c<span class="op">=</span><span class="st">'k'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb17-15"><a href="#cb17-15" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="fl">4.5</span>, c<span class="op">=</span><span class="st">'k'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb17-16"><a href="#cb17-16" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="fl">5.5</span>, c<span class="op">=</span><span class="st">'k'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" tabindex="-1"></a></span>
+<span id="cb17-18"><a href="#cb17-18" tabindex="-1"></a>plt.colorbar(cmap)</span>
+<span id="cb17-19"><a href="#cb17-19" tabindex="-1"></a></span>
+<span id="cb17-20"><a href="#cb17-20" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb17-21"><a href="#cb17-21" tabindex="-1"></a></span>
+<span id="cb17-22"><a href="#cb17-22" tabindex="-1"></a>plt.show()</span></code></pre>
+</div>
+<ol start="2" style="list-style-type: decimal">
+<li>Compare the vectors by vertically scanning the columns looking for
+columns with similar colors.</li>
+</ol>
+<figure><img src="../fig/emb9.png" class="figure mx-auto d-block"><div class="figcaption">Exercise solution - word2vec model</div>
+</figure><p>While we don’t know which dimension code for what, we can see that
+some columns are similar for all words, while other seem to distinguish
+the characteristic of being royal and gender. We could add more words
+and get a better understanding of what they code, however ultimately
+these would be always guesses.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="analogies">Analogies<a class="anchor" aria-label="anchor" href="#analogies"></a>
+</h2>
+<p>A word analogy is a statement of the type: “<em>a</em> is to
+<em>b</em> as <em>x</em> is to <em>y</em>”, which means that <em>a</em>
+and <em>x</em> can be transformed in the same way to get <em>b</em> and
+<em>y</em>, respectively. Vice versa, <em>b</em> and <em>y</em> can be
+inversely transformed to get <em>a</em> and <em>x</em>.</p>
+<p>A famous analogy (King - man + woman ~= queen) shows an incredible
+property of <code>word2vec</code> embeddings: That is, since words are
+encoded as vectors, we can often solve analogies with vector
+arithmetic.</p>
+<p>Let’s consider this in detail:</p>
+<p><span class="math display">\[
+\overrightarrow{\text{king}} - \overrightarrow{\text{man}} +
+\overrightarrow{\text{woman}} \approx \overrightarrow{\text{queen}}
+\]</span></p>
+<p>Using the <code>Gensim</code> library in python, we can translate the
+above analogy into code:</p>
+<div class="codewrapper sourceCode" id="cb18">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>google_vectors.most_similar(positive<span class="op">=</span>[<span class="st">'king'</span>, <span class="st">'woman'</span>], negative<span class="op">=</span>[<span class="st">'man'</span>], topn<span class="op">=</span><span class="dv">1</span>)</span></code></pre>
+</div>
+<p>In the line of code above, we have added the word vectors of: <span class="math display">\[ \overrightarrow{\text{king}}\]</span> and: <span class="math display">\[\overrightarrow{\text{woman}}\]</span> and
+subtracted: <span class="math display">\[\overrightarrow{\text{man}}\]</span>
+<code>Topn</code> was set to 1 to output the most similar (in terms of
+cosine similarity) word to the resulting vector.</p>
+<p>The output:</p>
+<div class="codewrapper sourceCode" id="cb19">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>[(<span class="st">'queen'</span>, <span class="fl">0.7118192911148071</span>)]</span></code></pre>
+</div>
+<p>We can visualize this analogy as we did previously:</p>
+<figure><img src="../fig/emb10.png" alt="Analogy of King - Man + woman ~= Queen" class="figure mx-auto d-block"><div class="figcaption">Analogy of King - Man + woman ~= Queen</div>
+</figure><p>This analogy works very well, as it matches our own expectation.
+However, the match is not 100%, indeed the embedding “queen” is just the
+closest embedding that this specific pre-trained model has in its
+vocabulary. That’s the reason why we don’t use the <code>=</code>
+symbol, but <code>~=</code>.</p>
+<div id="challenge3" class="callout challenge">
+<div class="callout-square">
+<i class="callout-icon" data-feather="zap"></i>
+</div>
+<div class="callout-inner">
+<h3 class="callout-title">Challenge<a class="anchor" aria-label="anchor" href="#challenge3"></a>
+</h3>
+<div class="callout-content">
+<p>Try other analogies with the code above. Find at least one analogy
+that works, and another that in your opinion is not exactly what you
+expected.</p>
+</div>
+</div>
+</div>
+<div id="accordionSolution3" class="accordion challenge-accordion accordion-flush">
+<div class="accordion-item">
+<button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution3" aria-expanded="false" aria-controls="collapseSolution3">
+  <h4 class="accordion-header" id="headingSolution3"> Show me the solution </h4>
+</button>
+<div id="collapseSolution3" class="accordion-collapse collapse" data-bs-parent="#accordionSolution3" aria-labelledby="headingSolution3">
+<div class="accordion-body">
+<p>An analogy that works, i.e., it matches my logic:</p>
+<p><span class="math display">\[
+\overrightarrow{\text{dollar}} - \overrightarrow{\text{US}} +
+\overrightarrow{\text{Italy}} \approx \overrightarrow{\text{euro}}
+\]</span></p>
+<div class="codewrapper sourceCode" id="cb20">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>google_vectors.most_similar(positive<span class="op">=</span>[<span class="st">'dollar'</span>, <span class="st">'Italy'</span>], negative<span class="op">=</span>[<span class="st">'US'</span>], topn<span class="op">=</span><span class="dv">1</span>)</span></code></pre>
+</div>
+<p>Output:</p>
+<div class="codewrapper sourceCode" id="cb21">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>[(<span class="st">'euro'</span>, <span class="fl">0.5166667103767395</span>)]</span></code></pre>
+</div>
+<p>This analogy also works, and it is based on the orthography of the
+words:</p>
+<p><span class="math display">\[
+\overrightarrow{\text{apple}} - \overrightarrow{\text{apples}} +
+\overrightarrow{\text{cars}} \approx \overrightarrow{\text{car}}
+\]</span></p>
+<div class="codewrapper sourceCode" id="cb22">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>google_vectors.most_similar(positive<span class="op">=</span>[<span class="st">'apple'</span>, <span class="st">'cars'</span>], negative<span class="op">=</span>[<span class="st">'apples'</span>], topn<span class="op">=</span><span class="dv">1</span>)</span></code></pre>
+</div>
+<p>Output:</p>
+<div class="codewrapper sourceCode" id="cb23">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>[(<span class="st">'car'</span>, <span class="fl">0.696682333946228</span>)]</span></code></pre>
+</div>
+<p>An analogy that doesn’t exactly match my expectation:</p>
+<p><span class="math display">\[
+\overrightarrow{\text{doctor}} - \overrightarrow{\text{hospital}} +
+\overrightarrow{\text{school}} \approx \overrightarrow{\text{teacher}}
+\]</span></p>
+<div class="codewrapper sourceCode" id="cb24">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a>google_vectors.most_similar(positive<span class="op">=</span>[<span class="st">'doctor'</span>, <span class="st">'school'</span>], negative<span class="op">=</span>[<span class="st">'hospital'</span>], topn<span class="op">=</span><span class="dv">1</span>)</span></code></pre>
+</div>
+<p>Output:</p>
+<div class="codewrapper sourceCode" id="cb25">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>[(<span class="st">'guidance_counselor'</span>, <span class="fl">0.5969595313072205</span>)]</span></code></pre>
+</div>
+<p>So, in this case this analogy is not solved very well by our model. I
+expected the model to give me the word <code>teacher</code> but instead
+it gave me <code>guidance_counselor</code>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="linguistic-categories-dimensionality-reduction-and-the-challenge-of-polysemy">Linguistic categories, dimensionality reduction and the challenge of
+polysemy<a class="anchor" aria-label="anchor" href="#linguistic-categories-dimensionality-reduction-and-the-challenge-of-polysemy"></a>
+</h2>
+<p>In addition to analogies, we can explore how good
+<code>word2vec</code> is in capturing the syntactic and semantic
+similarity between words (and pairs of words), via the exploration of
+linguistic categories.</p>
+<p>Linguistic categories are groups of words that describe high-level
+properties that all those words have in common. Consider the following
+words:</p>
+<div class="codewrapper sourceCode" id="cb26">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a>[<span class="st">'car'</span>, <span class="st">'truck'</span>, <span class="st">'bus'</span>, <span class="st">'bicycle'</span>, <span class="st">'motorcycle'</span>, <span class="st">'scooter'</span>, <span class="st">'train'</span>, <span class="st">'airplane'</span>, </span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a>                 <span class="st">'helicopter'</span>, <span class="st">'boat'</span>, <span class="st">'ship'</span>, <span class="st">'submarine'</span>, <span class="st">'van'</span>, <span class="st">'taxi'</span>, <span class="st">'ambulance'</span>, <span class="st">'tractor'</span>, </span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a>                 <span class="st">'trailer'</span>, <span class="st">'jeep'</span>, <span class="st">'minivan'</span>, <span class="st">'skateboard'</span>, <span class="st">'tank'</span>, <span class="st">'bobcat'</span>]</span></code></pre>
+</div>
+<p>What do they have in common? They are all <code>vehicles</code>.
+Consider now these words:</p>
+<div class="codewrapper sourceCode" id="cb27">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a>[<span class="st">'dog'</span>, <span class="st">'cat'</span>, <span class="st">'horse'</span>, <span class="st">'lion'</span>, <span class="st">'tiger'</span>, <span class="st">'elephant'</span>, <span class="st">'bear'</span>, <span class="st">'wolf'</span>, <span class="st">'fox'</span>, <span class="st">'deer'</span>, </span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>                <span class="st">'rabbit'</span>, <span class="st">'mouse'</span>, <span class="st">'rat'</span>, <span class="st">'bird'</span>, <span class="st">'eagle'</span>, <span class="st">'hawk'</span>, <span class="st">'fish'</span>, <span class="st">'shark'</span>, <span class="st">'whale'</span>, <span class="st">'dolphin'</span>,</span>
+<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a>               <span class="st">'fly'</span>, <span class="st">'crane'</span>, <span class="st">'bug'</span>,<span class="st">'seal'</span>,<span class="st">'cougar'</span>, <span class="st">'jaguar'</span>]</span></code></pre>
+</div>
+<p>All those words belong to the category of <code>animals</code>. Let’s
+group those vectors in their respective category labels:</p>
+<div class="codewrapper sourceCode" id="cb28">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a>animal_words <span class="op">=</span> [<span class="st">'dog'</span>, <span class="st">'cat'</span>, <span class="st">'horse'</span>, <span class="st">'lion'</span>, <span class="st">'tiger'</span>, <span class="st">'elephant'</span>, <span class="st">'bear'</span>, <span class="st">'wolf'</span>, <span class="st">'fox'</span>, <span class="st">'deer'</span>, </span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a>                <span class="st">'rabbit'</span>, <span class="st">'mouse'</span>, <span class="st">'rat'</span>, <span class="st">'bird'</span>, <span class="st">'eagle'</span>, <span class="st">'hawk'</span>, <span class="st">'fish'</span>, <span class="st">'shark'</span>, <span class="st">'whale'</span>, <span class="st">'dolphin'</span>,</span>
+<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a>               <span class="st">'fly'</span>, <span class="st">'crane'</span>, <span class="st">'bug'</span>,<span class="st">'seal'</span>,<span class="st">'cougar'</span>, <span class="st">'jaguar'</span>]</span>
+<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a>vehicle_words <span class="op">=</span> [<span class="st">'car'</span>, <span class="st">'truck'</span>, <span class="st">'bus'</span>, <span class="st">'bicycle'</span>, <span class="st">'motorcycle'</span>, <span class="st">'scooter'</span>, <span class="st">'train'</span>, <span class="st">'airplane'</span>, </span>
+<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a>                 <span class="st">'helicopter'</span>, <span class="st">'boat'</span>, <span class="st">'ship'</span>, <span class="st">'submarine'</span>, <span class="st">'van'</span>, <span class="st">'taxi'</span>, <span class="st">'ambulance'</span>, <span class="st">'tractor'</span>, </span>
+<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a>                 <span class="st">'trailer'</span>, <span class="st">'jeep'</span>, <span class="st">'minivan'</span>, <span class="st">'skateboard'</span>, <span class="st">'tank'</span>, <span class="st">'bobcat'</span>]</span></code></pre>
+</div>
+<p>Let’s extract their vectors from our pre-trained word2vec model:</p>
+<div class="codewrapper sourceCode" id="cb29">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a>all_words <span class="op">=</span> animal_words <span class="op">+</span> vehicle_words </span>
+<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>word_vectors <span class="op">=</span> np.array([google_vectors[word] <span class="cf">for</span> word <span class="kw">in</span> all_words])</span></code></pre>
+</div>
+<p>Intuitively, if we were to represent <em>visually</em> those
+categories in a two-dimensional (i.e., 2D) space, we would represent
+each word as a point in the plot, and separate in space those words
+belonging to the category of <code>animal</code> from those belonging to
+the category of <code>vehicles</code>. To test our intuition against the
+model, we can plot it.</p>
+<div class="section level3">
+<h3 id="dimensionality-reduction">Dimensionality reduction<a class="anchor" aria-label="anchor" href="#dimensionality-reduction"></a>
+</h3>
+<p>However, a point is made of two coordinate: <em>x</em> and
+<em>y</em>, while each word in those categories contains 50 coordinates,
+one for each dimension. We cannot represent more than e.g., 4 dimensions
+in our plot (x, y, z and colour). What’s the solution then?</p>
+<p>We must “squeeze” the dimensions into 2 (x and y). This process is
+called dimensionality reduction. The idea behind it is to represent a
+set of high-dimensional vectors as 2D points in such a way that the
+distances between pairs of points are preserved as much as possible. Of
+course this will be an approximation, however in most cases is good
+enough to test our intuition. There are many methods of dimensionality
+reduction, in this case we use <code>UMAP</code> from the homonymous
+library:</p>
+<div class="codewrapper sourceCode" id="cb30">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="co"># Reduce dimensions using UMAP</span></span>
+<span id="cb30-2"><a href="#cb30-2" tabindex="-1"></a><span class="im">import</span> umap.umap_ <span class="im">as</span> umap</span>
+<span id="cb30-3"><a href="#cb30-3" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" tabindex="-1"></a>reducer <span class="op">=</span> umap.UMAP(n_neighbors<span class="op">=</span><span class="dv">15</span>, min_dist<span class="op">=</span><span class="fl">0.1</span>, random_state<span class="op">=</span><span class="dv">40</span>)</span>
+<span id="cb30-5"><a href="#cb30-5" tabindex="-1"></a>embedding <span class="op">=</span> reducer.fit_transform(word_vectors)</span></code></pre>
+</div>
+<ul>
+<li><p>Setting <code>n_neighbors</code> to 15 means UMAP will consider
+each point in the context of its 15 nearest neighbors. Lower values of
+<code>n_neighbors</code> can capture more local structure, which might
+be useful for clustering closely related points.</p></li>
+<li><p><code>min_dist</code>: This parameter controls how tightly UMAP
+packs points together. It defines the minimum distance between points in
+the embedding space. Lower values lead to more tightly packed
+embeddings, while higher values result in a more spread out embedding. A
+value of <code>0.1</code> allows some flexibility while keeping the
+embeddings packed.</p></li>
+<li><p>Setting <code>random_state</code> to 40 ensures that the results
+are reproducible. This means that each time the code is run with the
+same data and parameters, the output will be the same.</p></li>
+<li><p><code>fit_transform</code> picks the high-dimentional data and
+transforms it into a lower-dimensional space.</p></li>
+</ul>
+<p>We plot the result of the dimensionality reduction:</p>
+<div class="codewrapper sourceCode" id="cb31">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">8</span>))</span>
+<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a><span class="co"># animal words</span></span>
+<span id="cb31-4"><a href="#cb31-4" tabindex="-1"></a><span class="cf">for</span> i, word <span class="kw">in</span> <span class="bu">enumerate</span>(animal_words_in_vocab):</span>
+<span id="cb31-5"><a href="#cb31-5" tabindex="-1"></a>    plt.scatter(embedding[i, <span class="dv">0</span>], embedding[i, <span class="dv">1</span>], color<span class="op">=</span><span class="st">'blue'</span>)</span>
+<span id="cb31-6"><a href="#cb31-6" tabindex="-1"></a>    plt.text(embedding[i, <span class="dv">0</span>] <span class="op">+</span> <span class="fl">0.1</span>, embedding[i, <span class="dv">1</span>] <span class="op">+</span> <span class="fl">0.1</span>, word, fontsize<span class="op">=</span><span class="dv">9</span>, color<span class="op">=</span><span class="st">'blue'</span>)</span>
+<span id="cb31-7"><a href="#cb31-7" tabindex="-1"></a></span>
+<span id="cb31-8"><a href="#cb31-8" tabindex="-1"></a><span class="co"># vehicle words</span></span>
+<span id="cb31-9"><a href="#cb31-9" tabindex="-1"></a><span class="cf">for</span> i, word <span class="kw">in</span> <span class="bu">enumerate</span>(vehicle_words_in_vocab, start<span class="op">=</span><span class="bu">len</span>(animal_words_in_vocab)):</span>
+<span id="cb31-10"><a href="#cb31-10" tabindex="-1"></a>    plt.scatter(embedding[i, <span class="dv">0</span>], embedding[i, <span class="dv">1</span>], color<span class="op">=</span><span class="st">'red'</span>)</span>
+<span id="cb31-11"><a href="#cb31-11" tabindex="-1"></a>    plt.text(embedding[i, <span class="dv">0</span>] <span class="op">+</span> <span class="fl">0.1</span>, embedding[i, <span class="dv">1</span>] <span class="op">+</span> <span class="fl">0.1</span>, word, fontsize<span class="op">=</span><span class="dv">9</span>, color<span class="op">=</span><span class="st">'red'</span>)</span>
+<span id="cb31-12"><a href="#cb31-12" tabindex="-1"></a></span>
+<span id="cb31-13"><a href="#cb31-13" tabindex="-1"></a>plt.title(<span class="st">'2D Visualization of Animal and Vehicle Words using UMAP'</span>)</span>
+<span id="cb31-14"><a href="#cb31-14" tabindex="-1"></a>plt.xlabel(<span class="st">'UMAP Dimension 1'</span>)</span>
+<span id="cb31-15"><a href="#cb31-15" tabindex="-1"></a>plt.ylabel(<span class="st">'UMAP Dimension 2'</span>)</span>
+<span id="cb31-16"><a href="#cb31-16" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb31-17"><a href="#cb31-17" tabindex="-1"></a>plt.show()</span></code></pre>
+</div>
+<figure><img src="../fig/emb11.png" class="figure mx-auto d-block"><div class="figcaption">2D visualisation of animal and vehicle word
+embeddings</div>
+</figure><p>The visualisation confirms our real world knowledge:</p>
+<ol style="list-style-type: decimal">
+<li><p>Words belonging to the animal realm are closer and form a group
+together. Same for the vehicle words.</p></li>
+<li><p>Those two categories form two clusters, i.e., it would be easy to
+draw with a pen their perimeter</p></li>
+</ol>
+</div>
+<div class="section level3">
+<h3 id="polysemy">Polysemy<a class="anchor" aria-label="anchor" href="#polysemy"></a>
+</h3>
+<p>At a closer inspection, however, there is also an interesting
+phenomenon visible: The words <code>crane</code> (for animals) and
+<code>bobcat</code> (for vehicles) are somewhat confused. They are
+represented closer to the vehicles and animals, respectively. The reason
+for this “confusion” is due to the fact that <code>crane</code> and
+<code>bobcat</code> are polysemous words, i.e., they have multiple
+meanings. A <code>cran</code>e is a large, tall machine used for moving
+heavy objects and a tall, long-legged, long-necked bird. A bobcat is
+both a wildcat with a short tail and spotted coat and an excavator used
+for digging. A vast majority of words, especially frequent ones, are
+polysemous, with each word taking on anywhere from two to a dozen
+different senses in many natural languages. We are able to disambiguate
+words based on the context in which they occur. Word2vec however is not
+able to do it. The reason for this is that word2vec assigns a single
+vector to each word regardless of its multiple meanings. This means that
+all contexts in which a polysemous word appears contribute to a single
+representation, in which all meanings are blended together.</p>
+<div id="keypoints2" class="callout keypoints">
+<div class="callout-square">
+<i class="callout-icon" data-feather="key"></i>
+</div>
+<div class="callout-inner">
+<h3 class="callout-title">Key Points<a class="anchor" aria-label="anchor" href="#keypoints2"></a>
+</h3>
+<div class="callout-content">
+<ul>
+<li><p>We can explore linguistic categories via word2vec by extracting
+the vectors of words belonging to some category we wish to
+investigate</p></li>
+<li><p>To visualise word embeddings we must reduce their dimensions to
+2</p></li>
+<li><p>Word2vec does not deal very efficiently with polysemy as it does
+not allow to extract a different embedding to a word depending on its
+context</p></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section level1">
+<h1 id="optional-training-a-word2vec-model-on-our-dataset">(Optional) Training a word2vec model on our dataset<a class="anchor" aria-label="anchor" href="#optional-training-a-word2vec-model-on-our-dataset"></a>
+</h1>
+<p>We import <code>spacy</code> for a light pre-processing of the text
+and nltk to get a subset of the books present in the Gutenberg
+dataset.</p>
+<div class="codewrapper sourceCode" id="cb32">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a><span class="im">import</span> spacy</span>
+<span id="cb32-2"><a href="#cb32-2" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="cb32-3"><a href="#cb32-3" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> gutenberg</span>
+<span id="cb32-4"><a href="#cb32-4" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" tabindex="-1"></a><span class="co"># this is a log setting, useful for printing during training</span></span>
+<span id="cb32-6"><a href="#cb32-6" tabindex="-1"></a>logging.basicConfig(<span class="bu">format</span><span class="op">=</span><span class="st">'</span><span class="sc">%(asctime)s</span><span class="st"> : </span><span class="sc">%(levelname)s</span><span class="st"> : </span><span class="sc">%(message)s</span><span class="st">'</span>, level<span class="op">=</span>logging.INFO)</span></code></pre>
+</div>
+<div id="callout3" class="callout">
+<div class="callout-square">
+<i class="callout-icon" data-feather="bell"></i>
+</div>
+<div class="callout-inner">
+<h3 class="callout-title">Callout<a class="anchor" aria-label="anchor" href="#callout3"></a>
+</h3>
+<div class="callout-content">
+<p>If you haven’t installed <code>spaCy</code> before, and the proper
+english model, run the code below from your terminal:</p>
+<div class="codewrapper sourceCode" id="cb33">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a>pip install spacy</span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a>python <span class="op">-</span>m spacy download en_core_web_sm</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<p>We load the <code>en_core_web_sm</code> model.It is a pre-trained
+statistical model provided by <code>spaCy</code> for processing English
+language text. It includes vocabulary and syntax already.</p>
+<div class="codewrapper sourceCode" id="cb34">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a>nlp <span class="op">=</span> spacy.load(<span class="st">"en_core_web_sm"</span>)</span></code></pre>
+</div>
+<p>We download the books:</p>
+<div class="codewrapper sourceCode" id="cb35">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a>nltk.download(<span class="st">'gutenberg'</span>)</span></code></pre>
+</div>
+<p>Let’s take a look at which books we have in this dataset:</p>
+<div class="codewrapper sourceCode" id="cb36">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a>available_books <span class="op">=</span> gutenberg.fileids()</span></code></pre>
+</div>
+<p>Output:</p>
+<div class="codewrapper sourceCode" id="cb37">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a>available_books</span>
+<span id="cb37-2"><a href="#cb37-2" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" tabindex="-1"></a>[<span class="st">'austen-emma.txt'</span>,</span>
+<span id="cb37-4"><a href="#cb37-4" tabindex="-1"></a> <span class="st">'austen-persuasion.txt'</span>,</span>
+<span id="cb37-5"><a href="#cb37-5" tabindex="-1"></a> <span class="st">'austen-sense.txt'</span>,</span>
+<span id="cb37-6"><a href="#cb37-6" tabindex="-1"></a> <span class="st">'bible-kjv.txt'</span>,</span>
+<span id="cb37-7"><a href="#cb37-7" tabindex="-1"></a> <span class="st">'blake-poems.txt'</span>,</span>
+<span id="cb37-8"><a href="#cb37-8" tabindex="-1"></a> <span class="st">'bryant-stories.txt'</span>,</span>
+<span id="cb37-9"><a href="#cb37-9" tabindex="-1"></a> <span class="st">'burgess-busterbrown.txt'</span>,</span>
+<span id="cb37-10"><a href="#cb37-10" tabindex="-1"></a> <span class="st">'carroll-alice.txt'</span>,</span>
+<span id="cb37-11"><a href="#cb37-11" tabindex="-1"></a> <span class="st">'chesterton-ball.txt'</span>,</span>
+<span id="cb37-12"><a href="#cb37-12" tabindex="-1"></a> <span class="st">'chesterton-brown.txt'</span>,</span>
+<span id="cb37-13"><a href="#cb37-13" tabindex="-1"></a> <span class="st">'chesterton-thursday.txt'</span>,</span>
+<span id="cb37-14"><a href="#cb37-14" tabindex="-1"></a> <span class="st">'edgeworth-parents.txt'</span>,</span>
+<span id="cb37-15"><a href="#cb37-15" tabindex="-1"></a> <span class="st">'melville-moby_dick.txt'</span>,</span>
+<span id="cb37-16"><a href="#cb37-16" tabindex="-1"></a> <span class="st">'milton-paradise.txt'</span>,</span>
+<span id="cb37-17"><a href="#cb37-17" tabindex="-1"></a> <span class="st">'shakespeare-caesar.txt'</span>,</span>
+<span id="cb37-18"><a href="#cb37-18" tabindex="-1"></a> <span class="st">'shakespeare-hamlet.txt'</span>,</span>
+<span id="cb37-19"><a href="#cb37-19" tabindex="-1"></a> <span class="st">'shakespeare-macbeth.txt'</span>,</span>
+<span id="cb37-20"><a href="#cb37-20" tabindex="-1"></a> <span class="st">'whitman-leaves.txt'</span>]</span></code></pre>
+</div>
+<p>Some of these books are very big, making the training excessively
+long. It’s best for this exercise to limit ourselves to midium/small
+size books. In order to do so, we first compute the length of each book,
+then we subset those that are within 2000000 characters. This is an
+arbitrary value but for the sake of this exercise it serves our purpose.
+If we were to train all books from the Gutenberg dataset we would need
+access to a server a different type of code that deals with allocation
+of the memory more efficiently.</p>
+<div class="codewrapper sourceCode" id="cb38">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a><span class="co"># Calculate the length of each book</span></span>
+<span id="cb38-2"><a href="#cb38-2" tabindex="-1"></a>book_lengths <span class="op">=</span> {book: <span class="bu">len</span>(nltk.corpus.gutenberg.raw(book)) <span class="cf">for</span> book <span class="kw">in</span> available_books}</span>
+<span id="cb38-3"><a href="#cb38-3" tabindex="-1"></a></span>
+<span id="cb38-4"><a href="#cb38-4" tabindex="-1"></a><span class="co"># Print the size of each book</span></span>
+<span id="cb38-5"><a href="#cb38-5" tabindex="-1"></a><span class="cf">for</span> book, length <span class="kw">in</span> book_lengths.items():</span>
+<span id="cb38-6"><a href="#cb38-6" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>book<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>length<span class="sc">}</span><span class="ss"> characters"</span>)</span></code></pre>
+</div>
+<p>We set <code>npl.max_length</code> to <code>2000000</code> because
+some books in the Gutenberg libraries are very long. The
+<code>nlp.max_length</code> parameter ensures that they are processed
+without issues related to document length.</p>
+<div class="codewrapper sourceCode" id="cb39">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a>nlp.max_length <span class="op">=</span> <span class="dv">2000000</span> </span></code></pre>
+</div>
+<p>Now we filter the books that are within our
+<code>nlp.max_length</code>:</p>
+<div class="codewrapper sourceCode" id="cb40">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a><span class="co"># filter books that are less than our max_length</span></span>
+<span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a>filtered_books <span class="op">=</span> [book <span class="cf">for</span> book, length <span class="kw">in</span> book_lengths.items() <span class="cf">if</span> length <span class="op">&lt;=</span> nlp.max_length]</span>
+<span id="cb40-3"><a href="#cb40-3" tabindex="-1"></a>filtered_books</span></code></pre>
+</div>
+<p>We are ready to preprocess our books and train our word2vec
+model.</p>
+<p>First, preprocess the books. We use an ad-hoc function to tokenize,
+lowercase, remove stop words and punctuation:</p>
+<div class="codewrapper sourceCode" id="cb41">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="co"># Function to read and preprocess texts using spaCy</span></span>
+<span id="cb41-2"><a href="#cb41-2" tabindex="-1"></a><span class="kw">def</span> read_input(book_ids):</span>
+<span id="cb41-3"><a href="#cb41-3" tabindex="-1"></a>    <span class="co">"""This method reads the input book IDs and preprocesses the text"""</span></span>
+<span id="cb41-4"><a href="#cb41-4" tabindex="-1"></a>    </span>
+<span id="cb41-5"><a href="#cb41-5" tabindex="-1"></a>    logging.info(<span class="st">"Reading and preprocessing books...this may take a while"</span>)</span>
+<span id="cb41-6"><a href="#cb41-6" tabindex="-1"></a>    </span>
+<span id="cb41-7"><a href="#cb41-7" tabindex="-1"></a>    <span class="cf">for</span> book_id <span class="kw">in</span> book_ids:</span>
+<span id="cb41-8"><a href="#cb41-8" tabindex="-1"></a>        logging.info(<span class="ss">f"Reading book </span><span class="sc">{</span>book_id<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb41-9"><a href="#cb41-9" tabindex="-1"></a>        raw_text <span class="op">=</span> nltk.corpus.gutenberg.raw(book_id)</span>
+<span id="cb41-10"><a href="#cb41-10" tabindex="-1"></a>        doc <span class="op">=</span> nlp(raw_text)</span>
+<span id="cb41-11"><a href="#cb41-11" tabindex="-1"></a>        </span>
+<span id="cb41-12"><a href="#cb41-12" tabindex="-1"></a>        <span class="cf">for</span> sentence <span class="kw">in</span> doc.sents:</span>
+<span id="cb41-13"><a href="#cb41-13" tabindex="-1"></a>            <span class="co"># Tokenize, lowercase, use lemmatization</span></span>
+<span id="cb41-14"><a href="#cb41-14" tabindex="-1"></a>            tokens <span class="op">=</span> [token.lemma_.lower() <span class="cf">for</span> token <span class="kw">in</span> sentence </span>
+<span id="cb41-15"><a href="#cb41-15" tabindex="-1"></a>            <span class="co"># remove stop words punctuation and words starting with uppercase (to avoid entities), </span></span>
+<span id="cb41-16"><a href="#cb41-16" tabindex="-1"></a>                      <span class="cf">if</span> <span class="kw">not</span> token.is_stop <span class="kw">and</span> <span class="kw">not</span> token.is_punct <span class="kw">and</span> <span class="kw">not</span> token.text[<span class="dv">0</span>].isupper()]</span>
+<span id="cb41-17"><a href="#cb41-17" tabindex="-1"></a>            <span class="cf">if</span> tokens:</span>
+<span id="cb41-18"><a href="#cb41-18" tabindex="-1"></a>                <span class="cf">yield</span> tokens</span>
+<span id="cb41-19"><a href="#cb41-19" tabindex="-1"></a>                </span></code></pre>
+</div>
+<p>Then we run it over our dataset:</p>
+<div class="codewrapper sourceCode" id="cb42">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a><span class="co"># Read and preprocess the texts from the selected books</span></span>
+<span id="cb42-2"><a href="#cb42-2" tabindex="-1"></a>documents <span class="op">=</span> <span class="bu">list</span>(read_input(filtered_books))</span>
+<span id="cb42-3"><a href="#cb42-3" tabindex="-1"></a>logging.info(<span class="st">"Done reading and preprocessing data"</span>)</span></code></pre>
+</div>
+<p>We initialise the word2vec model:</p>
+<div class="codewrapper sourceCode" id="cb43">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" tabindex="-1"></a>model <span class="op">=</span> gensim.models.Word2Vec(documents, vector_size<span class="op">=</span><span class="dv">50</span>, window<span class="op">=</span><span class="dv">4</span>, min_count<span class="op">=</span><span class="dv">2</span>, workers<span class="op">=</span><span class="dv">4</span>)</span></code></pre>
+</div>
+<p>Note that:</p>
+<ul>
+<li><p>By default, the architecture used by
+<code>gensim.models.Word2Vec()</code> is CBOW. You have to explicitly
+state <code>sg=1</code> if you intend to use skip-gram.</p></li>
+<li><p>we set <code>vector_size</code> to 50. This means that each word
+will be represented by a 50-dimensional vector in the embedding space.
+Higher dimensions can capture more semantic nuances but require more
+computational resources.</p></li>
+<li><p>In addition, we set <code>window</code> to 4. This setting
+ensures that the model consider up to 4 words to the left and 4 words to
+the right of the target word for context. Larger windows can capture
+broader context but might introduce noise.</p></li>
+<li><p>We ignore all words with total frequency lower than a predifined
+threshold by setting <code>min_count</code> to 2. This helps to remove
+infrequent words that may not provide useful information and could
+potentially introduce noise.</p></li>
+<li><p>We set <code>workers</code> to 4 to use 4 parallel threads for
+training. More workers can speed up training on multicore
+machines.</p></li>
+</ul>
+<p>Now that we are all set, we start training on the polished
+dataset:</p>
+<div class="codewrapper sourceCode" id="cb44">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" tabindex="-1"></a>model.train(documents,total_examples<span class="op">=</span><span class="bu">len</span>(documents),epochs<span class="op">=</span><span class="dv">10</span>)</span></code></pre>
+</div>
+<p>We can then explore the embedding space as we did for the
+<code>word2vec-google-news-300</code> model.</p>
+<div id="challenge4" class="callout challenge">
+<div class="callout-square">
+<i class="callout-icon" data-feather="zap"></i>
+</div>
+<div class="callout-inner">
+<h3 class="callout-title">Challenge<a class="anchor" aria-label="anchor" href="#challenge4"></a>
+</h3>
+<div class="callout-content">
+<ul>
+<li><p>Try exploring your pre-trained model by re-computing the famous
+analogy of the king and outputting the first 5 words. Do you find any
+difference in performance?</p></li>
+<li><p>If you ask for the top 10 words most similar to <code>King</code>
+what’s the output?</p></li>
+<li><p>How do you explain differences in performance, if any?</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="accordionSolution4" class="accordion challenge-accordion accordion-flush">
+<div class="accordion-item">
+<button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution4" aria-expanded="false" aria-controls="collapseSolution4">
+  <h4 class="accordion-header" id="headingSolution4"> Show me the solution </h4>
+</button>
+<div id="collapseSolution4" class="accordion-collapse collapse" data-bs-parent="#accordionSolution4" aria-labelledby="headingSolution4">
+<div class="accordion-body">
+<ul>
+<li>Reproducing the famous analogy of the
+<code>King - man + woman ~= queen</code>:</li>
+</ul>
+<div class="codewrapper sourceCode" id="cb45">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" tabindex="-1"></a>model.wv.most_similar(positive<span class="op">=</span>[<span class="st">'king'</span>, <span class="st">'woman'</span>], negative<span class="op">=</span>[<span class="st">'man'</span>], topn<span class="op">=</span><span class="dv">5</span>)</span></code></pre>
+</div>
+<p>Output:</p>
+<div class="codewrapper sourceCode" id="cb46">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" tabindex="-1"></a>[(<span class="st">'rich'</span>, <span class="fl">0.6688281893730164</span>),</span>
+<span id="cb46-2"><a href="#cb46-2" tabindex="-1"></a> (<span class="st">'brave'</span>, <span class="fl">0.6251468062400818</span>),</span>
+<span id="cb46-3"><a href="#cb46-3" tabindex="-1"></a> (<span class="st">'widow'</span>, <span class="fl">0.6215934753417969</span>),</span>
+<span id="cb46-4"><a href="#cb46-4" tabindex="-1"></a> (<span class="st">'farmer'</span>, <span class="fl">0.6200089454650879</span>),</span>
+<span id="cb46-5"><a href="#cb46-5" tabindex="-1"></a> (<span class="st">'nursery'</span>, <span class="fl">0.6171179413795471</span>)]</span></code></pre>
+</div>
+<ul>
+<li>If you ask for the top 10 words most similar to <code>King</code>
+what’s the output?</li>
+</ul>
+<div class="codewrapper sourceCode" id="cb47">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" tabindex="-1"></a><span class="co"># the word most similar to king?</span></span>
+<span id="cb47-2"><a href="#cb47-2" tabindex="-1"></a>w1 <span class="op">=</span> <span class="st">"king"</span></span>
+<span id="cb47-3"><a href="#cb47-3" tabindex="-1"></a>model.wv.most_similar(w1, topn<span class="op">=</span><span class="dv">10</span>)</span></code></pre>
+</div>
+<p>Output:</p>
+<div class="codewrapper sourceCode" id="cb48">
+<h3 class="code-label">PYTHON<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode python" tabindex="0"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a>[(<span class="st">'queen'</span>, <span class="fl">0.6963975429534912</span>),</span>
+<span id="cb48-2"><a href="#cb48-2" tabindex="-1"></a> (<span class="st">'royal'</span>, <span class="fl">0.6770277619361877</span>),</span>
+<span id="cb48-3"><a href="#cb48-3" tabindex="-1"></a> (<span class="st">'brave'</span>, <span class="fl">0.6549012660980225</span>),</span>
+<span id="cb48-4"><a href="#cb48-4" tabindex="-1"></a> (<span class="st">'evangelist'</span>, <span class="fl">0.6369228959083557</span>),</span>
+<span id="cb48-5"><a href="#cb48-5" tabindex="-1"></a> (<span class="st">'warrior'</span>, <span class="fl">0.6366517543792725</span>),</span>
+<span id="cb48-6"><a href="#cb48-6" tabindex="-1"></a> (<span class="st">'god'</span>, <span class="fl">0.6336646676063538</span>),</span>
+<span id="cb48-7"><a href="#cb48-7" tabindex="-1"></a> (<span class="st">'crop'</span>, <span class="fl">0.6331022381782532</span>),</span>
+<span id="cb48-8"><a href="#cb48-8" tabindex="-1"></a> (<span class="st">'bachelor'</span>, <span class="fl">0.6304036974906921</span>),</span>
+<span id="cb48-9"><a href="#cb48-9" tabindex="-1"></a> (<span class="st">'mystick'</span>, <span class="fl">0.6260853409767151</span>),</span>
+<span id="cb48-10"><a href="#cb48-10" tabindex="-1"></a> (<span class="st">'auction'</span>, <span class="fl">0.614545464515686</span>)]</span></code></pre>
+</div>
+<ul>
+<li>Difference in performance is due to (1) different trained corpus and
+(2) different size of the corpus.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="keypoints3" class="callout keypoints">
+<div class="callout-square">
+<i class="callout-icon" data-feather="key"></i>
+</div>
+<div class="callout-inner">
+<h3 class="callout-title">Key Points<a class="anchor" aria-label="anchor" href="#keypoints3"></a>
+</h3>
+<div class="callout-content">
+<ul>
+<li><p>We can both train or load a pre-trained word2vec model</p></li>
+<li><p>Embeddings of a trained model will reflect the statistics of the
+input dataset</p></li>
+<li><p>Loading a (big) pre-trained word2vec model allows us to get
+embeddings that better reflect the syntactic and semantic relationship
+among (pairs of) words. Using one or the other will depend on your
+research question.</p></li>
+</ul>
+</div>
+</div>
+</div>
+<!--
+Place links that you need to refer to multiple times across pages here. Delete
+any links that you are not going to use.
+ -->
 </div></section>
 </div>
     </main>
@@ -1258,8 +2574,8 @@ any links that you are not going to use.
   "url": "https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/aio.html",
   "identifier": "https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/aio.html",
   "dateCreated": "2023-11-16",
-  "dateModified": "2024-07-23",
-  "datePublished": "2024-07-23"
+  "dateModified": "2024-07-25",
+  "datePublished": "2024-07-25"
 }
 
   </script><script>

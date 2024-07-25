@@ -276,6 +276,18 @@
 </div>
 <!--/div.accordion-flush-->
 
+<div class="accordion accordion-flush" id="accordionFlush5">
+  <div class="accordion-item">
+    <div class="accordion-header" id="flush-heading5">
+        <a href="03-embeddings.html">4. Episode 3: Word embeddings</a>
+    </div>
+<!--/div.accordion-header-->
+
+  </div>
+<!--/div.accordion-item-->
+</div>
+<!--/div.accordion-flush-->
+
                 </div>
               </div>
             </div>
@@ -333,7 +345,52 @@
 <section id="00-welcome"><h2 class="section-heading"><a href="00-welcome.html">WelcomeWelcome<a class="anchor" aria-label="anchor" href="#welcome"></a></a></h2>
 <hr class="half-width"></section><section id="01-introduction"><h2 class="section-heading"><a href="01-introduction.html">Episode 1: Introducing NLP</a></h2>
 <hr class="half-width"></section><section id="02-preprocessing"><h2 class="section-heading"><a href="02-preprocessing.html">Episode 2: PreprocessingPreprocessing<a class="anchor" aria-label="anchor" href="#preprocessing"></a></a></h2>
-<hr class="half-width"></section>
+<hr class="half-width"></section><section id="03-embeddings"><h2 class="section-heading"><a href="03-embeddings.html">Episode 3: Word embeddingsWhat are word embeddings?<a class="anchor" aria-label="anchor" href="#what-are-word-embeddings"></a>Word2vec model<a class="anchor" aria-label="anchor" href="#word2vec-model"></a>(Optional) Training a word2vec model on our dataset<a class="anchor" aria-label="anchor" href="#optional-training-a-word2vec-model-on-our-dataset"></a></a></h2>
+<hr class="half-width">
+<h3 id="03-embeddings-figure-1">Figure 1</h3>
+<figure><img src="fig/emb1.png" class="figure mx-auto d-block"><div class="figcaption">Embedding of a cat - We measured its furriness
+and found out it’s 70!</div>
+</figure><hr>
+<h3 id="03-embeddings-figure-2">Figure 2</h3>
+<figure><img src="fig/emb3.png" class="figure mx-auto d-block"><div class="figcaption">Embedding of a cat - We have described it along
+two dimensions: furriness and number of legs</div>
+</figure><hr>
+<h3 id="03-embeddings-figure-3">Figure 3</h3>
+<figure><img src="fig/emb4.png" class="figure mx-auto d-block"><div class="figcaption">Embeddings of a cat and a dog</div>
+</figure><hr>
+<h3 id="03-embeddings-figure-4">Figure 4</h3>
+<figure><img src="fig/emb5.png" class="figure mx-auto d-block"><div class="figcaption">Embeddings of a cat and a dog and a
+caterpillar</div>
+</figure><hr>
+<h3 id="03-embeddings-figure-5">Figure 5</h3>
+<p aria-hidden="true">Image 1 of 1: ‘[decorative]’</p>
+<figure><img src="fig/emb12.png" alt="" class="figure mx-auto d-block"></figure><hr>
+<h3 id="03-embeddings-figure-6">Figure 6</h3>
+<figure><img src="fig/emb6.png" class="figure mx-auto d-block"><div class="figcaption">Embeddings of a cat and a dog and a caterpillar
+- We can describe these animals in many dimensions!</div>
+</figure><hr>
+<h3 id="03-embeddings-figure-7">Figure 7</h3>
+<figure><img src="fig/emb13.png" class="figure mx-auto d-block"><div class="figcaption">Schematic representations of the different
+prediction tasks that CBOW and Skip-gram try to solve</div>
+</figure><hr>
+<h3 id="03-embeddings-figure-8">Figure 8</h3>
+<figure><img src="fig/emb7.png" class="figure mx-auto d-block"><div class="figcaption">Embedding of king - word2vec model</div>
+</figure><hr>
+<h3 id="03-embeddings-figure-9">Figure 9</h3>
+<figure><img src="fig/emb8.png" class="figure mx-auto d-block"><div class="figcaption">Embedding of king vs queen - word2vec
+model</div>
+</figure><hr>
+<h3 id="03-embeddings-figure-10">Figure 10</h3>
+<figure><img src="fig/emb9.png" class="figure mx-auto d-block"><div class="figcaption">Exercise solution - word2vec model</div>
+</figure><hr>
+<h3 id="03-embeddings-figure-11">Figure 11</h3>
+<p aria-hidden="true">Image 1 of 1: ‘Analogy of King - Man + woman ~= Queen’</p>
+<figure><img src="fig/emb10.png" alt="Analogy of King - Man + woman ~= Queen" class="figure mx-auto d-block"><div class="figcaption">Analogy of King - Man + woman ~= Queen</div>
+</figure><hr>
+<h3 id="03-embeddings-figure-12">Figure 12</h3>
+<figure><img src="fig/emb11.png" class="figure mx-auto d-block"><div class="figcaption">2D visualisation of animal and vehicle word
+embeddings</div>
+</figure><hr></section>
 </div>
     </main>
 </div>
@@ -381,8 +438,8 @@
   "url": "https://esciencecenter-digital-skills.github.io/Natural-language-processing/images.html",
   "identifier": "https://esciencecenter-digital-skills.github.io/Natural-language-processing/images.html",
   "dateCreated": "2023-11-16",
-  "dateModified": "2024-07-23",
-  "datePublished": "2024-07-23"
+  "dateModified": "2024-07-25",
+  "datePublished": "2024-07-25"
 }
 
   </script><script>
