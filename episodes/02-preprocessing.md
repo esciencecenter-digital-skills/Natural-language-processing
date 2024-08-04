@@ -228,8 +228,9 @@ On of the things that the pipeline does, is tokenization as we did in the first 
 
 ```python
 # Get sentences
+sentences=[]
 for sentence in doc.sents:
-    print(sentence)
+    sentences.append(sentence)
 ```
 
 and the word tokens like this:
@@ -243,8 +244,6 @@ for token in doc[0:6]:
 If we want to get an idea of what the text is about we can visualize the word tokens in a word cloud to see which words are most common. To do this we can define a function:
 
 ```python
-from wordcloud import WordCloud
-
 # Define function that returns a word cloud
 def plot_wordcloud(sw = (""), doc = doc):
       wc = WordCloud(stopwords=sw).generate(str(doc))
