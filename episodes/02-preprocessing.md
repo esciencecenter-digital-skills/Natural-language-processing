@@ -54,7 +54,7 @@ We can then open the text file that contains the text and save it in a variable 
 
 ```python
 # Load the book The case-book of Sherlock Holmes by Arthur Conan Doyle
-path = "../pg69700.txt"
+path = "pg69700.txt"
 f = io.open(path, mode="r", encoding="utf-8-sig")
 corpus_full = f.read()
 ```
