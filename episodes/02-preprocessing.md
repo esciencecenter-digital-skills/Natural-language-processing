@@ -207,7 +207,7 @@ Free available pretrained models can be found on [Hugging Face](https://huggingf
 
 Let's load the model:
 ```python
-nlp = spacy.load('en_core_web_md')
+nlp = spacy.load('en_core_web_sm')
 
 ```
 
