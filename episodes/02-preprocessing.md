@@ -30,7 +30,7 @@ Examples of preprocessing steps are:
 - tokenization: this means splitting up the text into individual tokens. You can for example create sentence tokens or words tokens, or any others.
 - lowercasing
 - stop word removal, where you remove common words such as `the` or `a` that you would not need in some further analysis steps.
-- lemmatization: with this step you obtain the lemma of each word. You would get the form in which you find the word in the dictionary, such as the singular version of a plural or a noun, or the first person present tense of a verb instead of the past principle. You are making sure that you do not get different versions of the same word: you would convert `words` into `word` and `talking` into `talk`
+- lemmatization: with this step you obtain the lemma of each word. You would get the form in which you find the word in the dictionary, such as the singular version of a plural noun, or the first person present tense of a verb instead of the past principle. You are making sure that you do not get different versions of the same word: you would convert `words` into `word` and `talking` into `talk`
 - part of speech tagging: This means that you identify what type of word each is; such as nouns and verbs.
 
 The above examples of techniques of data preprocessing modify the input text to make it interpretable and analyzable by the NLP model of our choice. 
@@ -50,18 +50,18 @@ import matplotlib.pyplot as plt
 import string
 ```
 
-We can then open the text file that contains the text and save it in a variable called `corpus_full`. The text that we are going to analyse it the first story in the book "The case-book of Sherlock Holmes" by Arthus Conan Doyle. This first story is called "The Adventure of the Illustrious Client".
+We can then open the text file that contains the text and save it in a variable called `corpus_full`. The text that we are going to analyse it the first story in the book "The case-book of Sherlock Holmes" by Arthur Conan Doyle. This first story is called "The Adventure of the Illustrious Client".
 
 ```python
 # Load the book The case-book of Sherlock Holmes by Arthur Conan Doyle
-path = "pg69700.txt"
-f = io.open(path, mode="r", encoding="utf-8-sig")
+file = "pg69700.txt"
+f = io.open(file, mode="r", encoding="utf-8-sig")
 corpus_full = f.read()
 ```
 Let's check out the start of the corpus
 ```python
 # Print the text
-print(corpus_full[0:1000])
+print(corpus_full)
 ```
 This shows that the corpus contains a lot of text before the actual first story starts. Let's therefore select the part of the `corpus_full` that contains the first story. We determined beforehand which part of the string `corpus_full` catches the first story, and we can save it in the parameter `corpus`:
 
@@ -121,10 +121,10 @@ sentences = corpus_sentences.split(". ")
 ```
 What this does it that the `corpus_sentences` is split up every time a `. `is found, and the results are stored in a python list.
 
-If we print the first 20 items in the resulting list, we can see that indeed the data is split up into sentences, but there are some mistakes, where for example a new sentence is defined because the word 'mister' was abbreviated which also resulted in a new sentence definition. This shows that these kind of steps will never be fully perfect, but it good enough to proceed.
+If we print the items in the resulting list, we can see that indeed the data is split up into sentences, but there are some mistakes, where for example a new sentence is defined because the word 'mister' was abbreviated which also resulted in a new sentence definition. This shows that these kind of steps will never be fully perfect, but it good enough to proceed.
 
 ```python
-sentences[0:20]
+sentences
 ```
 
 ### Words
