@@ -133,7 +133,7 @@ We can now procede from `corpus_sentences` to split the corpus into individual w
 the python string package contains a string of all punctuation marks
 ```python
 # Punctuation symbols
-string.punctuatio
+string.punctuation
 ```
 
 Then we go over all these punctuation symbols one by one using a loop to replace them:
@@ -142,7 +142,7 @@ Then we go over all these punctuation symbols one by one using a loop to replace
 # Loop over the punctuation symbols to remove them
 corpus_words = corpus_sentences
 
-for punct in punctuation:
+for punct in string.punctuation:
       corpus_words = corpus_words.replace(punct, "")
 
 # Again replace double spaces with single spaces
@@ -151,7 +151,7 @@ for i in range(10):
       i = i + 1
 ```
 
-Next, we should lowercase all text so that we don't get a word in two forms in the list, once with capital, once without, and have a consistent list of words:
+Next, we will lowercase all text so that we don't get a word in two forms in the list, once with capital, once without, and have a consistent list of words:
 ```python
 # Lowercase the text
 corpus_words = corpus_words.lower()
@@ -170,12 +170,12 @@ Before the break we did a number of preprocessing steps to get the sentence toke
 - We loaded the corpus into one long string and selected the part of the string that we wanted to analyse, which is the first story
 - We replaced new lines with spaces and removed all double spaces.
 - We split the string into sentences based on points
+
 To continue getting the individual words:
 - we removed punctuation marks
-- removed double spaces
+- we removed double spaces
 - we lowercased the text
 - We split the text into a list of words based on spaces.
-- We selected all individual words by converting the list into a set.
 
 We did all these steps by hand, to get an understanding of what is needed to create the tokens. However these steps can also be done with a Python package, where these things happen behind the scenes. We will now start using this package to look at the results of the preprocessing steps of stop word removal, stemming and part-of-speech tagging.
 
