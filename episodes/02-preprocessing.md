@@ -34,8 +34,8 @@ Examples of preprocessing steps are:
 - part of speech tagging: This means that you identify what type of word each is; such as nouns and verbs.
 
 The above examples of techniques of data preprocessing modify the input text to make it interpretable and analyzable by the NLP model of our choice. 
-Here we will go through all these steps to be aware of which steps can be performed and what are their consequences. 
-However, It is important to realize that you do not always need to do all the preprocessing steps, and which ones you should do depends on what you want to do. 
+Here we will go through all these steps to be aware of which steps can be performed and what their consequences are. 
+However, it is important to realize that you do not always need to do all the preprocessing steps, and which ones you need depends on what you want to do. 
 For example, if you want to extract entities from the text using named entity recognition, you explicitly do not want to lowercase the text, as captials are one component in the identification.
 Another important thing is that NLP tasks and the preprocessing steps can be very diffent for different languages. 
 This is even more so if you are comparing steps for alphabetical languages such as English to those for non-alphabetical languages such as Chinese.
@@ -50,7 +50,7 @@ import matplotlib.pyplot as plt
 import string
 ```
 
-We can then open the text file that contains the text and save it in a variable called `corpus_full`.
+We can then open the text file that contains the text and save it in a variable called `corpus_full`. The text that we are going to analyse it the first story in the book "The case-book of Sherlock Holmes" by Arthus Conan Doyle. This first story is called "The Adventure of the Illustrious Client".
 
 ```python
 # Load the book The case-book of Sherlock Holmes by Arthur Conan Doyle
