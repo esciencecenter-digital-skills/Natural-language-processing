@@ -45,9 +45,9 @@ In order to start the preprocessing we first load in the data. For that we need 
 
 ```python
 # import packages
-import spacy
 import io
 import matplotlib.pyplot as plt
+import string
 ```
 
 We can then open the text file that contains the text and save it in a variable called `corpus_full`.
@@ -134,10 +134,10 @@ sentences[0:20]
 ### Words
 We can now procede from `corpus_sentences` to split the corpus into individual words based on spaces. To get 'clean words' we need to replace some more punctuation marks, so that these are not included in the list of words.
 
-Let's first define the punctuation marks we want to remove:
+the python string package contains a string of all punctuation marks
 ```python
 # Punctuation symbols
-punctuation = (".", ",", ":", ";", "(", ")", "!", "?", "\"")
+string.punctuatio
 ```
 
 Then we go over all these punctuation symbols one by one using a loop to replace them:
