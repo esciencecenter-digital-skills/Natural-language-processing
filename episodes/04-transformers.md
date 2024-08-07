@@ -92,7 +92,7 @@ Already the second pre-training task gives us an idea of the power of this Encod
 
 ## BERT Architecture in a Nutshell
 
-![BERT Architecture](fig/bert1.png)
+![BERT Architecture](fig/bert3.png)
 
 1. Tokenizer: split text into tokens that the model recognizes
 2. Embedder: convert each token into a fixed-sized vector that represents it
@@ -104,7 +104,7 @@ Already the second pre-training task gives us an idea of the power of this Encod
 
 As in any basic NLP pipeline, the first step is to pre-process the raw text so it is ready to be fed into the Transformer. Tokenization in BERT does not happen at the word-level but rather splits texts into what they call WordPieces (the reason for this decision is complex, but in short, researchers found that splitting texts into subtokens exploits better the character sub-sequences inside words and helps the model converge faster). A word then sometimes is decomposed into one or several (sub) tokens. Once the text is tokenized, each token is fed into an embedding layer that transforms the sentence into a sequence of vectors. Additionally, each token is concatenated to two other vectors: one is called segment embedding, which helps recognize if if belongs to segment A/B and the other is the positional embedding wich helps to trace the order of the sequence (remember that the transformer processes data in parallel, hence it looses track of the original word order if it didn't have this positional information).
 
-![BERT Embedding Layer](fig/bert2.png)
+# ![BERT Embedding Layer](fig/bert2.png)
 
 All of the following code is based on the HugingFace pythonn library. We can install it with:
 
@@ -183,6 +183,8 @@ print(f"Cosine Similarity 'note' vs 'note': {similarity[0][0]}")
 
 # BERT as a Language Model
 
+
+
 As mentioned before, one of the main pre-training tasks of BERT is Language Modeling. They model language by masking a token and using the whole context to predict it. We can therefore directly use BERT as a predictor for language completion:
 
 ```python
@@ -196,16 +198,18 @@ def pretty_print_outputs(sentences, model_outputs):
 
 
 nlp = pipeline(task='fill-mask', model='bert-base-cased', tokenizer='bert-base-cased')
-sentences = ['Paris is the [MASK] of France', 'I want to eat a cold [MASK] this afternoon']
+sentences = ['Paris is the [MASK] of France', 'I want to eat a cold [MASK] this afternoon', 'Maria [MASK] Groningen']
 model_outputs = nlp(sentences, top_k=5)
 pretty_print_outputs(sentences, model_outputs)
 ```
 
-This prints the top 5 most likely suggestions to complete the sentences. In the first example it shows correctly that the missing token in the first sentence is `capital`, and for the more ambiguous second example, the model at least uses the context to correctly predict a series of items that can be eaten (unfortunately, none of its suggestions sound very tasty). This already shows some of the weaknesses of the approach.
+This prints the top 5 most likely suggestions to complete the sentences. In the first example it shows correctly that the missing token in the first sentence is `capital`, the second example is a bit more ambiguous, but the model at least uses the context to correctly predict a series of items that can be eaten (unfortunately, none of its suggestions sound very tasty); finally, the third example gives almost no information so the model plays it safe and only suggests prepositions or punctuation. This already shows some of the weaknesses of the approach.
 
-# Text Classification
+# BERT for Text Classification
 
 We can also use Transformer encoders as the base for text classifiers (assigning a label to a whole sentence). With the parameter `task="text_classification"` the `pipeline()` function will load the provided model and add a linear layer on top. This linear layer can be fine-tuned with our own labeled data or we can also load the pre-trained models that are already available in HuggingFace. 
+
+![BERT as an Emotion Classifier](fig/bert4.png)
 
 Let's see the example of an emotion classifier based on `RoBERTa` model. This model was fine-tuned in the Go emotions [dataset](https://huggingface.co/datasets/google-research-datasets/go_emotions) which is annotated data taken from English Reddit. The fine-tuned model is called [roberta-base-go_emotions](https://huggingface.co/SamLowe/roberta-base-go_emotions). This model takes a sentence as input and ouputs a probability distribution over 28 possible emotions that are conveyed in the text. For example:
 
@@ -213,22 +217,22 @@ Let's see the example of an emotion classifier based on `RoBERTa` model. This mo
 
 classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", top_k=3)
 
-sentences = ["I am not having a great day", "This is a lovely and innocent sentence"]
+sentences = ["I am not having a great day", "Maria loves Groningen"]
 model_outputs = classifier(sentences)
 
 pretty_print_outputs(sentences, model_outputs)
 ```
 
-This code outputs the Top-3 emotions that each of the two sentences convey. In this case, the first sentence evokes (in order of likelihood) *dissapointment*, *sadness* and *annoyance*; whereas the second sentence evokes *admiration*, *approval* and *love*. Note however that the likelihood of each prediction decreases dramatically below the top choice.
+This code outputs the Top-3 emotions that each of the two sentences convey. In this case, the first sentence evokes (in order of likelihood) *dissapointment*, *sadness* and *annoyance*; whereas the second sentence evokes *love*, *neutral* and *approval*. Note however that the likelihood of each prediction decreases dramatically below the top choice, so perhaps this specific classifier is only useful for the top emotion.
 
 
-# Token Classification: Named Entity Recognition
+# BERT for Token Classification
 
-## NER Task
+## Named Entity Recognition
 
 Named Entity Recognition (NER) is the task of recognizing mentions of real-world entities inside a text. The concept of entity includes proper names that unequivocally identify a unique individual (PER), place (LOC), organization (ORG), or object (MISC). Depending on the domain, the concept has been expanded to recognize other unique (and more conveptual) entities such as dates, money, works of art and numeric expressions, etcetera. In terms of NLP, this boils down to classifying each token into a series of labels (PER, LOC, ORG, O). Since a single entity can be expressed with multiple words (e.g. New York) the usual notation used for labeling the text is IOB (**I**nner **O**ut **B**eginnig of entity) notations which identifies the limits of each entity tokens. For example:
 
-`['Lisa', 'lives', 'in', 'New', 'York', '.']` maps to the labels `['B-PER', 'O', 'O', 'B-LOC', 'I-LOC', 'O']`
+![BERT as an NER Classifier](fig/bert5.png)
 
 This is a typical sequence classification problem where an imput sequence must be fully mapped into an output sequence of labels with unique constraints (for example, there can't be an I-PER label before a B-PER label). Since the labels of the tokens are context dependent a language model such as BERT can be beneficial for a task like NER.
 
@@ -394,6 +398,182 @@ print(classification_report(gold_labels, model_predictions))
 
 ```
 
+Since we took a classifier that was not trained for the book domain, the performance is quite poor. The solution in this case is to use another of the great characteristics of BERT: fine-tuning for domain adaptation. It is possible to train your own classifier with relatively small data (given that a lot of linguistic knowledge was already provided during the language modeling pre-training). In the following section we will see how to train your own NER model and use it for predictions.
+
 # Training your own Classifier
 
-TODO: Show how fine-tunning a BERT model actually gets us way better results...
+First thing we need to do is load the bert-base model with an extra clean classifier which we will finetune using owr dataset...
+
+```python
+from transformers import AutoConfig
+import torch
+# This is to be able to use Mac GPU if available
+device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+# Load Pre-trained Weights
+model_config = AutoConfig.from_pretrained("bert-base-cased", num_labels=len(index2label), id2label=index2label, label2id=label2index)                                       
+ner_model = (AutoModelForTokenClassification
+           .from_pretrained("bert-base-cased", config=model_config)
+           .to(device))
+
+label2index = {idx: lbl for idx, lbl in label_vocab.items()}
+label2index['IGN'] = -100
+index2label = {lbl: idx for idx, lbl in label2index.items()}
+
+```
+
+Given that the BERT tokenizer breaks the sentences into WordPieces and our source data only has the gold labels at the full word level, we need to pre-process the data in order to expand the labels and have a 1-1 mapping that match the BERT tokens...
+
+```python
+
+def expand_labels(sentences, gold_labels, return_tensors = None):
+    tokenized_inputs = tokenizer(sentences, padding=True, truncation=True, is_split_into_words=True, return_tensors=return_tensors)
+    all_expanded = []
+    for idx, label in enumerate(gold_labels):
+        word_ids = tokenized_inputs.word_ids(batch_index=idx)
+        previous_word_idx = None
+        label_ids = []
+        for word_idx in word_ids:
+            if word_idx is None:
+                label_ids.append(-100)
+            elif word_idx == previous_word_idx:
+                label_str = label[word_idx - 1]
+                label_ids.append(label2index[label_str])
+            else:
+                label_str = label[word_idx]
+                label_ids.append(label2index[label_str])
+            previous_word_idx = word_idx
+        all_expanded.append(label_ids)    
+    return tokenized_inputs, all_expanded
+
+
+tokenized_inputs, all_expanded = expand_labels([s.split() for s in sentences], gold_labels)
+
+print(tokenized_inputs[0])
+print(len(all_expanded[0]), all_expanded[0])
+```
+
+We also need to track the performance of the model while training so we create a script to properly evlluate the model outputs when compared to the expanded gold labels we obtained:
+
+```python
+from transformers import TrainingArguments
+from seqeval.metrics import f1_score
+
+def align_predictions(predictions, label_ids):    
+    preds = np.argmax(predictions, axis=2)    
+    batch_size, seq_len = preds.shape    
+    labels_list, preds_list = [], []
+    
+    for batch_idx in range(batch_size):
+        example_labels, example_preds = [], []
+        for seq_idx in range(seq_len):
+            # Ignore label IDs = -100
+            if label_ids[batch_idx, seq_idx] != -100:
+                example_labels.append(index2label[label_ids[batch_idx][seq_idx]])
+                example_preds.append(index2label[preds[batch_idx][seq_idx]])
+            
+            labels_list.append(example_labels)
+            preds_list.append(example_preds)
+    
+    return preds_list, labels_list
+
+
+def compute_metrics(eval_pred):    
+    y_pred, y_true = align_predictions(eval_pred.predictions,eval_pred.label_ids)
+    return {"f1": f1_score(y_true, y_pred)}
+
+
+```
+
+Next, we define the dataset so the model puts the tensors on the device and goes through the training loop
+
+```python
+import torch
+
+class MyNerDataset(torch.utils.data.Dataset):
+    def __init__(self, encodings, labels=None):
+        self.encodings = encodings
+        self.labels = labels
+
+    def __getitem__(self, idx):
+        item = {key: torch.tensor(val[idx]).to(device) for key, val in self.encodings.items()}
+        if self.labels:
+            item['labels'] = torch.tensor(self.labels[idx]).to(device)
+        return item
+
+    def __len__(self):
+        if self.labels:
+            return len(self.labels)
+        else:
+            return None
+```
+
+We finally run the training loop. We will on purpose overfit the model (since we do not have time to train with more data). So we will use the same book for finetuning BERT and after 6 epochs evaluate how it does on the training data itself.
+
+```python
+from transformers import Trainer
+
+test_data = MyNerDataset(tokenized_inputs, all_expanded)
+train_data = MyNerDataset(tokenized_inputs, all_expanded)
+
+
+epochs = 6
+batch_size = 8
+logging_steps = len(sentences) // batch_size
+
+my_awesome_ner = "my-awesome-bert-ner-model"
+
+training_args = TrainingArguments(
+    output_dir=my_awesome_ner, 
+    log_level="error", 
+    num_train_epochs=epochs,    
+    per_device_train_batch_size=batch_size,    
+    per_device_eval_batch_size=batch_size, 
+    evaluation_strategy="epoch",    
+    save_steps=1e6, 
+    weight_decay=0.01, 
+    learning_rate=1e-4,
+    disable_tqdm=False, 
+    use_mps_device=True,   # Only if you are in Mac!
+    # logging_steps=logging_steps
+    )
+
+
+trainer = Trainer(tokenizer=tokenizer, 
+                  model=ner_model,
+                  args=training_args, 
+                  compute_metrics=compute_metrics,
+                  train_dataset=train_data,
+                  eval_dataset=test_data,
+                  )
+
+trainer.train()
+```
+
+And finally the evaluation:
+
+```python
+from seqeval.metrics import classification_report
+
+sentences, gold_labels, label_vocab = quick_conll_reader("1023_bleak_house_brat.tsv")
+
+my_loaded_ner_model = f"{my_awesome_ner}/checkpoint-80"
+ner_classifier = pipeline(task="ner", model=my_loaded_ner_model, tokenizer=my_loaded_ner_model, aggregation_strategy="simple")
+ner_results = ner_classifier(sentences)
+
+model_predictions = []
+for i, sentence_ner in enumerate(ner_results):
+    print(f"\n===== SENTENCE {i+1} =====")
+    print('Tokens:', sentences[i].split())
+    print('GOLD:', gold_labels[i])
+    # Get the IOB labels for the tokenized sentence
+    tokenized_sentence = sentences[i].split()
+    predicted_iob_labels = get_iob_labels(tokenized_sentence, sentence_ner)
+    model_predictions.append(predicted_iob_labels)
+    print('MODEL:', predicted_iob_labels)
+    for nr in sentence_ner:
+        print(f'\t{nr}')
+
+
+
+print(classification_report(gold_labels, model_predictions))
+```
