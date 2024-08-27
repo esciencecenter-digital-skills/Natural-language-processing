@@ -4,6 +4,7 @@
 "config.yaml" "85ebbf6439f37fff20f6dda0f1c025dc" "site/built/config.yaml" "2024-07-25"
 "index.md" "7cce00f7cd30382ee6c4812fe539c1de" "site/built/index.md" "2024-05-06"
 "links.md" "8184cf4149eafbf03ce8da8ff0778c14" "site/built/links.md" "2022-04-22"
+"workshops.md" "501f6afe121f59ecdfcc1146b37cf777" "site/built/workshops.md" "2024-08-27"
 "episodes/00-welcome.md" "a41380729a6078ae1567cbb4a85838d9" "site/built/00-welcome.md" "2024-05-06"
 "episodes/01-introduction.md" "318208d6dd410bd9d1fcb295ae998c51" "site/built/01-introduction.md" "2024-05-06"
 "episodes/02-preprocessing.md" "9c6fe518bf93df4b02c0c2c0e8f9e4d3" "site/built/02-preprocessing.md" "2024-07-09"
