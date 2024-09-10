@@ -33,7 +33,6 @@ The Transformer is a neural network architecture proposed by Google researchers 
 
 ![The general architecture for the Transformer](fig/trans1.png)
 
-
 ## Encoder-Decoder: The Machine Translation Case
 
 The inspiration for the Transformer is indeed the general  MT task, therefore it is easier to understand all of its components if we explain how translation was performed using neural models until 2016. The general architecture is called Encoder-Decoder, which works as follows:
@@ -43,7 +42,6 @@ An **encoder** is a recurrent neural network that processes the source sequence 
 Next, a second recurrent neural network is used, the **decoder**, to generate token by token conditioned both on the source meaning and the target words generated so far. This way, each generated tokens should be coherent within the target sequence while at the same time expressing the intended meaning in the source.
 
 ![The Encoder outputs a vector representation which conditions what the Decoder generates](fig/trans2.png)
-
 
 ## Attention Mechanism
 
@@ -104,7 +102,7 @@ Already the second pre-training task gives us an idea of the power of this Encod
 
 As in any basic NLP pipeline, the first step is to pre-process the raw text so it is ready to be fed into the Transformer. Tokenization in BERT does not happen at the word-level but rather splits texts into what they call WordPieces (the reason for this decision is complex, but in short, researchers found that splitting texts into subtokens exploits better the character sub-sequences inside words and helps the model converge faster). A word then sometimes is decomposed into one or several (sub) tokens. Once the text is tokenized, each token is fed into an embedding layer that transforms the sentence into a sequence of vectors. Additionally, each token is concatenated to two other vectors: one is called segment embedding, which helps recognize if if belongs to segment A/B and the other is the positional embedding wich helps to trace the order of the sequence (remember that the transformer processes data in parallel, hence it looses track of the original word order if it didn't have this positional information).
 
-# ![BERT Embedding Layer](fig/bert2.png)
+![BERT Embedding Layer](fig/bert2.png)
 
 All of the following code is based on the HugingFace pythonn library. We can install it with:
 
@@ -115,22 +113,27 @@ pip install transformers
 We can see how the tokenizer works by loading the correct pre-trained model and tokenizer. Then we feed a sentence into the tokenizer to obtain a tensor of vectors, each one of them representing a wordPiece:
 
 ```python
+
 # Load model and tokenizer
 from transformers import BertTokenizer, BertModel
 tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
 model = BertModel.from_pretrained("bert-base-cased")
+
 # Feed text into the tokenizer 
 text = "Maria's passion for music is clearly heard in every note and every enchanting melody."
 encoded_input = tokenizer(text, return_tensors='pt')
 token_ids = list(encoded_input.input_ids[0].detach().numpy())
 print(token_ids)
+
 ```
 
 This shows a list of 21 token IDs (the ID for each token in the embedding layer of the transformer). To see the actual list of 21 tokens we can convert the IDs like this:
 
 ```python
+
 string_tokens = tokenizer.convert_ids_to_tokens(token_ids)
 print(string_tokens)
+
 ```
 
 We can see that most "words" were converted into a token, however *enchanting* was splitted into three sub-tokens: `'en', '##chan', '##ting'` the hashtags indicate wether a sub-token was part of a bigger word or not, this is useful to recover the original strings later. The `[CLS]` token was added at a beginning and is intended to represent the meaning of the whole sequence, likewise the `[SEP]` token was added to indicate that it is where the sentence ends.
@@ -152,7 +155,6 @@ We can use the same method to encode another sentence with the word *note* to se
 note_index_1 = string_tokens.index('note')
 note_vector_1 = output.last_hidden_state[0][note_index_1].detach().numpy()
 note_token_id_1 = token_ids[note_index_1]
-
 
 # Encode and then take the 'note' token from the second sentence
 note_text_2 = "I could not buy milk in the supermarket because the bank note I wanted to use was fake."
@@ -182,8 +184,6 @@ print(f"Cosine Similarity 'note' vs 'note': {similarity[0][0]}")
 ```
 
 # BERT as a Language Model
-
-
 
 As mentioned before, one of the main pre-training tasks of BERT is Language Modeling. They model language by masking a token and using the whole context to predict it. We can therefore directly use BERT as a predictor for language completion:
 
