@@ -61,9 +61,8 @@ contact: 'l . ootes at esciencecenter.nl'
 # Order of episodes in your lesson
 episodes:
 - 00-welcome.md
-- 01-introduction.md
-- 02-preprocessing.md
-- 03-embeddings.md
+- 01-preprocessing.md
+- 02-embeddings.md
 
 # Information for Learners
 learners:
