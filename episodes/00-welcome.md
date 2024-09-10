@@ -13,6 +13,7 @@ exercises: 0
 :::::: objectives
 - Identify the target audience
 - Identify the learning goals of the lesson
+- Get data that will be used in the course
 ::::::
 
 # Welcome
