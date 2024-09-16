@@ -1,6 +1,6 @@
 ---
-title: "Episode 2: Preprocessing"
-teaching: 10 
+title: "Episode 1: From text to vectors - preprocessing and word embeddings"
+teaching: 10
 exercises: 0
 ---
 :::::::::::::::::::::::::::::::::::::::::::::::: questions
