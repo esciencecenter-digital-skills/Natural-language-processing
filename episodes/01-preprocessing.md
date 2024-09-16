@@ -5,9 +5,17 @@ exercises: 0
 ---
 :::::::::::::::::::::::::::::::::::::::::::::::: questions
 
+- What problem are we going to solve in this episode?
+
+- What is preprocessing and why do we need it?
 - What different types of preprocessing steps are there?
-- Why we need preprocessing?
-- What are the consequences of applying data preprocessing on our text? 
+- What are the consequences of applying data preprocessing on our text?
+
+- What are word embeddings?
+- What properties word embeddings have?
+- What is a word2vec model?
+- Can we inspect word embeddings?
+- (Optional) How do we train a word2vec model?
 
 :::::::::::::::::::::::::::::::::::::::::::::::: 
 
