@@ -32,6 +32,11 @@ After following this lesson, learners will be able to:
 
 # Delpher newspaper articles
 In this epsiode we are going to process Dutch newpaper texts. Newspapers make an interesting dataset for scientific research, as it contains information about current events and the language it uses is clear and reflective of its time.
+
+::: Instructor
+It would be useful to teach this while showing the website.
+:::
+
 We will be using data from [Delpher](https://www.delpher.nl/) in this episode. Delpher is a public database developed by the [KB - the National Library of the Netherlands](https://www.kb.nl/) and contains digitalised historic Dutch newspapers, books, and magazines. The online newspaper collection covers data spanning from 1618 up to 1995 and of many local, national and international publishers. 
 What we will be looking into today is to examine the sematic shifts of specific words over various decades. We will look at the context in which a word is used between the 1950s and 1990s.
 
@@ -41,7 +46,7 @@ Before we will collect the data, let's play around a bit in Delpher. Go to the [
 
 ::::::::::::::: solution
 
-
+Next we will be looking into text preprocessing. We will be using the edition of Trouw from 02-01-1950 for this exercise that can be downloaded as pdf-file from Delpher.
 
 
 
