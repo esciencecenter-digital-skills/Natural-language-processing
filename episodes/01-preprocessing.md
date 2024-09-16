@@ -30,6 +30,21 @@ After following this lesson, learners will be able to:
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
+# Delpher newspaper articles
+In this epsiode we are going to process Dutch newpaper texts. Newspapers make an interesting dataset for scientific research, as it contains information about current events and the language it uses is clear and reflective of its time.
+We will be using data from [Delpher](https://www.delpher.nl/) in this episode. Delpher is a public database developed by the [KB - the National Library of the Netherlands](https://www.kb.nl/) and contains digitalised historic Dutch newspapers, books, and magazines. The online newspaper collection covers data spanning from 1618 up to 1995 and of many local, national and international publishers. 
+What we will be looking into today is to examine the sematic shifts of specific words over various decades. We will look at the context in which a word is used between the 1950s and 1990s.
+
+::::::::::::::::::::::::::::::::::::::: challenge
+## Exploring Delpher
+Before we will collect the data, let's play around a bit in Delpher. Go to the [Delpher](https://www.delpher.nl/) and look around what data they all have. Can you find anything in the data that you find interesting or didn't know yet? For example about your living area, sports club, or an historic event?
+
+::::::::::::::: solution
+
+
+
+
+
 # Preprocessing
 NLP models work by learning the statistical regularities within the constituent parts of the language (i.e, letters, digits, words and sentences) in a text. Before applying these models, the input text must often be modified to make it into a format that is better interpretable by the model. This operation is known as `data preprocessing` and its goal is to make the text ready to be processed by the model. Applying these preprocessing steps will give better results in the end.
 
