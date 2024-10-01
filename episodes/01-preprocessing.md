@@ -38,7 +38,7 @@ It would be useful to teach this while showing the website.
 :::
 
 We will be using data from [Delpher](https://www.delpher.nl/) in this episode. Delpher is a public database developed by the [KB - the National Library of the Netherlands](https://www.kb.nl/) and contains digitalised historic Dutch newspapers, books, and magazines. The online newspaper collection covers data spanning from 1618 up to 1995 and of many local, national and international publishers. 
-What we will be looking into today is to examine the sematic shifts of specific words over various decades. We will look at the context in which a word is used between the 1950s and 1990s.
+What we will be looking into is to examine the sematic shifts of specific words over various decades. We will look at the context in which a word is used between the 1950s and 1990s.
 
 ::::::::::::::::::::::::::::::::::::::: challenge
 ## Exploring Delpher
@@ -46,8 +46,7 @@ Before we will collect the data, let's play around a bit in Delpher. Go to the [
 
 ::::::::::::::: solution
 
-Next we will be looking into text preprocessing. We will be using the edition of Trouw from 02-01-1950 for this exercise that can be downloaded as pdf-file from Delpher.
-
+Next we will be looking into text preprocessing. We will be using the edition of de [Volkskrant from 01-06-1992](https://www.delpher.nl/nl/kranten/view?coll=ddd&query=&cql%5B%5D=%28date+_gte_+%2201-06-1992%22%29&cql%5B%5D=%28date+_lte_+%2201-06-1992%22%29&cql%5B%5D=ppn+any+%28442505736+OR+412789353+OR+401021270+OR+401018156+OR+401021289+OR+401019144+OR+401017559+OR+401018091+OR+401019101+OR+401019098+OR+401019152+OR+401017303+OR+401017230+OR+401017311+OR+401021017+OR+40101911X+OR+401018148+OR+401019039+OR+401019128+OR+401019136+OR+862007704+OR+271635061+OR+271638699+OR+272557935+OR+832675814+OR+272560189+OR+271632224+OR+412869543+OR+401018504+OR+401018520+OR+40101813X+OR+412869551+OR+401019217+OR+271482397+OR+271481684+OR+400335360+OR+401020045+OR+401018067+OR+401018512+OR+401018113+OR+401021157+OR+401017478+OR+401021025+OR+401017338+OR+401020053+OR+401018121+OR+401020452+OR+401021033+OR+401021165+OR+40101892X+OR+401019330+OR+401021475+OR+401018911+OR+853386080+OR+433026464+OR+41286956X+OR+40102895X+OR+832675288+OR+43224235X+OR+400367629+OR+412869594+OR+412869608+OR+412869632+OR+412869624+OR+412869616+OR+43066950X%29&redirect=true&sortfield=date&resultscoll=dddtitel&identifier=ABCDDD:010866896:mpeg21&rowid=1) for this exercise that can be downloaded as pdf-file from Delpher.
 
 
 # Preprocessing
@@ -57,19 +56,23 @@ Examples of preprocessing steps are:
 
 - tokenization: this means splitting up the text into individual tokens. You can for example create sentence tokens or words tokens, or any others.
 - lowercasing
-- stop words removal, where you remove common words such as `the` or `a` that you would note need in some further analysis steps.
+- stop word removal, where you remove common words such as `the` or `a` that you would note need in some further analysis steps.
 - lemmatization: with this step you obtain the lemma of each word. You would get the form in which you find the word in the dictionary, such as the singular version of a plural of a noun, or the first person present tense of a verb instead of the past principle. You are making sure that you do not get different versions of the same word: you would convert `words` into `word` and `talking` into `talk`
 - part of speech tagging: This means that you identify what type of word each is; such as nouns and verbs.
 
 The above examples of techniques of data preprocessing modify the input text to make it interpretable and analyzable by the NLP model of our choice. 
-Here we will go through all these steps to be aware of which steps can be performed and what are their consequences. 
+Here we will go through several steps to be aware of which steps can be performed and what their consequences are. 
 However, It is important to realize that you do not always need to do all the preprocessing steps, and which ones you should do depends on what you want to do. 
-For example, if you want to extract entities from the text using named entity recognition, you explicitly do not want to lowercase the text, as captials are one component in the odentification. 
+For example, if you want to extract entities from the text using named entity recognition, you explicitly do not want to lowercase the text, as capitals are a component in the identification process.
 Another important thing is that NLP tasks and the preprocessing steps can be very diffent for different languages. 
 This is even more so if you are comparing steps for alphabetical languages such as English to those for non-alphabetical languages such as Chinese.
 
 ## Loading the corpus
-In order to start the preprocessing we first load in the data. For that we need a number of python packages.
+In order to start the preprocessing we first load in the data. 
+
+```Explain OCR?```
+
+For that we need a number of python packages.
 
 ```python
 # import packages
@@ -82,25 +85,14 @@ We can then open the text file that contains the text and save it in a variable 
 
 ```python
 # Load the book The case-book of Sherlock Holmes by Arthur Conan Doyle
-path = "../pg69700.txt"
-f = io.open(path, mode="r", encoding="utf-8-sig")
-corpus_full = f.read()
+path = "./volkskrant.txt"
+with open(path) as myfile:
+    corpus = myfile.read()
 ```
 Let's check out the start of the corpus
 ```python
 # Print the text
-print(corpus_full[0:1000])
-```
-This shows that the corpus contains a lot of text before the actual first story starts. Let's therefore select the part of the `corpus_full` that contains the first story. We determined beforehand which part of the string `corpus_full` catches the first story, and we can save it in the parameter `corpus`:
-
-```python
-# Select the first story
-corpus = corpus_full[5048:200000]
-```
-
-Let's again have a look at what the text looks like:
-```python
-print(corpus)
+print(corpus_full)
 ```
 
 The print statement automatically formats the text. We can also have a look at what the unformatted text looks like:
@@ -110,6 +102,8 @@ corpus
 ```
 
 This shows that there are things in there such as `\n` which defines new lines. This is one of the things we want to eliminate from the text in the preprocessing steps so that we have a more analyzable text to work with.
+
+##
 
 ## Tokenization
 We will now start by splitting the text up into individual sentences and words. This process is referred to as tokenizing; instead of having one long text we will create individual tokens.
