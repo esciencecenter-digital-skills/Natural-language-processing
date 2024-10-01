@@ -87,7 +87,7 @@ We can then open the text file that contains the text and save it in a variable 
 # Load the book The case-book of Sherlock Holmes by Arthur Conan Doyle
 path = "./volkskrant.txt"
 with open(path) as myfile:
-    corpus = myfile.read()
+    corpus_full = myfile.read()
 ```
 Let's check out the start of the corpus
 ```python
@@ -95,17 +95,7 @@ Let's check out the start of the corpus
 print(corpus_full)
 ```
 
-The print statement automatically formats the text. We can also have a look at what the unformatted text looks like:
-
-```python
-corpus
-```
-
-This shows that there are things in there such as `\n` which defines new lines. This is one of the things we want to eliminate from the text in the preprocessing steps so that we have a more analyzable text to work with.
-
-##
-
-## Tokenization
+<s> ## Tokenization
 We will now start by splitting the text up into individual sentences and words. This process is referred to as tokenizing; instead of having one long text we will create individual tokens.
 
 Tokens can be defined in different ways: here we will first split text up into sentence tokens, so that each token represents one sentence in the text. Then we will extract the word tokens, where each token is one word.
@@ -118,40 +108,10 @@ The text can be split into sentences based on points. From the corpus as we have
 
 We will define `corpus_sentences` to do all preprocessing steps we need to split the text into individual sentences. First we replace the end of lines and backslashes:
 
-```python
-# Replace newlines with spaces:
-corpus_sentences = corpus.replace("\n", " ")
-
-# Replace backslashes
-corpus_sentences = corpus_sentences.replace("\"", "")
-```
-
-Then we can replace the double spaces with single spaces. However, there might be multiple double spaces in the text after one another. To catch these, we can repeat the action of replacing double spaces a couple of times, using a loop: 
-
-```python
-# Replace double spaces with single spaces
-for i in range(10):
-      corpus_sentences = corpus_sentences.replace("  ", " ")
-      i = i + 1
-```
-
-```python
-# Check that there a no more double spaces
-"  " in corpus_sentences
-```
-Indeed there a no more double spaces.
-
-Now we are ready to split the text into sentences based on points:
-```python
-sentences = corpus_sentences.split(". ")
-```
 What this does it that the `corpus_sentences` is split up every time a `. `is found, and the results are stored in a python list.
 
 If we print the first 20 items in the resulting list, we can see that indeed the data is split up into sentences, but there are some mistakes, where for example a new sentence is defined because the word 'mister' was abbreviated which also resulted in a new sentence definition. This shows that these kind of steps will never be fully perfect, but it good enough to proceed.
 
-```python
-sentences[0:20]
-```
 
 ### Words
 We can now procede from `corpus_sentences` to split the corpus into individual words based on spaces. To get 'clean words' we need to replace some more punctuation marks, so that these are not included in the list of words.
@@ -164,34 +124,15 @@ punctuation = (".", ",", ":", ";", "(", ")", "!", "?", "\"")
 
 Then we go over all these punctuation symbols one by one using a loop to replace them:
 
-```python
-# Loop over the punctuation symbols to remove them
-corpus_words = corpus_sentences
-
-for punct in punctuation:
-      corpus_words = corpus_words.replace(punct, "")
-
-# Again replace double spaces with single spaces
-for i in range(10):
-      corpus_words = corpus_words.replace("  ", " ")
-      i = i + 1
-```
-
 Next, we should lowercase all text so that we don't get a word in two forms in the list, once with capital, once without, and have a consistent list of words:
 ```python
 # Lowercase the text
 corpus_words = corpus_words.lower()
 ```
-
-Now we can split the text into individual words based by splitting them up on every space:
-```python
-words = corpus_words.split(" ")
-words
-```
-
+</s>
 
 ## Using a spacy pipeline to analyse texts
-Before the break we did a number of preprocessing steps to get the sentence tokens and word tokens. We took the following steps:
+<s>Before the break we did a number of preprocessing steps to get the sentence tokens and word tokens. We took the following steps:
 
 - We loaded the corpus into one long string and selected the part of the string that we wanted to analyse, which is the first story
 - We replaced new lines with spaces and removed all double spaces.
@@ -204,7 +145,7 @@ To continue getting the individual words:
 - We selected all individual words by converting the list into a set.
 
 We did all these steps by hand, to get an understanding of what is needed to create the tokens. However these steps can also be done with a Python package, where these things happen behind the scenes. We will now start using this package to look at the results of the preprocessing steps of stop word removal, stemming and part-of-speech tagging.
-
+</s>
 ## Spacy NLP pipeline
 There are multiple python packages that can be used to for NLP, such as `Spacy`, `NLTK`, `Gensim` and `PyTorch`. Here we will be using the `Spacy` package.
 
@@ -246,7 +187,7 @@ Let's now apply this pipeline on our data. Remember that we as a first step befo
 doc = nlp(corpus)
 ```
 
-On of the things that the pipeline does, is tokenization as we did in the first part. We can now check out the sentence tokens like this:
+One of the things that the pipeline does, is tokenization as we did in the first part. We can now check out the sentence tokens like this:
 
 ```python
 # Get sentences
