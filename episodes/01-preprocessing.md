@@ -40,6 +40,9 @@ It would be useful to teach this while showing the website.
 We will be using data from [Delpher](https://www.delpher.nl/) in this episode. Delpher is a public database developed by the [KB - the National Library of the Netherlands](https://www.kb.nl/) and contains digitalised historic Dutch newspapers, books, and magazines. The online newspaper collection covers data spanning from 1618 up to 1995 and of many local, national and international publishers. 
 What we will be looking into is to examine the sematic shifts of specific words over various decades. We will look at the context in which a word is used between the 1950s and 1990s.
 
+<span style="color:red">Expand a bit more?</span>
+
+
 ::::::::::::::::::::::::::::::::::::::: challenge
 ## Exploring Delpher
 Before we will collect the data, let's play around a bit in Delpher. Go to the [Delpher](https://www.delpher.nl/) and look around what data they all have. Can you find anything in the data that you find interesting or didn't know yet? For example about your living area, sports club, or an historic event?
