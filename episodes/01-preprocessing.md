@@ -161,13 +161,6 @@ Let's now apply this pipeline on our data. Remember that we as a first step befo
 doc = nlp(corpus)
 ```
 
-One of the things that the pipeline does, is tokenization as we did in the first part. We can now check out the sentence tokens like this:
-
-```python
-# Get sentences
-for sentence in doc.sents:
-    print(sentence)
-```
 
 and the word tokens like this:
 ```python
@@ -221,17 +214,6 @@ for token in doc:
 ```
 
 Here we can for example see that even the `n't` is recognized as not.
-
-## Part-of-speech tagging 
-The last thing we want to look at right now is part-of-speech tagging. The loaded model can tell for each word token what type of word it is grammatically. We can access these as follows:
-
-```python
-# Part-of-speech tags
-for token in doc:
-    print(token.text, token.pos_)
-```
-
-It recognizes determiners, nouns, adpositions, and more. But we can also see that it is not perfect and mistakes are made. That is something important to remember; any model, pretrained or if you train it yourself: there are always mistakes in it.
 
 
 :::::::::::::::::::: challenge
