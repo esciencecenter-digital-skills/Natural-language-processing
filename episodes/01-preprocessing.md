@@ -49,7 +49,7 @@ Before we will collect the data, let's play around a bit in Delpher. Go to the [
 
 ::::::::::::::: solution
 
-Next we will be looking into text preprocessing. The task we will tackly is to get an overview of the most common words in a piece of text. We will be using the first page of the edition of de [Algemeen Dagblad from July 21 1969](https://www.delpher.nl/nl/kranten/view?coll=ddd&query=&cql%5B%5D=%28date+_gte_+%2220-07-1969%22%29&redirect=true&sortfield=date&resultscoll=dddtitel&identifier=KBPERS01:002846018:mpeg21&rowid=3) for this exercise that can be downloaded as txt-file from Delpher.
+Next we will be looking into text preprocessing. <span style="color:red"> The task we will tackly is to get an overview of the most common words in a piece of text </span>. We will be using the first page of the edition of de [Algemeen Dagblad from July 21 1969](https://www.delpher.nl/nl/kranten/view?coll=ddd&query=&cql%5B%5D=%28date+_gte_+%2220-07-1969%22%29&redirect=true&sortfield=date&resultscoll=dddtitel&identifier=KBPERS01:002846018:mpeg21&rowid=3) for this exercise that can be downloaded as txt-file from Delpher.
 
 It is possible to download the data in different formats; jpg, pdf, and txt. The jpg file is the original scan that was made of the page, and can thus be considered the raw data. Because we want to use the text itself we download the txt file. This file contains only the text without formatting and images, and is produced by Delpher using a technique called Optical Character Recognition (OCR). This is a technique in which text from an image is converted into text. Very simply said, OCR software identifies which parts of an image contain text, and identifies the individual caracters to reconstruct the text. Although in research you might also have to start from images rather than text files, we will not go into optical character recognition. It is quite a difficult process that is beyond the scope of this course.
 
@@ -71,7 +71,7 @@ The above examples of techniques of data preprocessing modify the input text to 
 For example, if you want to extract entities from the text using named entity recognition, you explicitly do not want to lowercase the text, as capitals are a component in the identification process.
 Another important thing is that NLP tasks and the preprocessing can be very diffent for different languages. This is both in terms of which steps to apply, but also which methods to use for a specific step.
 
-<b> Right now, we are going to apply a number of preprocessing steps to obtain a list of all distinct word tokens from the newspaper page. </b>
+<span style="color:red"> Right now, we are going to apply a number of preprocessing steps to obtain a list of all distinct word tokens from the newspaper page. </span>
 
 ## Loading the corpus
 In order to start the preprocessing we first load in the data. For that we need a number of python packages.
