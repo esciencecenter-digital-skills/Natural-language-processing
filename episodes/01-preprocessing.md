@@ -60,8 +60,8 @@ NLP models work by learning the statistical regularities within the constituent 
 Examples of preprocessing steps are:
 
 - cleaning the text: remove symbols/special characters, or other things that "sneaked" into the text while loading the original version.
-- lowercasing.
-- remove punctuation
+- lowercasing
+- removing punctuation
 - stop word removal, where you remove common words such as `the` or `a` that you would note need in some further analysis steps.
 - tokenization: this means splitting up the text into individual tokens. You can for example create sentence tokens or words tokens, or any others.
 - lemmatization: with this step you obtain the lemma of each word. You would get the form in which you find the word in the dictionary, such as the singular version of a plural of a noun, or the first person present tense of a verb instead of the past principle. You are making sure that you do not get different versions of the same word: you would convert `words` into `word` and `talking` into `talk`
@@ -78,8 +78,9 @@ In order to start the preprocessing we first load in the data. For that we need 
 
 ```python
 # import packages
-import spacy
 import io
+import re
+import spacy
 import string
 import matplotlib.pyplot as plt
 ```
@@ -100,10 +101,26 @@ print(corpus)
 
 Looking at the text, we can see that in this case the OCR that has been applied to the original image, has given a pretty good result. However, there are still mistakes in the recognized text. For example, on the first line the word 'juli' has misinterpreted as 'iuli'.
 
-### Clean the text
-A first thing to do is to clean the text. As said, in this case the text is in pretty good state, close to the original. However, we can still improve the interpretability of the text by removing a number of special characters. Let's define these:
+### Cleaning the text
+A first thing to do is to clean the text. As said, in this case the text is in pretty good state, close to the original. However, we can still improve the interpretability of the text by removing a number of special characters, bringing the text closer to the original. First we'll remove any special symbols using a regex. Then we'll also remove the three dashes separating different news articles and the vertical bars separating some of the columns.
 
-### Lowercase
+```python
+clean = re.sub(r'[^\n -~\u00C0-\u017F]', "", corpus)
+cleaner = clean.replace("---", "")
+corpus_clean = cleaner.replace("|", "")
+
+print(corpus_clean)
+```
+
+### Lowercasing
+Our next step is to lowercase the text. Our goal here is to generate a list of unique words from the text, so in order to not have words twice in the list - once normal and once capitalised when it is at the start of a sentence for example- we can lowercase the full text. 
+
+```python
+corpus_lower = corpus_clean.lower()
+
+print(corpus_lower)
+```
+It is important to keep in mind that in doing this, some information is actually lost. As mentioned before, models that are trained to identify named entities use information on capitalisation. As another example, there are a lot of names and surnames that carry meaning. "Bakker" is a common Dutch surname, but is also a noun (baker), in lowercasing the text you loose the distinction between the two.
 
 ### Remove punctuation
 
