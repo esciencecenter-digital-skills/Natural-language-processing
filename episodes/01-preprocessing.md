@@ -55,22 +55,23 @@ It is possible to download the data in different formats; jpg, pdf, and txt. The
 
 
 # Preprocessing
-NLP models work by learning the statistical regularities within the constituent parts of the language (i.e, letters, digits, words and sentences) in a text. Before applying these models, the input text must often be modified to make it into a format that is better interpretable by the model. This operation is known as `data preprocessing` and its goal is to make the text ready to be processed by the model. Applying these preprocessing steps will give better results in the end.
+NLP models work by learning the statistical regularities within the constituent parts of the language (i.e, letters, digits, words and sentences) in a text. Before applying these models, the input text must often be modified to make it into a format that is better interpretable by the model. This operation is known as `data preprocessing` and its goal is to make the text ready to be efficiently processed by the model. Applying preprocessing steps will give better results in the end.
 
 Examples of preprocessing steps are:
 
-- tokenization: this means splitting up the text into individual tokens. You can for example create sentence tokens or words tokens, or any others.
-- lowercasing
+- cleaning the text: remove symbols/special characters, or other things that "sneaked" into the text while loading the original version.
+- lowercasing.
+- remove punctuation
 - stop word removal, where you remove common words such as `the` or `a` that you would note need in some further analysis steps.
+- tokenization: this means splitting up the text into individual tokens. You can for example create sentence tokens or words tokens, or any others.
 - lemmatization: with this step you obtain the lemma of each word. You would get the form in which you find the word in the dictionary, such as the singular version of a plural of a noun, or the first person present tense of a verb instead of the past principle. You are making sure that you do not get different versions of the same word: you would convert `words` into `word` and `talking` into `talk`
 - part of speech tagging: This means that you identify what type of word each is; such as nouns and verbs.
 
-The above examples of techniques of data preprocessing modify the input text to make it interpretable and analyzable by the NLP model of our choice. 
-Here we will go through several steps to be aware of which steps can be performed and what their consequences are. 
-However, It is important to realize that you do not always need to do all the preprocessing steps, and which ones you should do depends on what you want to do. 
+The above examples of techniques of data preprocessing modify the input text to make it interpretable and analyzable by the NLP model of our choice. Here we will go through several steps to be aware of which steps can be performed and what their consequences are. However, It is important to realize that you do not always need to do all the preprocessing steps, and which ones you should do depends on what you want to do. 
 For example, if you want to extract entities from the text using named entity recognition, you explicitly do not want to lowercase the text, as capitals are a component in the identification process.
-Another important thing is that NLP tasks and the preprocessing steps can be very diffent for different languages. 
-This is even more so if you are comparing steps for alphabetical languages such as English to those for non-alphabetical languages such as Chinese.
+Another important thing is that NLP tasks and the preprocessing can be very diffent for different languages. This is both in terms of which steps to apply, but also which methods to use for a specific step.
+
+<b> Right now, we are going to apply a number of preprocessing steps to obtain a list of all distinct word tokens from the newspaper page. </b>
 
 ## Loading the corpus
 In order to start the preprocessing we first load in the data. 
