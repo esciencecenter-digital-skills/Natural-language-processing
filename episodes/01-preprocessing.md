@@ -98,56 +98,27 @@ Let's check out the start of the corpus
 print(corpus)
 ```
 
+Looking at the text, we can see that in this case the OCR that has been applied to the original image, has given a pretty good result. However, there are still mistakes in the recognized text. For example, on the first line the word 'juli' has misinterpreted as 'iuli'.
+
+### Clean the text
+A first thing to do is to clean the text. As said, in this case the text is in pretty good state, close to the original. However, we can still improve the interpretability of the text by removing a number of special characters. Let's define these:
+
+### Lowercase
+
+### Remove punctuation
+
+### Remove stop words
+
+### Tokenisation
+
+### Lemmatisation
+
 <s> ## Tokenization
 We will now start by splitting the text up into individual sentences and words. This process is referred to as tokenizing; instead of having one long text we will create individual tokens.
 
 Tokens can be defined in different ways: here we will first split text up into sentence tokens, so that each token represents one sentence in the text. Then we will extract the word tokens, where each token is one word.
-
-### Individual sentences and words
-Sentences are separated by points, and words are separated by spaces, we can use this information to split the text. However, we saw that when we printed the corpus, that the text is not so 'clean'. If we were to split the text now using points, there would be a lot of redundant symbols that we do not want to include in the individual sentences and words, such as the `\n` symbols, but also we do not want to include punctuation symbols in our sentences and words. So let's remove these from the text before splitting it up based on. 
-
-### Sentences
-The text can be split into sentences based on points. From the corpus as we have it, we do not want to include the end of line symbols, backslashes before apostrophes, and any double spaces that might occur from new lines or new pages.
-
-We will define `corpus_sentences` to do all preprocessing steps we need to split the text into individual sentences. First we replace the end of lines and backslashes:
-
-What this does it that the `corpus_sentences` is split up every time a `. `is found, and the results are stored in a python list.
-
-If we print the first 20 items in the resulting list, we can see that indeed the data is split up into sentences, but there are some mistakes, where for example a new sentence is defined because the word 'mister' was abbreviated which also resulted in a new sentence definition. This shows that these kind of steps will never be fully perfect, but it good enough to proceed.
-
-
-### Words
-We can now procede from `corpus_sentences` to split the corpus into individual words based on spaces. To get 'clean words' we need to replace some more punctuation marks, so that these are not included in the list of words.
-
-Let's first define the punctuation marks we want to remove:
-```python
-# Punctuation symbols
-punctuation = (".", ",", ":", ";", "(", ")", "!", "?", "\"")
-```
-
-Then we go over all these punctuation symbols one by one using a loop to replace them:
-
-Next, we should lowercase all text so that we don't get a word in two forms in the list, once with capital, once without, and have a consistent list of words:
-```python
-# Lowercase the text
-corpus_words = corpus_words.lower()
-```
 </s>
 
-## Using a spacy pipeline to analyse texts
-<s>Before the break we did a number of preprocessing steps to get the sentence tokens and word tokens. We took the following steps:
-
-- We loaded the corpus into one long string and selected the part of the string that we wanted to analyse, which is the first story
-- We replaced new lines with spaces and removed all double spaces.
-- We split the string into sentences based on points
-To continue getting the individual words:
-- we removed punctuation marks
-- removed double spaces
-- we lowercased the text
-- We split the text into a list of words based on spaces.
-- We selected all individual words by converting the list into a set.
-
-We did all these steps by hand, to get an understanding of what is needed to create the tokens. However these steps can also be done with a Python package, where these things happen behind the scenes. We will now start using this package to look at the results of the preprocessing steps of stop word removal, stemming and part-of-speech tagging.
 </s>
 ## Spacy NLP pipeline
 There are multiple python packages that can be used to for NLP, such as `Spacy`, `NLTK`, `Gensim` and `PyTorch`. Here we will be using the `Spacy` package.
