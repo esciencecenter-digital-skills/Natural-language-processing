@@ -74,31 +74,28 @@ Another important thing is that NLP tasks and the preprocessing can be very diff
 <b> Right now, we are going to apply a number of preprocessing steps to obtain a list of all distinct word tokens from the newspaper page. </b>
 
 ## Loading the corpus
-In order to start the preprocessing we first load in the data. 
-
-```Explain OCR?```
-
-For that we need a number of python packages.
+In order to start the preprocessing we first load in the data. For that we need a number of python packages.
 
 ```python
 # import packages
 import spacy
 import io
+import string
 import matplotlib.pyplot as plt
 ```
 
-We can then open the text file that contains the text and save it in a variable called `corpus_full`.
+We can then open the text file that contains the text and save it in a variable called `corpus`.
 
 ```python
-# Load the book The case-book of Sherlock Holmes by Arthur Conan Doyle
-path = "./volkskrant.txt"
+# Load the newspaper text
+path = "./ad.txt"
 with open(path) as myfile:
-    corpus_full = myfile.read()
+    corpus = myfile.read()
 ```
 Let's check out the start of the corpus
 ```python
 # Print the text
-print(corpus_full)
+print(corpus)
 ```
 
 <s> ## Tokenization
