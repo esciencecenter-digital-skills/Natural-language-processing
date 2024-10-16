@@ -237,35 +237,7 @@ Here we can for example see that even the `n't` is recognized as not.
 
 We have gone through various data preprocessing techniques in this episode. Now that you know how to apply them all, let's see how they affect each other.
 
-* Above we removed the stopwords from the text before lemmatization. What happens if you use the lemmatized text? Create a word cloud of your results.
-* The word clouds that we created can give an idea on what the text is about. However, there are still some terms in the word cloud that are not so useful to do this aim. Which further words would you remove? Add them to the stop words to improve your word cloud so that it better represents to subject of the text.
-
 ::::::::: solution
-
-* Lemmatized word cloud
-
-The doc can be created to consist only of lemma's as follows:
-```python
-lemmas = ' '.join([token.lemma_ for token in doc])
-```
-
-Create the word cloud using the lemmatized text and the stopwords we defined earlier.
-```python
-plot_wordcloud(doc=lemmas, sw=stopwords)
-```
-
-* Additional stop words
-
-Add some more words to the stopwords set:
-```python
-add_stopwords = ['ask', 'tell', 'like', 'want', 'case', 'come']
-new_stopwords = stopwords.update(set(add_stopwords))
-```
-
-Create the word cloud:
-```python
-plot_wordcloud(doc=lemmas, sw=new_stopwords)
-```
 
 :::::::::
 
