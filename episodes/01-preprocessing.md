@@ -157,55 +157,63 @@ We can now input our corpus to the pipeline to apply the tokenisation to the tex
 doc = nlp(corpus_lower)
 ```
 
-We can check out which components are available in this pipeline:
 ```python
-# loaded components
-print("components:", nlp.component_names)
+# Get the tokens from the pipeline
+tokens = [token.text for token in doc]
+
+print(len(tokens))
+print(tokens)
 ```
 
-Let's now apply this pipeline on our data. Remember that we as a first step before the break we loaded the data in the variable called corpus. We now give this as an argument to the pipeline; this will apply the model to our specific data; such that we have all components of the pipeline available on our specific corpus:
+### Remove punctuation
+The next step we will apply is to remove punctuation. To create a list of the distinct word tokens in the text, punctuation symbols are not of interest. 
 
-```python
-# apply model to our corpus
-doc = nlp(corpus)
+The punctuation symbols are defined in:
+```
+string.punctuation
 ```
 
-
-and the word tokens like this:
+We can loop over these symbols to remove them from the text:
 ```python
-# Get word tokens
-for token in doc[0:6]:
-    print(token.text)
-```
+# remove punctuation from set
+tokens_no_punct = tokens
 
-## Stop word removal
-If we want to get an idea of what the text is about we can visualize the word tokens in a word cloud to see which words are most common. To do this we can define a function:
-
-```python
-from wordcloud import WordCloud
-
-# Define function that returns a word cloud
-def plot_wordcloud(sw = (""), doc = doc):
-      wc = WordCloud(stopwords=sw).generate(str(doc))
-      plt.imshow(wc, interpolation='bilinear')
-      plt.axis("off")
-      return plt.show()
+for punct in string.punctuation:
+    tokens_no_punct = [token for token in tokens_no_punct if token != punct]
 ```
 
 ```python
-plot_wordcloud(doc=doc)
+print(len(tokens_no_punct))
 ```
 
-From this we get no idea what the text is about because the most common words are word such as 'the', 'a', and 'I', which are referred to as stopwords. We could therefore want to remove these stopwords. The spacy package has a list of stopwords available. Let's have a look at these:
+:::::::::::::::::::: challenge
 
+Discuss with each other
+
+- For which NLP tasks can punctuation removal be applied?
+- For which tasks is punctuation relevant?
+
+::::::::: solution
+
+
+
+:::::::::
+
+
+::::::::::::::::::::
+
+### Stop word removal
+
+For some NLP tasks only the relevant words in the text are needed. A text however contains a lot of so called stop words: very common words such as 'de', 'het', 'een' that do not contribute to as much the content of the text compared to the nouns and words. In those cases it is common to remove these stop words from your corpus. This reduces the number of words to process. 
+
+NLP tasks for which stop word removal can be applied are for example text classification or topic modelling. To cluster the words of a text into topic clusters, stop words are irrelevant. Having fewer and more revevant words would give better results. For other tasks such as text generation or question answering the full structure and context of the text are important and hence stop words should not be removed. This is also the case for named entitity recognition, since named entities can contain stop words themselves.
+
+The Dutch spacy model that we are using contains a list of stop words in the Dutch language.
 ```python
-# Stop word removal
 stopwords = nlp.Defaults.stop_words
 
-print(len(stopwords))
 print(stopwords)
 ```
-The pipeline has 326 stopwords, and if we have a look at them you could indeed say that these words do not add much if we want to get an idea of what the text is about. So let's create the word cloud again, but without the stopwords:
 
 ```python
 # remove stopwords
