@@ -137,19 +137,23 @@ Many older tokenisers are rule-based, meaning that they iterate over a number of
 #### Spacy
 There are multiple python packages that can be used for NLP, such as `Spacy`, `NLTK`, `Gensim` and `PyTorch`. Here we will be using the `Spacy` package to create word tokens.
 
-The pipeline that we are going to use is called `nl_core_news_sm`. A pipeline is XXX
-. This a [pipeline from Spacy](https://spacy.io/models/nl/) that is pretrained to do a number of NLP tasks for Dutch texts. We first have to download this model model from the Spacy library:
+The model that we are going to use is called `nl_core_news_sm`. This a [model from Spacy](https://spacy.io/models/nl/) that is pretrained to do a number of NLP tasks for Dutch texts. We first have to download this model model from the Spacy library:
 
 ```python
 # download the Dutch spacy model
 ! python -m spacy download nl_core_news_sm
 ```
 
+We can then load the model into the pipeline function. This function connects the pretrained model to various preprocessing steps, including the tokenisation.
+
 ```python
 # Load the Dutch model in a pipeline
 nlp = spacy.load("nl_core_news_sm")
+```
 
-# Load our text in the pipeline
+We can now input our corpus to the pipeline to apply the tokenisation to the text.
+```
+# Input our corpus
 doc = nlp(corpus_lower)
 ```
 
