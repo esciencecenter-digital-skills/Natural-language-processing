@@ -120,11 +120,7 @@ corpus_lower = corpus_clean.lower()
 
 print(corpus_lower)
 ```
-It is important to keep in mind that in doing this, some information is actually lost. As mentioned before, models that are trained to identify named entities use information on capitalisation. As another example, there are a lot of names and surnames that carry meaning. "Bakker" is a common Dutch surname, but is also a noun (baker), in lowercasing the text you loose the distinction between the two.
-
-### Remove punctuation
-
-### Remove stop words
+It is important to keep in mind that in doing this, some information is lost. As mentioned before, models that are trained to identify named entities use information on capitalisation. As another example, there are a lot of names and surnames that carry meaning. "Bakker" is a common Dutch surname, but is also a noun (baker). In lowercasing the text you loose the distinction between the two.
 
 ### Tokenisation
 A very important step in NLP is tokenisation. Tokenisation is breaking up your text into a list of smaller, meaningfull segments referred to as tokens. Tokens can be defined in various ways, such as  sentences, words, subwords or characters. Tokenisation is essential in NLP, as these are a step in creating strucutre from raw text. Once you have split a text into tokens, these can be transformed into vectors (i.e. numbers), which can used for further processing in an efficient manner. Although a token that is transformed into a vector is then represented by numbers, it will still carry linguistic meaning, as we will discuss lateron.
