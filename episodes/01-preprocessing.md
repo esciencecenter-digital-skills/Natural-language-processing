@@ -123,16 +123,16 @@ print(corpus_lower)
 It is important to keep in mind that in doing this, some information is lost. As mentioned before, models that are trained to identify named entities use information on capitalisation. As another example, there are a lot of names and surnames that carry meaning. "Bakker" is a common Dutch surname, but is also a noun (baker). In lowercasing the text you loose the distinction between the two.
 
 ### Tokenisation
-A very important step in NLP is tokenisation. Tokenisation is breaking up your text into a list of smaller, meaningfull segments referred to as tokens. Tokens can be defined in various ways, such as  sentences, words, subwords or characters. Tokenisation is essential in NLP, as these are a step in creating strucutre from raw text. Once you have split a text into tokens, these can be transformed into vectors (i.e. numbers), which can used for further processing in an efficient manner. Although a token that is transformed into a vector is then represented by numbers, it will still carry linguistic meaning, as we will discuss lateron.
+A very important step in NLP is tokenisation. Tokenisation is breaking up text into smaller, segments referred to as tokens. Tokens can split text at different levels, such as sentences, words, subwords or characters. This used level depends on the task at hand and the model and technique that is used. Tokenisation is essential in NLP, as it helps to creating structure from raw text. Once a text is split into tokens, these can be transformed into vectors (i.e. numbers), which can used for further processing in an efficient manner. Although a token that is transformed into a vector is then represented by numbers, it can still carry linguistic meaning, as we will discuss later on.
 
-You can tokenise your text with Python using various existing tokenisers. There are tokenisers available for different languages, as each language has their own intrincities that should be taken into account when splitting up text. A good word tokeniser for example, does not simply break up a text based on spaces and punctuation, but it should be able to distinguish:
+You can tokenise your text with Python using various existing tokenisers. There are tokenisers available for different languages, as each language has their own intricacies that should be taken into account when splitting up text. A good word tokeniser for example, does not simply break up a text based on spaces and punctuation, but it should be able to distinguish:
 
 - abbreviations that include points (e.g.: *e.g.*)
 - times (*11:15*) and dates written in various formats (*01/01/2024* or *01-01-2024*)
 - word contractions such as *don't*, these should be split into *do* and *n't*
-- url's
+- URLs
 
-Many older tokenisers are rule-based, meaning that they iterate over a number of predefined rules to split the text into tokens, which is useful for splitting text into word tokens for example. Modern large language models use statistical-based tokenizers that split text into meaningful sub-words.
+Many older tokenisers are rule-based, meaning that they iterate over a number of predefined rules to split the text into tokens, which is useful for splitting text into word tokens for example. Modern large language models use subword tokenisation, which are more flexible.
 
 #### Spacy
 There are multiple python packages that can be used for NLP, such as `Spacy`, `NLTK`, `Gensim` and `PyTorch`. Here we will be using the `Spacy` package to create word tokens.
