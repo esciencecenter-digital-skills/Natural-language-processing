@@ -216,22 +216,35 @@ print(stopwords)
 The pipeline has 326 stopwords, and if we have a look at them you could indeed say that these words do not add much if we want to get an idea of what the text is about. So let's create the word cloud again, but without the stopwords:
 
 ```python
-plot_wordcloud(sw= stopwords, doc = doc)
+# remove stopwords
+tokens_no_stopwords = tokens_no_punct
+
+for stopword in stopwords:
+    tokens_no_stopwords = [token for token in tokens_no_stopwords if token != stopword]
+
+print(len(tokens_no_stopwords))
 ```
 
-This shows that Holmes is the most common word in the text, as one might expect. There are also words in this word cloud that would also consider as stop words in this case, such as `said` and `know`. If you would want to remove these as well you can add them to the list of stopwords that we used.
-
-## Lemmatization
-Let's now have a look at the lemmatization. From the wordcloud, we can see that one of the most common words in the text is the word `said`. This is past tense of the word `say`. If we want all the words referring to the word `say` we should look at the lemmatized text. We saw in the pipeline that this is also one of the components of the pipeline, so we already have all the lemmas available. We can check them out using:
+### Token word cloud
 
 ```python
-# Lemmas
-for token in doc:
-      print(token.text, token.lemma_)
+wordcloud = WordCloud().generate(' '.join(tokens_no_stopwords))
+
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.axis("off")
+plt.show()
 ```
 
-Here we can for example see that even the `n't` is recognized as not.
+## Statistical-based tokenizers
+We have now created a list of word tokens and afterwards removed stopwords and punctuation. Large language models use a more sophisticated way of tokenisation. If we look at the distinct words from out vocabulary:
 
+```python
+print(len(set(tokens)))
+
+print(set(tokens))
+```
+
+This set is XX tokens long. If we were to process a larger piece of text, the number of distinct words would grow very large. When looking at the inidividual tokens here, we can see that there are various words that are similar in the sense that they are a plural form, or XXX form of the same word. It would be redundant to process the words as completely distinct tokens. This is why many models use sub-word tokenisation. 
 
 :::::::::::::::::::: challenge
 
