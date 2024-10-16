@@ -250,8 +250,6 @@ XXX would be split as xxx
 
 :::::::::::::::::::: challenge
 
-We have gone through various data preprocessing techniques in this episode. Now that you know how to apply them all, let's see how they affect each other.
-
 ::::::::: solution
 
 :::::::::
@@ -264,7 +262,7 @@ We have gone through various data preprocessing techniques in this episode. Now 
 - Preprocessing involves a number of steps that one can apply to their text to prepare it for further processing.
 - Preprocessing is important because it can improve your results
 - You do not always need to do all preprocessing steps. It depends on the task at hand which preprocessing steps are important.
-- A number of preprocessing steps are: lowercasing, tokenization, stop word removal, lemmatization, part-of-speech tagging.
+- A number of preprocessing steps are: lowercasing, tokenization, stop word removal
 - Often you can use a pretrained model to process and analyse your data.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
