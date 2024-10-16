@@ -235,7 +235,7 @@ plt.axis("off")
 plt.show()
 ```
 
-## Statistical-based tokenizers
+## Subword tokenizers
 We have now created a list of word tokens and afterwards removed stopwords and punctuation. Large language models use a more sophisticated way of tokenisation. If we look at the distinct words from out vocabulary:
 
 ```python
@@ -244,7 +244,9 @@ print(len(set(tokens)))
 print(set(tokens))
 ```
 
-This set is XX tokens long. If we were to process a larger piece of text, the number of distinct words would grow very large. When looking at the inidividual tokens here, we can see that there are various words that are similar in the sense that they are a plural form, or XXX form of the same word. It would be redundant to process the words as completely distinct tokens. This is why many models use sub-word tokenisation. 
+This set is XX tokens long. If we were to process a larger piece of text, the number of distinct words would grow very large. When looking at the inidividual tokens here, we can see that there are various words that are similar in the sense that they are a plural form, or XXX form of the same word. It would be redundant to process the words as completely distinct tokens. This is why many models use sub-word tokenisation.
+XXX would be split as xxx
+
 
 :::::::::::::::::::: challenge
 
