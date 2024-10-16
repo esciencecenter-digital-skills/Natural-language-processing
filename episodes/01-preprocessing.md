@@ -127,42 +127,34 @@ It is important to keep in mind that in doing this, some information is actually
 ### Remove stop words
 
 ### Tokenisation
+A very important step in NLP is tokenisation. Tokenisation is breaking up your text into a list of smaller, meaningfull segments referred to as tokens. Tokens can be defined in various ways, such as  sentences, words, subwords or characters. Tokenisation is essential in NLP, as these are a step in creating strucutre from raw text. Once you have split a text into tokens, these can be transformed into vectors (i.e. numbers), which can used for further processing in an efficient manner. Although a token that is transformed into a vector is then represented by numbers, it will still carry linguistic meaning, as we will discuss lateron.
 
-### Lemmatisation
+You can tokenise your text with Python using various existing tokenisers. There are tokenisers available for different languages, as each language has their own intrincities that should be taken into account when splitting up text. A good word tokeniser for example, does not simply break up a text based on spaces and punctuation, but it should be able to distinguish:
 
-<s> ## Tokenization
-We will now start by splitting the text up into individual sentences and words. This process is referred to as tokenizing; instead of having one long text we will create individual tokens.
+- abbreviations that include points (e.g.: *e.g.*)
+- times (*11:15*) and dates written in various formats (*01/01/2024* or *01-01-2024*)
+- word contractions such as *don't*, these should be split into *do* and *n't*
+- url's
 
-Tokens can be defined in different ways: here we will first split text up into sentence tokens, so that each token represents one sentence in the text. Then we will extract the word tokens, where each token is one word.
-</s>
+Many older tokenisers are rule-based, meaning that they iterate over a number of predefined rules to split the text into tokens, which is useful for splitting text into word tokens for example. Modern large language models use statistical-based tokenizers that split text into meaningful sub-words.
 
-</s>
-## Spacy NLP pipeline
-There are multiple python packages that can be used to for NLP, such as `Spacy`, `NLTK`, `Gensim` and `PyTorch`. Here we will be using the `Spacy` package.
+#### Spacy
+There are multiple python packages that can be used for NLP, such as `Spacy`, `NLTK`, `Gensim` and `PyTorch`. Here we will be using the `Spacy` package to create word tokens.
 
-Let's first load a few packages that we will be using:
-
-```Python
-import spacy
-from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
-```
-
-The pipeline that we are going to 
-
-The pipeline that we are going to use is called `en_core_web_md`. This a [pipeline from Spacy](https://spacy.io/models/en/) that is pretrained to do a number of NLP tasks for English texts. We first have to download this model model from the Spacy library:
+The pipeline that we are going to use is called `nl_core_news_sm`. A pipeline is XXX
+. This a [pipeline from Spacy](https://spacy.io/models/nl/) that is pretrained to do a number of NLP tasks for Dutch texts. We first have to download this model model from the Spacy library:
 
 ```python
-!python -m spacy download en_core_web_sm
+# download the Dutch spacy model
+! python -m spacy download nl_core_news_sm
 ```
 
-It is important to realize that in many cases you can use a pretrained model such as this one. You then do not have to do any training of your data. This is very nice, because training a model requires a whole lot of data, that would have to be analyzed by hand before you can start. It also requires a lot of specific understanding of NLP and a lot of time, and often it is simply not neccesary. These available models are trained on a lot of data, and have very good accuracy.
-
-Free available pretrained models can be found on [Hugging Face](https://huggingface.co/), along with instructions on how to use them. This website contains a lot of models trained for specific tasks and use cases. It also contains data sets that can be used to train new models.
-
-Let's load the model:
 ```python
-nlp = spacy.load('en_core_web_md')
+# Load the Dutch model in a pipeline
+nlp = spacy.load("nl_core_news_sm")
 
+# Load our text in the pipeline
+doc = nlp(corpus_lower)
 ```
 
 We can check out which components are available in this pipeline:
