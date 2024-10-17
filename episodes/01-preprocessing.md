@@ -24,7 +24,8 @@ exercises: 0
 After following this lesson, learners will be able to:
 
 - Explain what preprocessing means.
-- Perform lowercasing, handling new lines, tokenization, stop words removal, part-of-speech tagging, stemmatization/lemmatization.
+- Explain what tokenisation is.
+- Perform text cleaning, lowercasing, tokenization, punctuation and stop word removal tokenisation.
 - Apply and use a spacy pretrained model.
 
 
@@ -152,7 +153,7 @@ nlp = spacy.load("nl_core_news_sm")
 ```
 
 We can now input our corpus to the pipeline to apply the tokenisation to the text.
-```
+```python
 # Input our corpus
 doc = nlp(corpus_lower)
 ```
@@ -169,7 +170,7 @@ print(tokens)
 The next step we will apply is to remove punctuation. To create a list of the distinct word tokens in the text, punctuation symbols are not of interest. 
 
 The punctuation symbols are defined in:
-```
+```python
 string.punctuation
 ```
 
@@ -191,7 +192,7 @@ print(len(tokens_no_punct))
 Discuss with each other
 
 - For which NLP tasks can punctuation removal be applied?
-- For which tasks is punctuation relevant?
+- For which tasks is punctuation relevant and should punctuation not be removed?
 
 ::::::::: solution
 
@@ -208,7 +209,7 @@ For some NLP tasks only the relevant words in the text are needed. A text howeve
 
 NLP tasks for which stop word removal can be applied are for example text classification or topic modelling. To cluster the words of a text into topic clusters, stop words are irrelevant. Having fewer and more revevant words would give better results. For other tasks such as text generation or question answering the full structure and context of the text are important and hence stop words should not be removed. This is also the case for named entitity recognition, since named entities can contain stop words themselves.
 
-The Dutch spacy model that we are using contains a list of stop words in the Dutch language.
+The Dutch spacy model contains a list of stop words in the Dutch language.
 ```python
 stopwords = nlp.Defaults.stop_words
 
