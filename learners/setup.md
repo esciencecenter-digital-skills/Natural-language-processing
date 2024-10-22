@@ -2,10 +2,29 @@
 title: Setup
 ---
 
-FIXME: Setup instructions live in this document. Please specify the tools and
-the data sets the Learner needs to have installed.
+## Software Setup
+
+::::::::::::::::::::::::::::::::::::::: discussion
+
+### Installing Python
+
+[Python][python] is a popular language for scientific computing, and a frequent choice
+for machine learning as well.
+To install Python, follow the [Beginner's Guide](https://wiki.python.org/moin/BeginnersGuide/Download) or head straight to the [download page](https://www.python.org/downloads/).
+
+Please set up your python environment at least a day in advance of the workshop.
+If you encounter problems with the installation procedure, ask your workshop organizers via e-mail for assistance so
+you are ready to go as soon as the workshop begins.
+
+:::::::::::::::::::::::::::::::::::::::::::::::::::
+
+## Installing the required packages
+
+Pip](https://pip.pypa.io/en/stable/) is the package management system built into Python.
+Pip should be available in your system once you installed Python successfully.
 
 ## Data Sets
+
 
 <!--
 FIXME: place any data you want learners to use in `episodes/data` and then use
@@ -14,41 +33,4 @@ FIXME: place any data you want learners to use in `episodes/data` and then use
 -->
 Download the [data zip file](https://example.com/FIXME) and unzip it to your Desktop
 
-## Software Setup
-
-::::::::::::::::::::::::::::::::::::::: discussion
-
-### Details
-
-Setup for different systems can be presented in dropdown menus via a `solution`
-tag. They will join to this discussion block, so you can give a general overview
-of the software used in this lesson here and fill out the individual operating
-systems (and potentially add more, e.g. online setup) in the solutions blocks.
-
-:::::::::::::::::::::::::::::::::::::::::::::::::::
-
-:::::::::::::::: solution
-
-### Windows
-
-Use PuTTY
-
-:::::::::::::::::::::::::
-
-:::::::::::::::: solution
-
-### MacOS
-
-Use Terminal.app
-
-:::::::::::::::::::::::::
-
-
-:::::::::::::::: solution
-
-### Linux
-
-Use Terminal
-
-:::::::::::::::::::::::::
 
