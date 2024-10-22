@@ -63,7 +63,6 @@ For the episode 01: preprocessing and word embeddings (Word2Vec):
 - An excerpt from a Dutch journal of your choice dated from the 1950 up until 1989. This can be freely downloaded as a `txt` from [Delpher](https://www.delpher.nl/nl/kranten)
 - Word2Vec models trained on 6 national Dutch newspaper data spanning a time period from 1950 to 1989 (Wevers, M., 2019). These models are available on [Zenodo](https://zenodo.org/records/3237380).
 
-For the episode 02: Transformers (BERT)
 -
 -
 
