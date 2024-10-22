@@ -1,4 +1,4 @@
-# A lesson on Natural language processing in Python
+# A lesson on Natural Language Processing in Python
 
 This lesson is about the fundamentals of natural language processing in Python.
 
