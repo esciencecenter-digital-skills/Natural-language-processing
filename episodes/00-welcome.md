@@ -51,7 +51,7 @@ After following this lesson, learners will be able to:
 - Explain and differentiate what are the core topics in NLP
 - Identify what kinds of tasks NLP techniques excel at, and what are their limitations
 - Structure a typical NLP pipeline
-- Extract vector representations of individual words, visualise it and manipulate it
+- Extract vector representations of individual words, visualise and manipulate them
 - Applying a machine learning algorithm to textual data to extract and categorise names of entities (e.gs., places, people)
 - Using natural language to produce a desired response from a large language model (LLM), i.e. prompt engineering
 - Other?
