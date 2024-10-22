@@ -60,7 +60,7 @@ contact: 'team@carpentries.org'
 
 # Order of episodes in your lesson
 episodes:
-- 00-welcome.md
+- 00-introduction.md
 - 01-preprocessing.md
 - 02-embeddings.md
 
