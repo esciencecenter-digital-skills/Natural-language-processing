@@ -1,13 +1,21 @@
 ---
-title: "Episode 2: Preprocessing"
-teaching: 10 
+title: "Episode 1: From text to vectors - preprocessing and word embeddings"
+teaching: 10
 exercises: 0
 ---
 :::::::::::::::::::::::::::::::::::::::::::::::: questions
 
+- What problem are we going to solve in this episode?
+
+- What is preprocessing and why do we need it?
 - What different types of preprocessing steps are there?
-- Why we need preprocessing?
-- What are the consequences of applying data preprocessing on our text? 
+- What are the consequences of applying data preprocessing on our text?
+
+- What are word embeddings?
+- What properties word embeddings have?
+- What is a word2vec model?
+- Can we inspect word embeddings?
+- (Optional) How do we train a word2vec model?
 
 :::::::::::::::::::::::::::::::::::::::::::::::: 
 
@@ -16,320 +24,234 @@ exercises: 0
 After following this lesson, learners will be able to:
 
 - Explain what preprocessing means.
-- Perform lowercasing, handling new lines, tokenization, stop words removal, part-of-speech tagging, stemmatization/lemmatization.
+- Explain what tokenisation is.
+- Perform text cleaning, lowercasing, tokenization, punctuation and stop word removal tokenisation.
 - Apply and use a spacy pretrained model.
 
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
+# Delpher newspaper articles
+In this epsiode we are going to process Dutch newpaper texts. Newspapers make an interesting dataset for scientific research, as it contains information about current events and the language it uses is clear and reflective of its time.
+
+::: Instructor
+It would be useful to teach this while showing the website.
+:::
+
+We will be using data from [Delpher](https://www.delpher.nl/) in this episode. Delpher is a public database developed by the [KB - the National Library of the Netherlands](https://www.kb.nl/) and contains digitalised historic Dutch newspapers, books, and magazines. The online newspaper collection covers data spanning from 1618 up to 1995 and of many local, national and international publishers. 
+What we will be looking into is to examine the sematic shifts of specific words over various decades. We will look at the context in which a word is used between the 1950s and 1990s.
+
+<span style="color:red">Expand a bit more?</span>
+
+
+::::::::::::::::::::::::::::::::::::::: challenge
+## Exploring Delpher
+Before we will collect the data, let's play around a bit in Delpher. Go to the [Delpher](https://www.delpher.nl/) and look around what data they all have. Can you find anything in the data that you find interesting or didn't know yet? For example about your living area, sports club, or an historic event?
+
+::::::::::::::: solution
+
+Next we will be looking into text preprocessing. The task we will tackly is to get an overview of the most common words in a piece of text. We will be using the first page of the edition of de [Algemeen Dagblad from July 21 1969](https://www.delpher.nl/nl/kranten/view?coll=ddd&query=&cql%5B%5D=%28date+_gte_+%2220-07-1969%22%29&redirect=true&sortfield=date&resultscoll=dddtitel&identifier=KBPERS01:002846018:mpeg21&rowid=3) for this exercise that can be downloaded as txt-file from Delpher.
+
+It is possible to download the data in different formats; jpg, pdf, and txt. The jpg file is the original scan that was made of the page, and can thus be considered the raw data. Because we want to use the text itself we download the txt file. This file contains only the text without formatting and images, and is produced by Delpher using a technique called Optical Character Recognition (OCR). This is a technique in which text from an image is converted into text. Very simply said, OCR software identifies which parts of an image contain text, and identifies the individual caracters to reconstruct the text. Although in research you might also have to start from images rather than text files, we will not go into optical character recognition. It is quite a difficult process that is beyond the scope of this course.
+
+
 # Preprocessing
-NLP models work by learning the statistical regularities within the constituent parts of the language (i.e, letters, digits, words and sentences) in a text. Before applying these models, the input text must often be modified to make it into a format that is better interpretable by the model. This operation is known as `data preprocessing` and its goal is to make the text ready to be processed by the model. Applying these preprocessing steps will give better results in the end.
+NLP models work by learning the statistical regularities within the constituent parts of the language (i.e, letters, digits, words and sentences) in a text. Before applying these models, the input text must often be modified to make it into a format that is better interpretable by the model. This operation is known as `data preprocessing` and its goal is to make the text ready to be efficiently processed by the model. Applying preprocessing steps will give better results in the end.
 
 Examples of preprocessing steps are:
 
-- tokenization: this means splitting up the text into individual tokens. You can for example create sentence tokens or words tokens, or any others.
+- cleaning the text: remove symbols/special characters, or other things that "sneaked" into the text while loading the original version.
 - lowercasing
-- stop words removal, where you remove common words such as `the` or `a` that you would note need in some further analysis steps.
+- removing punctuation
+- stop word removal, where you remove common words such as `the` or `a` that you would note need in some further analysis steps.
+- tokenization: this means splitting up the text into individual tokens. You can for example create sentence tokens or words tokens, or any others.
 - lemmatization: with this step you obtain the lemma of each word. You would get the form in which you find the word in the dictionary, such as the singular version of a plural of a noun, or the first person present tense of a verb instead of the past principle. You are making sure that you do not get different versions of the same word: you would convert `words` into `word` and `talking` into `talk`
 - part of speech tagging: This means that you identify what type of word each is; such as nouns and verbs.
 
-The above examples of techniques of data preprocessing modify the input text to make it interpretable and analyzable by the NLP model of our choice. 
-Here we will go through all these steps to be aware of which steps can be performed and what are their consequences. 
-However, It is important to realize that you do not always need to do all the preprocessing steps, and which ones you should do depends on what you want to do. 
-For example, if you want to extract entities from the text using named entity recognition, you explicitly do not want to lowercase the text, as captials are one component in the odentification. 
-Another important thing is that NLP tasks and the preprocessing steps can be very diffent for different languages. 
-This is even more so if you are comparing steps for alphabetical languages such as English to those for non-alphabetical languages such as Chinese.
+The above examples of techniques of data preprocessing modify the input text to make it interpretable and analyzable by the NLP model of our choice. Here we will go through several steps to be aware of which steps can be performed and what their consequences are. However, It is important to realize that you do not always need to do all the preprocessing steps, and which ones you should do depends on what you want to do. 
+For example, if you want to extract entities from the text using named entity recognition, you explicitly do not want to lowercase the text, as capitals are a component in the identification process.
+Another important thing is that NLP tasks and the preprocessing can be very diffent for different languages. This is both in terms of which steps to apply, but also which methods to use for a specific step.
+
+Right now, we are going to apply a number of preprocessing steps to obtain a list of relevant word tokens from the newspaper page.
 
 ## Loading the corpus
 In order to start the preprocessing we first load in the data. For that we need a number of python packages.
 
 ```python
 # import packages
-import spacy
 import io
+import re
+import spacy
+import string
 import matplotlib.pyplot as plt
 ```
 
-We can then open the text file that contains the text and save it in a variable called `corpus_full`.
+We can then open the text file that contains the text and save it in a variable called `corpus`.
 
 ```python
-# Load the book The case-book of Sherlock Holmes by Arthur Conan Doyle
-path = "../pg69700.txt"
-f = io.open(path, mode="r", encoding="utf-8-sig")
-corpus_full = f.read()
+# Load the newspaper text
+path = "./ad.txt"
+with open(path) as myfile:
+    corpus = myfile.read()
 ```
 Let's check out the start of the corpus
 ```python
 # Print the text
-print(corpus_full[0:1000])
-```
-This shows that the corpus contains a lot of text before the actual first story starts. Let's therefore select the part of the `corpus_full` that contains the first story. We determined beforehand which part of the string `corpus_full` catches the first story, and we can save it in the parameter `corpus`:
-
-```python
-# Select the first story
-corpus = corpus_full[5048:200000]
-```
-
-Let's again have a look at what the text looks like:
-```python
 print(corpus)
 ```
 
-The print statement automatically formats the text. We can also have a look at what the unformatted text looks like:
+Looking at the text, we can see that in this case the OCR that has been applied to the original image, has given a pretty good result. However, there are still mistakes in the recognized text. For example, on the first line the word 'juli' has misinterpreted as 'iuli'.
+
+### Cleaning the text
+A first thing to do is to clean the text. As said, in this case the text is in pretty good state, close to the original. However, we can still improve the interpretability of the text by removing a number of special characters, bringing the text closer to the original. First we'll remove any special symbols using a regex. Then we'll also remove the three dashes separating different news articles and the vertical bars separating some of the columns.
 
 ```python
-corpus
+clean = re.sub(r'[^\n -~\u00C0-\u017F]', "", corpus)
+cleaner = clean.replace("---", "")
+corpus_clean = cleaner.replace("|", "")
+
+print(corpus_clean)
 ```
 
-This shows that there are things in there such as `\n` which defines new lines. This is one of the things we want to eliminate from the text in the preprocessing steps so that we have a more analyzable text to work with.
-
-## Tokenization
-We will now start by splitting the text up into individual sentences and words. This process is referred to as tokenizing; instead of having one long text we will create individual tokens.
-
-Tokens can be defined in different ways: here we will first split text up into sentence tokens, so that each token represents one sentence in the text. Then we will extract the word tokens, where each token is one word.
-
-### Individual sentences and words
-Sentences are separated by points, and words are separated by spaces, we can use this information to split the text. However, we saw that when we printed the corpus, that the text is not so 'clean'. If we were to split the text now using points, there would be a lot of redundant symbols that we do not want to include in the individual sentences and words, such as the `\n` symbols, but also we do not want to include punctuation symbols in our sentences and words. So let's remove these from the text before splitting it up based on. 
-
-### Sentences
-The text can be split into sentences based on points. From the corpus as we have it, we do not want to include the end of line symbols, backslashes before apostrophes, and any double spaces that might occur from new lines or new pages.
-
-We will define `corpus_sentences` to do all preprocessing steps we need to split the text into individual sentences. First we replace the end of lines and backslashes:
+### Lowercasing
+Our next step is to lowercase the text. Our goal here is to generate a list of unique words from the text, so in order to not have words twice in the list - once normal and once capitalised when it is at the start of a sentence for example- we can lowercase the full text. 
 
 ```python
-# Replace newlines with spaces:
-corpus_sentences = corpus.replace("\n", " ")
+corpus_lower = corpus_clean.lower()
 
-# Replace backslashes
-corpus_sentences = corpus_sentences.replace("\"", "")
+print(corpus_lower)
 ```
+It is important to keep in mind that in doing this, some information is lost. As mentioned before, models that are trained to identify named entities use information on capitalisation. As another example, there are a lot of names and surnames that carry meaning. "Bakker" is a common Dutch surname, but is also a noun (baker). In lowercasing the text you loose the distinction between the two.
 
-Then we can replace the double spaces with single spaces. However, there might be multiple double spaces in the text after one another. To catch these, we can repeat the action of replacing double spaces a couple of times, using a loop: 
+### Tokenisation
+A very important step in NLP is tokenisation. Tokenisation is breaking up text into smaller, segments referred to as tokens. Tokens can split text at different levels, such as sentences, words, subwords or characters. This used level depends on the task at hand and the model and technique that is used. Tokenisation is essential in NLP, as it helps to creating structure from raw text. Once a text is split into tokens, these can be transformed into vectors (i.e. numbers), which can used for further processing in an efficient manner. Although a token that is transformed into a vector is then represented by numbers, it can still carry linguistic meaning, as we will discuss later on.
+
+You can tokenise your text with Python using various existing tokenisers. There are tokenisers available for different languages, as each language has their own intricacies that should be taken into account when splitting up text. A good word tokeniser for example, does not simply break up a text based on spaces and punctuation, but it should be able to distinguish:
+
+- abbreviations that include points (e.g.: *e.g.*)
+- times (*11:15*) and dates written in various formats (*01/01/2024* or *01-01-2024*)
+- word contractions such as *don't*, these should be split into *do* and *n't*
+- URLs
+
+Many older tokenisers are rule-based, meaning that they iterate over a number of predefined rules to split the text into tokens, which is useful for splitting text into word tokens for example. Modern large language models use subword tokenisation, which are more flexible.
+
+#### Spacy
+There are multiple python packages that can be used for NLP, such as `Spacy`, `NLTK`, `Gensim` and `PyTorch`. Here we will be using the `Spacy` package to create word tokens.
+
+The model that we are going to use is called `nl_core_news_sm`. This a [model from Spacy](https://spacy.io/models/nl/) that is pretrained to do a number of NLP tasks for Dutch texts. We first have to download this model model from the Spacy library:
 
 ```python
-# Replace double spaces with single spaces
-for i in range(10):
-      corpus_sentences = corpus_sentences.replace("  ", " ")
-      i = i + 1
+# download the Dutch spacy model
+! python -m spacy download nl_core_news_sm
 ```
+
+We can then load the model into the pipeline function. This function connects the pretrained model to various preprocessing steps, including the tokenisation.
 
 ```python
-# Check that there a no more double spaces
-"  " in corpus_sentences
+# Load the Dutch model in a pipeline
+nlp = spacy.load("nl_core_news_sm")
 ```
-Indeed there a no more double spaces.
 
-Now we are ready to split the text into sentences based on points:
+We can now input our corpus to the pipeline to apply the tokenisation to the text.
 ```python
-sentences = corpus_sentences.split(". ")
-```
-What this does it that the `corpus_sentences` is split up every time a `. `is found, and the results are stored in a python list.
-
-If we print the first 20 items in the resulting list, we can see that indeed the data is split up into sentences, but there are some mistakes, where for example a new sentence is defined because the word 'mister' was abbreviated which also resulted in a new sentence definition. This shows that these kind of steps will never be fully perfect, but it good enough to proceed.
-
-```python
-sentences[0:20]
-```
-
-### Words
-We can now procede from `corpus_sentences` to split the corpus into individual words based on spaces. To get 'clean words' we need to replace some more punctuation marks, so that these are not included in the list of words.
-
-Let's first define the punctuation marks we want to remove:
-```python
-# Punctuation symbols
-punctuation = (".", ",", ":", ";", "(", ")", "!", "?", "\"")
-```
-
-Then we go over all these punctuation symbols one by one using a loop to replace them:
-
-```python
-# Loop over the punctuation symbols to remove them
-corpus_words = corpus_sentences
-
-for punct in punctuation:
-      corpus_words = corpus_words.replace(punct, "")
-
-# Again replace double spaces with single spaces
-for i in range(10):
-      corpus_words = corpus_words.replace("  ", " ")
-      i = i + 1
-```
-
-Next, we should lowercase all text so that we don't get a word in two forms in the list, once with capital, once without, and have a consistent list of words:
-```python
-# Lowercase the text
-corpus_words = corpus_words.lower()
-```
-
-Now we can split the text into individual words based by splitting them up on every space:
-```python
-words = corpus_words.split(" ")
-words
-```
-
-
-## Using a spacy pipeline to analyse texts
-Before the break we did a number of preprocessing steps to get the sentence tokens and word tokens. We took the following steps:
-
-- We loaded the corpus into one long string and selected the part of the string that we wanted to analyse, which is the first story
-- We replaced new lines with spaces and removed all double spaces.
-- We split the string into sentences based on points
-To continue getting the individual words:
-- we removed punctuation marks
-- removed double spaces
-- we lowercased the text
-- We split the text into a list of words based on spaces.
-- We selected all individual words by converting the list into a set.
-
-We did all these steps by hand, to get an understanding of what is needed to create the tokens. However these steps can also be done with a Python package, where these things happen behind the scenes. We will now start using this package to look at the results of the preprocessing steps of stop word removal, stemming and part-of-speech tagging.
-
-## Spacy NLP pipeline
-There are multiple python packages that can be used to for NLP, such as `Spacy`, `NLTK`, `Gensim` and `PyTorch`. Here we will be using the `Spacy` package.
-
-Let's first load a few packages that we will be using:
-
-```Python
-import spacy
-from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
-```
-
-The pipeline that we are going to 
-
-The pipeline that we are going to use is called `en_core_web_md`. This a [pipeline from Spacy](https://spacy.io/models/en/) that is pretrained to do a number of NLP tasks for English texts. We first have to download this model model from the Spacy library:
-
-```python
-!python -m spacy download en_core_web_sm
-```
-
-It is important to realize that in many cases you can use a pretrained model such as this one. You then do not have to do any training of your data. This is very nice, because training a model requires a whole lot of data, that would have to be analyzed by hand before you can start. It also requires a lot of specific understanding of NLP and a lot of time, and often it is simply not neccesary. These available models are trained on a lot of data, and have very good accuracy.
-
-Free available pretrained models can be found on [Hugging Face](https://huggingface.co/), along with instructions on how to use them. This website contains a lot of models trained for specific tasks and use cases. It also contains data sets that can be used to train new models.
-
-Let's load the model:
-```python
-nlp = spacy.load('en_core_web_md')
-
-```
-
-We can check out which components are available in this pipeline:
-```python
-# loaded components
-print("components:", nlp.component_names)
-```
-
-Let's now apply this pipeline on our data. Remember that we as a first step before the break we loaded the data in the variable called corpus. We now give this as an argument to the pipeline; this will apply the model to our specific data; such that we have all components of the pipeline available on our specific corpus:
-
-```python
-# apply model to our corpus
-doc = nlp(corpus)
-```
-
-On of the things that the pipeline does, is tokenization as we did in the first part. We can now check out the sentence tokens like this:
-
-```python
-# Get sentences
-for sentence in doc.sents:
-    print(sentence)
-```
-
-and the word tokens like this:
-```python
-# Get word tokens
-for token in doc[0:6]:
-    print(token.text)
-```
-
-## Stop word removal
-If we want to get an idea of what the text is about we can visualize the word tokens in a word cloud to see which words are most common. To do this we can define a function:
-
-```python
-from wordcloud import WordCloud
-
-# Define function that returns a word cloud
-def plot_wordcloud(sw = (""), doc = doc):
-      wc = WordCloud(stopwords=sw).generate(str(doc))
-      plt.imshow(wc, interpolation='bilinear')
-      plt.axis("off")
-      return plt.show()
+# Input our corpus
+doc = nlp(corpus_lower)
 ```
 
 ```python
-plot_wordcloud(doc=doc)
+# Get the tokens from the pipeline
+tokens = [token.text for token in doc]
+
+print(len(tokens))
+print(tokens)
 ```
 
-From this we get no idea what the text is about because the most common words are word such as 'the', 'a', and 'I', which are referred to as stopwords. We could therefore want to remove these stopwords. The spacy package has a list of stopwords available. Let's have a look at these:
+### Remove punctuation
+The next step we will apply is to remove punctuation. To create a list of the distinct word tokens in the text, punctuation symbols are not of interest. 
+
+The punctuation symbols are defined in:
+```python
+string.punctuation
+```
+
+We can loop over these symbols to remove them from the text:
+```python
+# remove punctuation from set
+tokens_no_punct = tokens
+
+for punct in string.punctuation:
+    tokens_no_punct = [token for token in tokens_no_punct if token != punct]
+```
 
 ```python
-# Stop word removal
+print(len(tokens_no_punct))
+```
+
+:::::::::::::::::::: challenge
+
+Discuss with each other
+
+- For which NLP tasks can punctuation removal be applied?
+- For which tasks is punctuation relevant and should punctuation not be removed?
+
+::::::::: solution
+
+
+
+:::::::::
+
+
+::::::::::::::::::::
+
+### Stop word removal
+
+For some NLP tasks only the relevant words in the text are needed. A text however contains a lot of so called stop words: very common words such as 'de', 'het', 'een' that do not contribute to as much the content of the text compared to the nouns and words. In those cases it is common to remove these stop words from your corpus. This reduces the number of words to process. 
+
+NLP tasks for which stop word removal can be applied are for example text classification or topic modelling. To cluster the words of a text into topic clusters, stop words are irrelevant. Having fewer and more revevant words would give better results. For other tasks such as text generation or question answering the full structure and context of the text are important and hence stop words should not be removed. This is also the case for named entitity recognition, since named entities can contain stop words themselves.
+
+The Dutch spacy model contains a list of stop words in the Dutch language.
+```python
 stopwords = nlp.Defaults.stop_words
 
-print(len(stopwords))
 print(stopwords)
 ```
-The pipeline has 326 stopwords, and if we have a look at them you could indeed say that these words do not add much if we want to get an idea of what the text is about. So let's create the word cloud again, but without the stopwords:
 
 ```python
-plot_wordcloud(sw= stopwords, doc = doc)
+# remove stopwords
+tokens_no_stopwords = tokens_no_punct
+
+for stopword in stopwords:
+    tokens_no_stopwords = [token for token in tokens_no_stopwords if token != stopword]
+
+print(len(tokens_no_stopwords))
 ```
 
-This shows that Holmes is the most common word in the text, as one might expect. There are also words in this word cloud that would also consider as stop words in this case, such as `said` and `know`. If you would want to remove these as well you can add them to the list of stopwords that we used.
-
-## Lemmatization
-Let's now have a look at the lemmatization. From the wordcloud, we can see that one of the most common words in the text is the word `said`. This is past tense of the word `say`. If we want all the words referring to the word `say` we should look at the lemmatized text. We saw in the pipeline that this is also one of the components of the pipeline, so we already have all the lemmas available. We can check them out using:
+### Token word cloud
 
 ```python
-# Lemmas
-for token in doc:
-      print(token.text, token.lemma_)
+wordcloud = WordCloud().generate(' '.join(tokens_no_stopwords))
+
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.axis("off")
+plt.show()
 ```
 
-Here we can for example see that even the `n't` is recognized as not.
-
-## Part-of-speech tagging 
-The last thing we want to look at right now is part-of-speech tagging. The loaded model can tell for each word token what type of word it is grammatically. We can access these as follows:
+## Subword tokenizers
+We have now created a list of word tokens and afterwards removed stopwords and punctuation. Large language models use a more sophisticated way of tokenisation. If we look at the distinct words from out vocabulary:
 
 ```python
-# Part-of-speech tags
-for token in doc:
-    print(token.text, token.pos_)
+print(len(set(tokens)))
+
+print(set(tokens))
 ```
 
-It recognizes determiners, nouns, adpositions, and more. But we can also see that it is not perfect and mistakes are made. That is something important to remember; any model, pretrained or if you train it yourself: there are always mistakes in it.
+This set is XX tokens long. If we were to process a larger piece of text, the number of distinct words would grow very large. When looking at the inidividual tokens here, we can see that there are various words that are similar in the sense that they are a plural form, or XXX form of the same word. It would be redundant to process the words as completely distinct tokens. This is why many models use sub-word tokenisation.
+XXX would be split as xxx
 
 
 :::::::::::::::::::: challenge
 
-We have gone through various data preprocessing techniques in this episode. Now that you know how to apply them all, let's see how they affect each other.
-
-* Above we removed the stopwords from the text before lemmatization. What happens if you use the lemmatized text? Create a word cloud of your results.
-* The word clouds that we created can give an idea on what the text is about. However, there are still some terms in the word cloud that are not so useful to do this aim. Which further words would you remove? Add them to the stop words to improve your word cloud so that it better represents to subject of the text.
-
 ::::::::: solution
-
-* Lemmatized word cloud
-
-The doc can be created to consist only of lemma's as follows:
-```python
-lemmas = ' '.join([token.lemma_ for token in doc])
-```
-
-Create the word cloud using the lemmatized text and the stopwords we defined earlier.
-```python
-plot_wordcloud(doc=lemmas, sw=stopwords)
-```
-
-* Additional stop words
-
-Add some more words to the stopwords set:
-```python
-add_stopwords = ['ask', 'tell', 'like', 'want', 'case', 'come']
-new_stopwords = stopwords.update(set(add_stopwords))
-```
-
-Create the word cloud:
-```python
-plot_wordcloud(doc=lemmas, sw=new_stopwords)
-```
 
 :::::::::
 
@@ -341,7 +263,7 @@ plot_wordcloud(doc=lemmas, sw=new_stopwords)
 - Preprocessing involves a number of steps that one can apply to their text to prepare it for further processing.
 - Preprocessing is important because it can improve your results
 - You do not always need to do all preprocessing steps. It depends on the task at hand which preprocessing steps are important.
-- A number of preprocessing steps are: lowercasing, tokenization, stop word removal, lemmatization, part-of-speech tagging.
+- A number of preprocessing steps are: lowercasing, tokenization, stop word removal
 - Often you can use a pretrained model to process and analyse your data.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
