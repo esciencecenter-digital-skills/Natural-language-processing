@@ -10,7 +10,7 @@ We would love to help you prepare to teach the lesson and receive feedback on ho
 You can notify us that you plan to teach this lesson by creating an issue in this repository. Also, it would be great if you can update [this overview of all workshops taught with this lesson material](workshops.md). This helps us show the impact of developing open-source lessons to our funders.
 
 ## Target Audience
-The lesson is designed specifically with researchers in the Humanities and Social Sciences in mind, but is also applicable to other fields of research. We expect them to know the basics of Python programming and statistics.
+The lesson is designed specifically with researchers in the Humanities and Social Sciences in mind, but is also applicable to other fields of research. We expect them to know the basics of Python, Git and statistics.
 
 ## Contributing
 We welcome all contributions to improve the lesson! Maintainers will do their best to help you if you have any questions, concerns, or experience any difficulties along the way.
