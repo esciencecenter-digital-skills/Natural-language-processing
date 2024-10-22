@@ -5,7 +5,7 @@ site: sandpaper::sandpaper_site
 ## Welcome
 This lesson is about the fundamentals of Natural Language Processing (NLP) in Python, with applications in the Humanities and Social Sciences.
 
-It will equip you with the foundational skills and knowledge needed to carry over text-based research projects. The lesson is designed specifically with researchers in the humanities and social sciences in mind, but is also applicable to other fields of research.
+It will equip you with the foundational skills and knowledge needed to carry over text-based research projects. The lesson is designed specifically with researchers in the Humanities and Social Sciences in mind, but is also applicable to other fields of research.
 
 :::::::::::::::::: checklist
 ## Prerequisites
