@@ -27,42 +27,47 @@ In this episode, we’ll go over the concept of word embedding, and the steps to
 
 The goal of this episode is to get you hands-on experience, without diving into the technical or mathematical intricacies 
 of neural networks. We want you to complete the full workflow of building and using word embeddings 
-before diving into what are those. In the later episodes we will build upon this knowledge to go deeper into all of these steps.
+before diving into what are those. In the later episodes we will build upon this knowledge to go deeper into all of these concepts.
 
 
 # Formulate the problem
-In this episode we will be using Dutch newpaper texts from [Delpher](https://www.delpher.nl/). 
-Newspapers make an interesting dataset for scientific research, as it contains information about current events 
-and the language it uses is clear and reflective of its time.
+In this episode we will be using Dutch newpaper texts to train a Word2Vec model to investigate the notion of *semantic shift*. 
 
-Delpher is a public database developed by the [KB - the National Library of the Netherlands](https://www.kb.nl/) and 
-contains digitalised historic Dutch newspapers, books, and magazines. 
-The online newspaper collection covers data spanning from 1618 up to 1995 and of many local, national and 
-international publishers. 
-
-What we will be looking into is to examine the semantic shifts of specific words over various decades. We will look at the context in which a word is used between the 1950s and 1990s.
-
-We will be using this dataset to train a Word2Vec model to investigate the notion of *semantic shift*.
+### Semantic shift
 Semantic shift, as it is used here, refers to a pair of meanings A and B which are linked by some relation. Either
 diachronically (e.g., Latin *caput* "head" and Italian *capo* "chief") or synchronically, e.g. as two meanings that co-exist
-in a word simoultaneously (English "head", as in "I have covered my head with a hat" and as in "I am the head of the department").
+in a word simoultaneously (English "head", as in "I have covered my head with a hat" and as in "I am the head of the department"). **How do words acquire multiple meanings? Can we measure this semantic shift?**
 
+Newspapers make an interesting dataset for investigating this phenomenon, as they contain information about current events and the language it uses is clear and reflective of its time. We will specifically look at the evolution of specific words in Dutch across a period of time from 1950 to 1990.
 
-We will specifically look at the evolution of specific words in Dutch across a period of time from 1950 to 1990.
+::: callout
+## Goal
+The goal is to analyze the semantic shift of specific Dutch words from 1950 to 1990 using newspapers as a dataset.
+:::
+
+Delpher (developed by the [KB - the National Library of the Netherlands](https://www.kb.nl/)) contains digitalised historic Dutch newspapers, books, and magazines. This online newspaper collection covers data spanning from 1618 up to 1995 and of many local, national and 
+international publishers. 
 
 
 ::::::::::::::::::::::::::::::::::::::: challenge
 ## Exploring Delpher
-Before we will collect the data, let's play around a bit in Delpher. Go to the [Delpher](https://www.delpher.nl/) and look around what data they all have. Can you find anything in the data that you find interesting or didn't know yet? For example about your living area, sports club, or an historic event?
+Before we move further with our problem, take your time to explore Delpher more in detail. Go to [Delpher](https://www.delpher.nl/) and pick a newspaper of a particular date. Did you find anything in the newspaper that is interesting or didn't know yet? For example about your living area, sports club, or an historic event?
 
-::::::::::::::: solution
+::::: solution
+## Few examples. 
+
+1. The 20th of July 1969 mark an important event. The First Moon landing!
+Look at what the [Tubantia newspaper](https://resolver.kb.nl/resolve?urn=KBPERS01:003319021:mpeg21:pdf) had to say about it only four days afterwards.
+
+2. The Cuban Missile Crisis, also known as the October Crisis in Cuba, or the Caribbean Crisis, was a 13-day confrontation between the governments of the United States and the Soviet Union, when American deployments of nuclear missiles in Italy and Turkey were matched by Soviet deployments of nuclear missiles in Cuba. The crisis lasted from 16 to 28 October 1962. See what de Volkskrant published on the [24th of October, 1962](https://resolver.kb.nl/resolve?urn=ABCDDD:010876534:mpeg21:pdf). Can you see what they have organised in Den Haag related to this event?
+:::::
+
+::::::::::::::::::::::::::::::::::::::: 
 
 Next we will be looking into text preprocessing. The task we will tackly is to get an overview of the most common words in a piece of text. We will be using the first page of the edition of de [Algemeen Dagblad from July 21 1969](https://www.delpher.nl/nl/kranten/view?coll=ddd&query=&cql%5B%5D=%28date+_gte_+%2220-07-1969%22%29&redirect=true&sortfield=date&resultscoll=dddtitel&identifier=KBPERS01:002846018:mpeg21&rowid=3) for this exercise that can be downloaded as txt-file from Delpher.
 
 It is possible to download the data in different formats; jpg, pdf, and txt. The jpg file is the original scan that was made of the page, and can thus be considered the raw data. Because we want to use the text itself we download the txt file. This file contains only the text without formatting and images, and is produced by Delpher using a technique called Optical Character Recognition (OCR). This is a technique in which text from an image is converted into text. Very simply said, OCR software identifies which parts of an image contain text, and identifies the individual caracters to reconstruct the text. Although in research you might also have to start from images rather than text files, we will not go into optical character recognition. It is quite a difficult process that is beyond the scope of this course.
 
-:::::::::::::::
-:::::::::::::::::::::::::::::::::::::::
 
 # Preprocessing
 NLP models work by learning the statistical regularities within the constituent parts of the language (i.e, letters, digits, words and sentences) in a text. Before applying these models, the input text must often be modified to make it into a format that is better interpretable by the model. This operation is known as `data preprocessing` and its goal is to make the text ready to be efficiently processed by the model. Applying preprocessing steps will give better results in the end.
