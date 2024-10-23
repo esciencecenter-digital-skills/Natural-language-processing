@@ -3,6 +3,7 @@ title: "Episode 1: From text to vectors - preprocessing and word embeddings"
 teaching: 10
 exercises: 0
 ---
+
 :::::::::::::::::::::::::::::::::::::::::::::::: questions
 
 - What problem are we going to solve in this episode?
@@ -27,16 +28,15 @@ After following this lesson, learners will be able to:
 - Explain what tokenisation is.
 - Perform text cleaning, lowercasing, tokenization, punctuation and stop word removal tokenisation.
 - Apply and use a spacy pretrained model.
-
+- Explain ways machines represent words and understand their meaning
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
 # Delpher newspaper articles
 In this epsiode we are going to process Dutch newpaper texts. Newspapers make an interesting dataset for scientific research, as it contains information about current events and the language it uses is clear and reflective of its time.
 
-::: Instructor
 It would be useful to teach this while showing the website.
-:::
+
 
 We will be using data from [Delpher](https://www.delpher.nl/) in this episode. Delpher is a public database developed by the [KB - the National Library of the Netherlands](https://www.kb.nl/) and contains digitalised historic Dutch newspapers, books, and magazines. The online newspaper collection covers data spanning from 1618 up to 1995 and of many local, national and international publishers. 
 What we will be looking into is to examine the sematic shifts of specific words over various decades. We will look at the context in which a word is used between the 1950s and 1990s.

@@ -8,7 +8,7 @@ title: Setup
 
 ### Installing Python
 
-[Python][python] is a popular language for scientific computing, and a frequent choice
+[Python](https://python.org) is a popular language for scientific computing, and a frequent choice
 for machine learning as well.
 To install Python, follow the [Beginner's Guide](https://wiki.python.org/moin/BeginnersGuide/Download) or head straight to the [download page](https://www.python.org/downloads/).
 
@@ -25,7 +25,7 @@ Pip should be available in your system once you installed Python successfully.
 
 ## Jupyter Lab
 
-We will teach using Python in [Jupyter Lab][jupyter], a programming environment that runs in a web browser.
+We will teach using Python in [Jupyter Lab](http://jupyter.org/), a programming environment that runs in a web browser.
 Jupyter Lab is compatible with Firefox, Chrome, Safari and Chromium-based browsers.
 Note that Internet Explorer and Edge are *not* supported.
 See the [Jupyter Lab documentation](https://jupyterlab.readthedocs.io/en/latest/getting_started/accessibility.html#compatibility-with-browsers-and-assistive-technology) for an up-to-date list of supported browsers.
@@ -56,5 +56,3 @@ Click on this icon and select `txt` among the downloading options
 
 - Download Word2Vec models trained on 6 national Dutch newspaper data spanning a time period from 1950 to 1989 (Wevers, M., 2019). These models are available on [Zenodo](https://zenodo.org/records/3237380).
 
-[python]: https://python.org
-[jupyter]: http://jupyter.org/
