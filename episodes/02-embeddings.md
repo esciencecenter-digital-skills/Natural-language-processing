@@ -1,10 +1,14 @@
 ---
-title: "Episode 3: Word embeddings"
+title: "Episode 2: From text to vectors - preprocessing and word embeddings"
 teaching: 10 
 exercises: 0
 ---
 
 :::::::::::::::::::::::::::::::::::::::::::::::: questions
+
+- What is preprocessing and why do we need it?
+- What different types of preprocessing steps are there?
+- What are the consequences of applying data preprocessing on our text?
 
 - What are word embeddings?
 - What properties word embeddings have?
@@ -17,6 +21,11 @@ exercises: 0
 :::::::::::::::::::::::::::::::::::::::::::::::: objectives
 
 After following this lesson, learners will be able to:
+- Explain what preprocessing means.
+- Explain what tokenisation is.
+- Perform text cleaning, lowercasing, tokenization, punctuation and stop word removal tokenisation.
+- Apply and use a spacy pretrained model.
+- Explain ways machines represent words and understand their meaning
 
 - Explain what word embeddings are
 - Get familiar with using vectors to represent things

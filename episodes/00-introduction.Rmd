@@ -42,7 +42,7 @@ These are some of the most popular NLP-based products that we use on a daily bas
 
 The exercise above tells us that a great deal of NLP techniques is embedded in our daily life. Indeed NLP is an important component in a wide range of software applications that we use in our daily lives.
 
-# Core applications
+## Core applications
 
 - Email providers use NLP in several ways: automatically detect and filter-out spam emails, classify important emails (e.g., Priority inbox), recognise dates and events to automatically add them to your calendar and suggesting you phrases while you're typing
 
@@ -50,7 +50,7 @@ The exercise above tells us that a great deal of NLP techniques is embedded in o
 
 - Search engines use NLP to interpret the meaning behind user queries (e.g., "What's the best restaurant near me?"), pull and highlight key information directly from a webpage to answer your query and personalise results based on user history
 
-## Other types of applications
+### Other types of applications
 
 - Customer care services use NLP to summarise and understand user reviews to provide actionable insights to their companies
 
@@ -58,7 +58,7 @@ The exercise above tells us that a great deal of NLP techniques is embedded in o
 
 - The [Historical Archives of the European Parliament](https://historicalarchives.europarl.europa.eu/en/sites/historicalarchive/home/cultural-heritage-collections/news/ai-dashboard.html) have used NLP to instantly search, retrieve and understand decades of legislative documents and parliamentary proceedings in multiple languages
 
-# NLP tasks
+## NLP tasks
 
 - Language modeling: Given a sequence of words, the model predicts the next word. For example, in the sentence "The cat is on the _____", the model might predict "mat" based on the context. This task is useful for building solutions that require speech and optical character recognition (even handwriting), language translation and spelling correction
 
@@ -72,7 +72,7 @@ The exercise above tells us that a great deal of NLP techniques is embedded in o
 
 - Topic modelling: Automatically identify abstract "topics" that occur in a set of documents, where each topic is represented as a cluster of words that frequently appear together. This task is used in a variety of domains, from literature to bioinformatics as a common text-mining tool.
 
-# Natural vs Artificial Language
+## Natural vs Artificial Language
 
 Why does NLP have "natural" in its name? A [Language](https://en.wikipedia.org/wiki/Language) is a structured system of communication that consists of grammar and vocabulary. Within this definition, in NLP we refer to human language as [*Natural*](https://en.wikipedia.org/wiki/Natural_language) to contrast it to *artificial* languages which are [formal languages](https://en.wikipedia.org/wiki/Formal_language). The reason for this is that many experts believe that *natural* languages have emerged *naturally* tens of thousands of years ago and have evolved ever since. Formal languages, on the other hand, are languages that have been engineered by humans and have rigid and explicitly defined rules.
 
