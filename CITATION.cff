@@ -18,6 +18,15 @@ authors:
     family-names: Viviani
     email: e.viviani@esciencecenter.nl
     affiliation: Netherlands eScience center
+  - given-names: Angel
+    family-names: Daza
+    email: j.daza@esciencecenter.nl
+    affiliation: Netherlands eScience center
+  - given-names: Thijs
+    family-names: Vroegh
+    email: t.vroegh@esciencecenter.nl
+    affiliation: Netherlands eScience center
+
 identifiers:
   - type: url
     value: >-
