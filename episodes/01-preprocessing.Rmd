@@ -40,7 +40,7 @@ In this episode, we will build a workflow following these steps:
 6. Save the model
 7. Load the embeddings and Inspect them 
 
-Note that for step 5 we will cover only briefly the code to train your own model, but then we will load the output of alrea 
+Note that for step 5 we will cover only briefly the code to train your own model, but then we will load the output of already pretrained models 
 
 
 # Formulate the problem
