@@ -23,11 +23,24 @@ After following this lesson, learners will be able to:
 ::::::::::
 
 # Introduction
-In this episode, we’ll go over the concept of word embedding, and the steps to generate and explore it with Word2vec. 
+In this episode, we’ll train a neural network to obtain word embeddings. We will only briefly touch upon the concept of `word embedding`, and the steps to generate and explore it with Word2vec. 
 
-The goal of this episode is to get you hands-on experience, without diving into the technical or mathematical intricacies 
-of neural networks. We want you to complete the full workflow of building and using word embeddings 
-before diving into what are those. In the later episodes we will build upon this knowledge to go deeper into all of these concepts.
+The idea is to get you over a practical example first, without diving into the technical or mathematical intricacies of neural networks and word embeddings. The goal for this episode, in fact, is for you to get an intuition of how computers represent language. This is key to understand how NLP applications work and what are their limits.
+
+In the later episodes we will build upon this knowledge to go deeper into all of these concepts and see how NLP tools have evolved more complex language representations.
+
+
+In this episode, we will build a workflow following these steps:
+
+1. Formulate the problem
+2. Download the input data
+3. Prepare data to be ingested by the model (i.e. preprocessing step)
+4. Choose a pretrained model (Word2Vec)
+5. Train the model
+6. Save the model
+7. Load the embeddings and Inspect them 
+
+Note that for step 5 we will cover only briefly the code to train your own model, but then we will load the output of alrea 
 
 
 # Formulate the problem
@@ -64,13 +77,13 @@ Look at what the [Tubantia newspaper](https://resolver.kb.nl/resolve?urn=KBPERS0
 
 ::::::::::::::::::::::::::::::::::::::: 
 
-Next we will be looking into text preprocessing. The task we will tackly is to get an overview of the most common words in a piece of text. We will be using the first page of the edition of de [Algemeen Dagblad from July 21 1969](https://www.delpher.nl/nl/kranten/view?coll=ddd&query=&cql%5B%5D=%28date+_gte_+%2220-07-1969%22%29&redirect=true&sortfield=date&resultscoll=dddtitel&identifier=KBPERS01:002846018:mpeg21&rowid=3) for this exercise that can be downloaded as txt-file from Delpher.
+#### Download the data
+We download this page from the journal [Algemeen Dagblad](https://www.delpher.nl/nl/kranten/view?coll=ddd&query=&cql%5B%5D=%28date+_gte_+%2220-07-1969%22%29&redirect=true&sortfield=date&resultscoll=dddtitel&identifier=KBPERS01:002846018:mpeg21&rowid=3) of July 21, 1969. We download the `txt` format and save it as `ad.txt`.
 
-It is possible to download the data in different formats; jpg, pdf, and txt. The jpg file is the original scan that was made of the page, and can thus be considered the raw data. Because we want to use the text itself we download the txt file. This file contains only the text without formatting and images, and is produced by Delpher using a technique called Optical Character Recognition (OCR). This is a technique in which text from an image is converted into text. Very simply said, OCR software identifies which parts of an image contain text, and identifies the individual caracters to reconstruct the text. Although in research you might also have to start from images rather than text files, we will not go into optical character recognition. It is quite a difficult process that is beyond the scope of this course.
+This file contains only the text without formatting and images, and is produced by Delpher using a technique called Optical Character Recognition (OCR). This is a technique in which text from an image is converted into text.  
 
-
-# Preprocessing
-NLP models work by learning the statistical regularities within the constituent parts of the language (i.e, letters, digits, words and sentences) in a text. Before applying these models, the input text must often be modified to make it into a format that is better interpretable by the model. This operation is known as `data preprocessing` and its goal is to make the text ready to be efficiently processed by the model. Applying preprocessing steps will give better results in the end.
+#### Preprocessing
+NLP models work by learning the statistical regularities within the constituent parts of the language (i.e, letters, digits, words and sentences) in a text. Before applying these models, the input text must often be modified to make it into a format that is better interpretable by the model. This operation is known as `data preprocessing` and its goal is to make the text ready to be efficiently processed by the model.
 
 Examples of preprocessing steps are:
 
