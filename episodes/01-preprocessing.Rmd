@@ -6,8 +6,8 @@ exercises: 50
 
 ::::::::: questions
 
-- How do I train a neural network to extract word embeddings?
 - How do I prepare a text to be used as input to a model?
+- How do I train a neural network to extract word embeddings?
 - How do I get insights regarding my text, based on the word embeddings? 
 
 ::::::::: 
@@ -40,8 +40,7 @@ In this episode, we will build a workflow following these steps:
 6. Save the model
 7. Load the embeddings and Inspect them 
 
-Note that for step 5 we will cover only briefly the code to train your own model, but then we will load the output of already pretrained models 
-
+Note that for step 5 we will cover only briefly the code to train your own model, but then we will load the output of already pretrained models.
 
 # Formulate the problem
 In this episode we will be using Dutch newpaper texts to train a Word2Vec model to investigate the notion of *semantic shift*. 
@@ -51,16 +50,17 @@ Semantic shift, as it is used here, refers to a pair of meanings A and B which a
 diachronically (e.g., Latin *caput* "head" and Italian *capo* "chief") or synchronically, e.g. as two meanings that co-exist
 in a word simoultaneously (English "head", as in "I have covered my head with a hat" and as in "I am the head of the department"). **How do words acquire multiple meanings? Can we measure this semantic shift?**
 
-Newspapers make an interesting dataset for investigating this phenomenon, as they contain information about current events and the language it uses is clear and reflective of its time. We will specifically look at the evolution of specific words in Dutch across a period of time from 1950 to 1990.
+Newspapers make an interesting dataset for investigating this phenomenon, as they contain information about current events and the language it uses is clear and reflective of its time. We will specifically look at the evolution of specific words in Dutch across a period of time from 1950 to 1990. In order to do that, we need to train a model to extract the meaning of every single word and track in which context they occur. 
 
 ::: callout
 ## Goal
 The goal is to analyze the semantic shift of specific Dutch words from 1950 to 1990 using newspapers as a dataset.
 :::
 
-Delpher (developed by the [KB - the National Library of the Netherlands](https://www.kb.nl/)) contains digitalised historic Dutch newspapers, books, and magazines. This online newspaper collection covers data spanning from 1618 up to 1995 and of many local, national and 
-international publishers. 
+To do so we need a dataset large enough to allow our model to learn meaningful associations between a particular set of letters and their meaning. These associations are crystallized into vectors which in the NLP domain are referred to as `embeddings`. We will go into details about those when we actually create them.
 
+Our dataset is provided by Delpher (developed by the [KB - the National Library of the Netherlands](https://www.kb.nl/)) which contains digitalised historic Dutch newspapers, books, and magazines. This online newspaper collection covers data spanning from 1618 up to 1995 and of many local, national and 
+international publishers. We will initially load only a page to go step-by-step through what it takes to train a model. This makes it easier to know what's going on. However, in practice, when to successfully train a model you need larger quantities of data to allow the model to get more precise and accurate representations. In those cases you will simply condense each of the steps we cover next into one code, to do all these steps at once.
 
 ::::::::::::::::::::::::::::::::::::::: challenge
 ## Exploring Delpher
@@ -69,7 +69,7 @@ Before we move further with our problem, take your time to explore Delpher more 
 ::::: solution
 ## Few examples. 
 
-1. The 20th of July 1969 mark an important event. The First Moon landing!
+1. The 20th of July 1969 marks an important event. The First Moon landing!
 Look at what the [Tubantia newspaper](https://resolver.kb.nl/resolve?urn=KBPERS01:003319021:mpeg21:pdf) had to say about it only four days afterwards.
 
 2. The Cuban Missile Crisis, also known as the October Crisis in Cuba, or the Caribbean Crisis, was a 13-day confrontation between the governments of the United States and the Soviet Union, when American deployments of nuclear missiles in Italy and Turkey were matched by Soviet deployments of nuclear missiles in Cuba. The crisis lasted from 16 to 28 October 1962. See what de Volkskrant published on the [24th of October, 1962](https://resolver.kb.nl/resolve?urn=ABCDDD:010876534:mpeg21:pdf). Can you see what they have organised in Den Haag related to this event?
@@ -78,82 +78,120 @@ Look at what the [Tubantia newspaper](https://resolver.kb.nl/resolve?urn=KBPERS0
 ::::::::::::::::::::::::::::::::::::::: 
 
 #### Download the data
-We download this page from the journal [Algemeen Dagblad](https://www.delpher.nl/nl/kranten/view?coll=ddd&query=&cql%5B%5D=%28date+_gte_+%2220-07-1969%22%29&redirect=true&sortfield=date&resultscoll=dddtitel&identifier=KBPERS01:002846018:mpeg21&rowid=3) of July 21, 1969. We download the `txt` format and save it as `ad.txt`.
-
-This file contains only the text without formatting and images, and is produced by Delpher using a technique called Optical Character Recognition (OCR). This is a technique in which text from an image is converted into text.  
-
-#### Preprocessing
-NLP models work by learning the statistical regularities within the constituent parts of the language (i.e, letters, digits, words and sentences) in a text. Before applying these models, the input text must often be modified to make it into a format that is better interpretable by the model. This operation is known as `data preprocessing` and its goal is to make the text ready to be efficiently processed by the model.
-
-Examples of preprocessing steps are:
-
-- cleaning the text: remove symbols/special characters, or other things that "sneaked" into the text while loading the original version.
-- lowercasing
-- removing punctuation
-- stop word removal, where you remove common words such as `the` or `a` that you would note need in some further analysis steps.
-- tokenization: this means splitting up the text into individual tokens. You can for example create sentence tokens or words tokens, or any others.
-- lemmatization: with this step you obtain the lemma of each word. You would get the form in which you find the word in the dictionary, such as the singular version of a plural of a noun, or the first person present tense of a verb instead of the past principle. You are making sure that you do not get different versions of the same word: you would convert `words` into `word` and `talking` into `talk`
-- part of speech tagging: This means that you identify what type of word each is; such as nouns and verbs.
-
-The above examples of techniques of data preprocessing modify the input text to make it interpretable and analyzable by the NLP model of our choice. Here we will go through several steps to be aware of which steps can be performed and what their consequences are. However, It is important to realize that you do not always need to do all the preprocessing steps, and which ones you should do depends on what you want to do. 
-For example, if you want to extract entities from the text using named entity recognition, you explicitly do not want to lowercase the text, as capitals are a component in the identification process.
-Another important thing is that NLP tasks and the preprocessing can be very diffent for different languages. This is both in terms of which steps to apply, but also which methods to use for a specific step.
-
-Right now, we are going to apply a number of preprocessing steps to obtain a list of relevant word tokens from the newspaper page.
-
-## Loading the corpus
-In order to start the preprocessing we first load in the data. For that we need a number of python packages.
+We download a page from the journal [Algemeen Dagblad](https://www.delpher.nl/nl/kranten/view?coll=ddd&query=&cql%5B%5D=%28date+_gte_+%2220-07-1969%22%29&redirect=true&sortfield=date&resultscoll=dddtitel&identifier=KBPERS01:002846018:mpeg21&rowid=3) of July 21, 1969 as `txt` and save it as `ad.txt`. We then load this file and store it in a variable called `corpus`.
 
 ```python
-# import packages
-import io
-import re
-import spacy
-import string
-import matplotlib.pyplot as plt
-```
-
-We can then open the text file that contains the text and save it in a variable called `corpus`.
-
-```python
-# Load the newspaper text
-path = "./ad.txt"
+path = "episodes/data/ad.txt"
 with open(path) as myfile:
     corpus = myfile.read()
 ```
-Let's check out the start of the corpus
-```python
-# Print the text
-print(corpus)
-```
 
-Looking at the text, we can see that in this case the OCR that has been applied to the original image, has given a pretty good result. However, there are still mistakes in the recognized text. For example, on the first line the word 'juli' has misinterpreted as 'iuli'.
+::: callout
+The `txt` file provides the text without formatting and images, and is the product of a technique called Optical Character Recognition (OCR). This is a technique in which text from an image is converted into text, and it's a necessary step for any scanned image to obtain plain text. Luckily for us, Delpher has already done this step for us so that we can directly use the txt. However, take into consideration that if you start from an image that contains text, you may need an additional preprocessing step.
+:::
 
-### Cleaning the text
-A first thing to do is to clean the text. As said, in this case the text is in pretty good state, close to the original. However, we can still improve the interpretability of the text by removing a number of special characters, bringing the text closer to the original. First we'll remove any special symbols using a regex. Then we'll also remove the three dashes separating different news articles and the vertical bars separating some of the columns.
+##### Inspect the data
+We inspect the first line of the imported text:
 
 ```python
-clean = re.sub(r'[^\n -~\u00C0-\u017F]', "", corpus)
-cleaner = clean.replace("---", "")
-corpus_clean = cleaner.replace("|", "")
+corpus[:100]
 
-print(corpus_clean)
 ```
+
+`'MENS OP MAAN\n„De Eagle is geland” Reisduur: 102 uur, Uitstappen binnen 20 iuli, 21.17 uur 45 min. en'`
+
+We can see that although the OCR applied to the original image has given a pretty good result, there are mistakes in the recognized text. For example, on the first line the word ``juli`` (july) has misinterpreted as ``iuli``.
+
+Note also the size of the text:
+
+```python
+len(corpus)
+```
+
+There are `12354` characters inside the corpus. Note also the type of file:
+
+```python
+type(corpus)
+```
+
+Python tells us that `corpus` is a `str`, i.e. a string. This means that every single character in the text (even blank spaces) is a unit for our computer. However, what's really important for us is that the machine gets the meaning of the **words** contained in the text. That is, that is able to understand which characters belong together to form a word, and what instead is something else: Punctuation, conjunctions, articles, or prepositions. 
+
+How do we teach our machine to *segment* the text and keep only the relevant words? This is where `data preprocessing` comes into play. It prepares the text for efficient processing by the model, allowing it to focus on the important parts of the text that contribute to understanding its meaning.
+
+### Preprocessing
+NLP models work by learning the statistical regularities within the constituent parts of the language (i.e, letters, digits, words and sentences) in a text. However, text contains also other type of information that humans find useful to convey meaning. To signal pauses, give emphasis and convey tone, for instance, we use punctuation. Articles, conjunctions and prepositions also alter the meaning of a sentence. The machine does not know the difference among all of these linguistic units, as it treats them all as equal. Also, the decision to remove or retain these parts of text is quite crucial for training our model, as it affects the quality of generated word vectors.
+
+Examples of preprocessing steps are:
+
+- Cleaning the text: remove symbols/special characters, or other things that "sneaked" into the text while loading the original version.
+- Lowercasing
+- Removing punctuation
+- Stop word removal, where you remove prepositions, conjuctions and articles 
+- Tokenization: this means segmenting the text by retaining groups of characters. These groups are referred to as `tokens` and their size can vary from entire words to lemmas, or subword components (e.g. morphemes)
+- Part of speech tagging: the process of labelling the grammatical role of a word, e.g. nouns and verbs.
+
+::: callout
+- Preprocessing approaches affect significantly the quality of the training when working with word embeddings. For example, [Rahimi & Homayounpour (2022)] (https://link.springer.com/article/10.1007/s10579-022-09620-5) demonstrated that for text classification and sentiment analysis, the removal of punctuation and stopwords leads to higher performance. 
+
+- You do not always need to do all the preprocessing steps, and which ones you should do depends on what you want to do. For example, if you want to extract entities from the text using named entity recognition, you explicitly do not want to lowercase the text, as capitals are a component in the identification process.
+
+- Preprocessing can be very diffent for different languages. This is both in terms of which steps to apply, but also which methods to use for a specific step.
+:::
+
+Let's apply a number of preprocessing steps to extract a list of words from the newspaper page.
+
+#### 1. Cleaning the text
+We start by importing the `spaCy` library that will help us go through the preprocessing steps. SpaCy is a popular open-source library for NLP in Python and it works with pre-trained languages models that we can load and use to process and analyse the text efficiently. 
+
+```python
+import spacy
+```
+
+We need to install `en_core_web_sm` because the text we're dealing with it's in English. This is a small pre-trained language model containing essential components like vocabulary, syntax, and entities specifically for the English language.
+
+```python
+python -m spacy download en_core_web_sm
+```
+
+Next, we'll eliminate the triple dashes that separate different news articles, as well as the vertical bars used to divide some columns.
+
+```python
+# process the text with spacy
+doc = nlp(corpus)
+
+# filter out triple dashes and vertical bars
+filtered_tokens = [token.text for token in doc if token.text != "---" and token.text != "|"]
+
+# join units back into a cleaned string
+corpus_clean = ' '.join(filtered_tokens)
+
+print(corpus_clean[:100])
+
+```
+
+`MENS OP MAAN „ De Eagle is geland ” Reisduur : 102 uur , Uitstappen binnen 20 iuli , 21.17 uur 45 `
 
 ### Lowercasing
-Our next step is to lowercase the text. Our goal here is to generate a list of unique words from the text, so in order to not have words twice in the list - once normal and once capitalised when it is at the start of a sentence for example- we can lowercase the full text. 
+Our next step is to lowercase the text. Our goal here is to generate a list of unique words from the text, so in order to not have words twice in the list - once normal and once capitalised when it is at the start of a sentence for example - we can lowercase the full text. 
 
 ```python
 corpus_lower = corpus_clean.lower()
 
 print(corpus_lower)
 ```
+`mens op maan \n „ de eagle is geland ” reisduur : 102 uur , uitstappen binnen 20 iuli , 21.17 uur 45 [...]`
+
+::: callout
 It is important to keep in mind that in doing this, some information is lost. As mentioned before, models that are trained to identify named entities use information on capitalisation. As another example, there are a lot of names and surnames that carry meaning. "Bakker" is a common Dutch surname, but is also a noun (baker). In lowercasing the text you loose the distinction between the two.
+:::
+
+Next we move to tokenise our text. 
 
 ### Tokenisation
-A very important step in NLP is tokenisation. Tokenisation is breaking up text into smaller, segments referred to as tokens. Tokens can split text at different levels, such as sentences, words, subwords or characters. This used level depends on the task at hand and the model and technique that is used. Tokenisation is essential in NLP, as it helps to creating structure from raw text. Once a text is split into tokens, these can be transformed into vectors (i.e. numbers), which can used for further processing in an efficient manner. Although a token that is transformed into a vector is then represented by numbers, it can still carry linguistic meaning, as we will discuss later on.
+Tokenisation is essential in NLP, as it helps to create structure from raw text. It involves the segmentation of the text into smaller units referred as `tokens`. Tokens can be sentences (e.g. `'the happy cat'`), words (`'the, happy, cat'`), subwords (`'un', 'happiness'`) or characters (`'c','a', 't'`). The choice of tokens depends by the requirement of the model used for training, and the text. This step is carried out by a pre-trained model (called tokeniser) that has been fine-tuned for the target language. In our case, this is `en_core_web_sm` loaded before. 
 
-You can tokenise your text with Python using various existing tokenisers. There are tokenisers available for different languages, as each language has their own intricacies that should be taken into account when splitting up text. A good word tokeniser for example, does not simply break up a text based on spaces and punctuation, but it should be able to distinguish:
+::: callout
+A good word tokeniser for example, does not simply break up a text based on spaces and punctuation, but it should be able to distinguish:
 
 - abbreviations that include points (e.g.: *e.g.*)
 - times (*11:15*) and dates written in various formats (*01/01/2024* or *01-01-2024*)
@@ -161,6 +199,7 @@ You can tokenise your text with Python using various existing tokenisers. There 
 - URLs
 
 Many older tokenisers are rule-based, meaning that they iterate over a number of predefined rules to split the text into tokens, which is useful for splitting text into word tokens for example. Modern large language models use subword tokenisation, which are more flexible.
+:::
 
 #### Spacy
 There are multiple python packages that can be used for NLP, such as `Spacy`, `NLTK`, `Gensim` and `PyTorch`. Here we will be using the `Spacy` package to create word tokens.
@@ -168,7 +207,7 @@ There are multiple python packages that can be used for NLP, such as `Spacy`, `N
 The model that we are going to use is called `nl_core_news_sm`. This a [model from Spacy](https://spacy.io/models/nl/) that is pretrained to do a number of NLP tasks for Dutch texts. We first have to download this model model from the Spacy library:
 
 ```python
-# download the Dutch spacy model
+# download the Dutch spacy model  
 ! python -m spacy download nl_core_news_sm
 ```
 
@@ -224,10 +263,7 @@ Discuss with each other
 ::::::::: solution
 
 
-
 :::::::::
-
-
 ::::::::::::::::::::
 
 ### Stop word removal
