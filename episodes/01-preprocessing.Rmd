@@ -147,18 +147,20 @@ We start by importing the `spaCy` library that will help us go through the prepr
 import spacy
 ```
 
-We need to install `en_core_web_sm` because the text we're dealing with it's in English. This is a small pre-trained language model containing essential components like vocabulary, syntax, and entities specifically for the English language.
+We need to install `en_core_web_sm` because the text we're dealing with it's in Dutch This is a small pre-trained language [model from Spacy](https://spacy.io/models/nl/) containing essential components like vocabulary, syntax, and entities specifically for the Dutch language.
 
 ```python
-python -m spacy download en_core_web_sm
+python -m spacy download nl_core_news_sm
+```
+
+We can then load the model into the pipeline function. This function connects the pretrained model to various preprocessing steps, including the tokenisation.
+```python
+doc = nlp(corpus)
 ```
 
 Next, we'll eliminate the triple dashes that separate different news articles, as well as the vertical bars used to divide some columns.
 
 ```python
-# process the text with spacy
-doc = nlp(corpus)
-
 # filter out triple dashes and vertical bars
 filtered_tokens = [token.text for token in doc if token.text != "---" and token.text != "|"]
 
@@ -188,7 +190,7 @@ It is important to keep in mind that in doing this, some information is lost. As
 Next we move to tokenise our text. 
 
 ### Tokenisation
-Tokenisation is essential in NLP, as it helps to create structure from raw text. It involves the segmentation of the text into smaller units referred as `tokens`. Tokens can be sentences (e.g. `'the happy cat'`), words (`'the, happy, cat'`), subwords (`'un', 'happiness'`) or characters (`'c','a', 't'`). The choice of tokens depends by the requirement of the model used for training, and the text. This step is carried out by a pre-trained model (called tokeniser) that has been fine-tuned for the target language. In our case, this is `en_core_web_sm` loaded before. 
+Tokenisation is essential in NLP, as it helps to create structure from raw text. It involves the segmentation of the text into smaller units referred as `tokens`. Tokens can be sentences (e.g. `'the happy cat'`), words (`'the', 'happy', 'cat'`), subwords (`'un', 'happiness'`) or characters (`'c','a', 't'`). The choice of tokens depends by the requirement of the model used for training, and the text. This step is carried out by a pre-trained model (called tokeniser) that has been fine-tuned for the target language. In our case, this is `en_core_web_sm` loaded before. 
 
 ::: callout
 A good word tokeniser for example, does not simply break up a text based on spaces and punctuation, but it should be able to distinguish:
@@ -201,39 +203,21 @@ A good word tokeniser for example, does not simply break up a text based on spac
 Many older tokenisers are rule-based, meaning that they iterate over a number of predefined rules to split the text into tokens, which is useful for splitting text into word tokens for example. Modern large language models use subword tokenisation, which are more flexible.
 :::
 
-#### Spacy
-There are multiple python packages that can be used for NLP, such as `Spacy`, `NLTK`, `Gensim` and `PyTorch`. Here we will be using the `Spacy` package to create word tokens.
-
-The model that we are going to use is called `nl_core_news_sm`. This a [model from Spacy](https://spacy.io/models/nl/) that is pretrained to do a number of NLP tasks for Dutch texts. We first have to download this model model from the Spacy library:
 
 ```python
-# download the Dutch spacy model  
-! python -m spacy download nl_core_news_sm
-```
-
-We can then load the model into the pipeline function. This function connects the pretrained model to various preprocessing steps, including the tokenisation.
-
-```python
-# Load the Dutch model in a pipeline
-nlp = spacy.load("nl_core_news_sm")
-```
-
-We can now input our corpus to the pipeline to apply the tokenisation to the text.
-```python
-# Input our corpus
-doc = nlp(corpus_lower)
-```
-
-```python
+spacy_corpus = nlp(corpus_clean)
 # Get the tokens from the pipeline
-tokens = [token.text for token in doc]
+tokens = [token.text for token in spacy_corpus]
 
-print(len(tokens))
-print(tokens)
+tokens[:10]
 ```
+
+`['mens', 'op', 'maan', '\n ', '„', 'de', 'eagle', 'is', 'geland', '”']`
+
+As one can see the tokeniser has split each word in a token, however it has considered also blank spaces `\n` and also punctuation.
 
 ### Remove punctuation
-The next step we will apply is to remove punctuation. To create a list of the distinct word tokens in the text, punctuation symbols are not of interest. 
+The next step we will apply is to remove punctuation. We are interested in training our model to learn the meaning of the words. This task is highly influnced by the state of our text and punctuation would decrease the quality of the learning as it would add spurious information. We'll see how the learning process works later in the episode.
 
 The punctuation symbols are defined in:
 ```python
