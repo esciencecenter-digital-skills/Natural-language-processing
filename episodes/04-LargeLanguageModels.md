@@ -39,11 +39,24 @@ In this episode, we will:
 This episode aims to equip you with both theoretical knowledge and practical skills, preparing you to harness the power of LLMs in your own projects and applications.
 
 ## What are Large Language Models?
-Large Language Models (LLMs) are powerful AI models designed to understand and generate human-like text. Examples like GPT-4, BERT, and LLaMA are used across various applications, from chatbots to text analysis, translation, summarization, and more. These models mark a significant advance in the field of artificial intelligence, particularly in understanding and generating text that closely mimics human language. Their core strength lies in being trained on vast datasets, allowing them to recognize patterns, structures, and nuances in the way we communicate.
+Large language models (LLMs) represent a significant advancement in artificial intelligence, designed to process and interpret large-scale natural language data to generate responses to user queries. By being trained on extensive datasets through advanced machine learning algorithms, these models learn the intricate patterns, structures and nuances of human language. This enables them to produce coherent and natural-sounding language outputs across various written inputs. As a result, large language models are becoming increasingly essential in a range of applications, such as natural language processing, machine translation, and the generation of text and code, among others. Examples like GPT-4, BERT, and LLaMA are used across various applications, from chatbots to text analysis, translation, summarization, and more.
 
 The emergence of *ChatGPT*, powered by OpenAI's advanced LLMs, has brought these capabilities into the mainstream. With ChatGPT, users interact through natural language, enabling seamless conversations and performing complex tasks across various sectors, like customer service, education, and content creation.
 
 Notably, the success of ChatGPT and other LLM-driven applications highlights their versatility and potential to transform how we interact with digital systems. These models continue to push the boundaries of what's possible in human-computer interaction, offering a glimpse into a future where machines and humans communicate more naturally and effectively.
+
+### Timeline
+The journey of large language models over the past decade highlights the rapid evolution and growing impact of AI in language processing:
+
+- **2012**: Significant advancements in deep learning architectures and access to larger datasets lead to the creation of the GPT (Generative Pre-trained Transformer) framework, marking a pivotal point in AI development.
+
+- **2018**: Google unveils BERT (Bidirectional Encoder Representations from Transformers), introducing a groundbreaking architecture that sets the stage for the next generation of large language models.
+
+- **2020**: OpenAI releases GPT-3, which, with its remarkable 175 billion parameters, establishes a new standard for performance in language-related tasks.
+
+- **2022**: The launch of ChatGPT marks a turning point by making GPT-3 and similar models easily accessible to the public via a web interface, significantly raising public awareness and interest in LLMs and generative AI.
+
+- **2023**: Open-source LLMs begin to deliver impressive outcomes with the introduction of models like Dolly 2.0, LLaMA, Alpaca, and Vicuna. Meanwhile, the release of GPT-4 pushes the envelope by setting new records for both parameter scale and overall performance.
 
 ### Starting up a simple chat 
 Let's explore how these LLMs work by doing a simple chat demonstration.
