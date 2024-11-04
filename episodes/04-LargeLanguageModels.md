@@ -222,9 +222,51 @@ collect the data itself
 
 - Collect the titles of the articles.
 
+```python
+from transformers import pipeline
+import re
+
+# Step 1: Load the file with the Dutch newspaper
+with open('../30041951.txt', 'r', encoding='utf-8') as file:
+    newspaper_text = file.read()
+
+# Step 2: Split the text by articles (using a pattern that identifies article dividers, like headings or dates)
+# Adjust regex as needed based on file structure
+articles = re.split(r'---', newspaper_text)  
+
+# Step 3: Extract the title from each article
+titles = []
+for article in articles:
+    # Strip any leading/trailing whitespace
+    article = article.strip()
+    
+    # Split the article by the first newline character to get the title
+    title = article.split('\n', 1)[0].strip()
+    
+    # Check if the title is non-empty and add to the list
+    if title:
+        titles.append(title)
+
+# Display the extracted titles
+print("Extracted Titles:")
+for i, title in enumerate(titles, 1):
+    print(f"{i}. {title}")
+
+```
+
+
 - Get a one-sentence description of the articles.
+```python
+# Initialize pipeline
+summarizer = pipeline("summarization", model="huggingface/Llama-3-7b-dutch")
+
+```
 
 - Classify the articles: e.g. politics, economics, sports, culture...
+```python
+# Initialize pipeline
+classifier = pipeline("text-classification", model="yhavinga/t5-base-dutch")
+```
 
 - Compare the writing styles
 
