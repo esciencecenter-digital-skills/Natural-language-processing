@@ -39,13 +39,157 @@ In this episode, we will:
 This episode aims to equip you with both theoretical knowledge and practical skills, preparing you to harness the power of LLMs in your own projects and applications.
 
 ## What are Large Language Models?
+Large Language Models (LLMs) are powerful AI models designed to understand and generate human-like text. Examples like GPT-4, BERT, and LLaMA are used across various applications, from chatbots to text analysis, translation, summarization, and more. These models mark a significant advance in the field of artificial intelligence, particularly in understanding and generating text that closely mimics human language. Their core strength lies in being trained on vast datasets, allowing them to recognize patterns, structures, and nuances in the way we communicate.
 
-- What is an LLM? (explain around ChatGPT since people know that one?)
-- What are LLMs good at and what not
--- startup simple chat? (code along, if so, use llama, in which case llama needs to be explained)
-- how are they different from other NLP techniques
--- challenge: something with having them try out stuff that does not work? (code)
-- how do they work? (how is it that you can chat with the model) -> something (very globally) on the architecture?
+The emergence of *ChatGPT*, powered by OpenAI's advanced LLMs, has brought these capabilities into the mainstream. With ChatGPT, users interact through natural language, enabling seamless conversations and performing complex tasks across various sectors, like customer service, education, and content creation.
+
+Notably, the success of ChatGPT and other LLM-driven applications highlights their versatility and potential to transform how we interact with digital systems. These models continue to push the boundaries of what's possible in human-computer interaction, offering a glimpse into a future where machines and humans communicate more naturally and effectively.
+
+### Starting up a simple chat 
+Let's explore how these LLMs work by doing a simple chat demonstration.
+
+Imagine asking a computer a question and getting a human-like response. An LLM, like GPT-4, can generate responses that feel natural, informative, and tailored to your question by analyzing the context and meaning of your input. In the demonstration below, you'll see how an LLM responds to a prompt and how it builds upon previous information to maintain the conversation.
+
+### Example Chat
+
+- *User*: "What's the tallest mountain in the world?"
+
+- *LLM*: "The tallest mountain in the world is Mount Everest, which stands at 8,848 meters (29,029 feet)."
+
+- *User*: "How long does it take to climb it?"
+
+- *LLM*: "Climbing Mount Everest typically takes around two months, due to the acclimatization process needed to adjust to high altitudes. Expeditions often start from Base Camp in Nepal, where climbers spend several weeks preparing."
+
+- *User*: "Could someone with no climbing experience try it?"
+
+- *LLM*: "Climbing Mount Everest is extremely challenging and requires significant training and experience due to the harsh conditions, high altitudes, and technical aspects of the climb. Most climbers spend years training and gaining experience on other mountains before attempting Everest."
+
+This example shows how LLMs can maintain context across multiple questions. Notice how the model connects information across each question, keeping the conversation relevant and informed.
+
+### Challenge 1: Try chatting yourself with an LLM
+If you’d like to try this yourself, here’s a small exercise:
+
+- Open an LLM interface (such as ChatGPT or a similar service).
+- Think of a question on a topic you’re interested in, like a famous historical event, a scientific question, or even advice on writing.
+- Notice how the model responds to your follow-up questions, using previous context to build its responses.
+
+This quick chat example introduces you to the conversational abilities of LLMs, demonstrating their ability to respond contextually, provide coherent answers, and follow up on earlier parts of the conversation.
+
+## How are LLMs different from other NLP techniques?
+LLMs stand apart from traditional NLP techniques due to their scale, versatility, and reliance on deep learning models, especially Transformers. Here’s a breakdown of how they differ:
+
+### Scale of training data and parameters
+- LLMs: Trained on massive datasets (trillions of words) and use billions of parameters, allowing them to learn language patterns, facts, and relationships at an unprecedented depth.
+- Traditional NLP: Techniques like rule-based systems or smaller machine learning models rely on much smaller datasets, often requiring domain-specific training for each task (e.g., sentiment analysis or named entity recognition).
+
+### Model architecture
+- LLMs: Use the Transformer architecture, particularly self-attention, to analyze relationships between words regardless of position. This allows them to capture long-range dependencies and context better than traditional models.
+- Traditional NLP: Often use simpler models like bag-of-words, TF-IDF (term frequency-inverse document frequency), or shallow neural networks, which treat words independently or consider only local context, missing the complex, global relationships.
+
+### Generalization vs. task-specific models
+- LLMs: Can be applied across a wide range of tasks—summarization, translation, question answering, etc.—without the need for separate models for each. Fine-tuning makes them even more adaptable to specific needs.
+- Traditional NLP: Typically requires developing or training a separate model for each task. For example, separate models for sentiment analysis, translation, and entity recognition.
+
+### Learning from unlabeled data
+- LLMs: Leverage unsupervised or self-supervised learning during pretraining, enabling them to learn language patterns from raw text without human-labeled data.
+- Traditional NLP: Often relies on labeled data for training (e.g., labeled sentiment or part-of-speech tags), which can be costly and time-consuming to create at scale.
+
+### Context and language nuance
+- LLMs: Excel at understanding context, tone, and nuance, due to their ability to weigh word relationships dynamically. This enables better handling of idioms, sarcasm, and ambiguous phrases.
+- Traditional NLP: Struggles with complex language nuances, often producing more rigid or literal interpretations. Contextual understanding is limited, especially for longer sentences or paragraphs.
+
+### Adaptability and fine-tuning
+- LLMs: Easily adaptable to new tasks or domains with fine-tuning, making them versatile across different applications.
+- Traditional NLP: Less flexible, often requiring retraining from scratch or heavy feature engineering to adapt to new domains or tasks.
+
+In short, LLMs represent a leap forward by combining scale, flexibility, and deep learning power, allowing for more accurate, nuanced, and versatile language processing compared to traditional NLP techniques.
+
+## What LLMs are good at
+- *Language generation*: Creating coherent and contextually appropriate text, making them ideal for creative writing, chatbots, and automated responses.
+- *Summarization and translation*: Quickly summarizing articles, books, and translating text between languages with reasonable accuracy.
+- *Information retrieval and answering questions*: LLMs can recall and apply general knowledge from their training data to answer questions, though they don’t actually “know” facts.
+- *Sentiment and text classification*: LLMs can classify text for tasks like sentiment analysis, spam detection, and topic categorization.
+
+## What LLMs struggle with
+- *Fact-based accuracy*: Since LLMs don’t “know” facts, they may generate incorrect or outdated information and are prone to hallucinations (making up facts).
+- *Understanding context over long passages*: LLMs can struggle with context over very long texts and may lose track of earlier details, affecting coherence.
+- *Mathematical reasoning and logic*: Though improving, LLMs often find complex problem-solving and detailed logical reasoning challenging without direct guidance.
+- *Ethical and sensitive issues*: LLMs may produce biased or offensive text based on biases present in the training data, making content moderation necessary in sensitive applications.
+
+## How do LLMs work?
+So, how is it that you can chat with a model and receive responses that seem almost human? The answer lies in the architecture and training of Large Language Models (LLMs), which are powered by advanced neural networks that understand, generate, and even translate human language with surprising accuracy.
+
+At the core of LLMs lies a framework known as the **transformer**; a concept we already encountered in the previous episode. Transformers allow these models to process vast amounts of text and learn the structure and nuances of language. This setup enables LLMs not only to answer questions but also to predict, complete, and even generate coherent text based on the patterns they've learned.
+
+LLMs are trained on large text datasets and later fine-tuned on specific tasks, which helps them adapt to a wide range of applications, from conversation to text classification. The result? A model that can chat, summarize, translate, and much more—all by leveraging these core mechanisms. LLM's rely on the following key concepts:
+
+- **Transformers and self-attention**: The transformer architecture, especially the self-attention mechanism, is at the heart of LLMs. Self-attention enables these models to understand the importance of each word in relation to others in a sequence, regardless of their position.
+- **Pretraining and fine-tuning**: LLMs are first pre-trained on large text datasets using tasks like predicting the next word in a sentence, learning language patterns. They are then fine-tuned on specific tasks (e.g., translation, summarization) to enhance performance for targeted applications.
+- **Generative vs. discriminative models**: LMs can be applied to both generative tasks (e.g., text generation) and discriminative tasks (e.g., classification).
+
+Below is a simplified diagram of the transformer architecture, which highlights the role of self-attention in understanding relationships between words:
+
+[#TODO: ADD A NICE FIGURE. CAN WE USE AN EXISITNG IMAGE FROM SOMEWHERE]
+
+Let’s see how this actually works with a hands-on example. We’ll use Hugging Face’s library to load a pretrained model and visualize the self-attention scores for a sentence.
+
+### Challenge 2: Exploring the transformer model
+
+- Goal:  Explore the mechanisms of transformers with a hands-on task
+
+- Instructions:
+  - Load a pretrained transformer model
+  - Extract and visualize attention scores for a sentence.
+  - This exercise will show how models like GPT-4 or BERT understand language relationships.
+
+
+```sh
+pip install transformers
+```
+
+```python
+import torch
+from transformers import BertTokenizer, BertModel
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load pretrained model and tokenizer
+model_name = "bert-base-uncased"
+tokenizer = BertTokenizer.from_pretrained(model_name)
+model = BertModel.from_pretrained(model_name, output_attentions=True)
+
+# Encode a sample sentence
+sentence = "The quick brown fox jumps over the lazy dog."
+inputs = tokenizer(sentence, return_tensors="pt")
+
+# Run the model and extract attention weights
+with torch.no_grad():
+    outputs = model(**inputs)
+    attentions = outputs.attentions
+
+# Visualize the attention for one of the layer
+# Attention for the first layer and first head
+attention_scores = attentions[0][0][0].numpy()
+sns.heatmap(attention_scores, annot=True)
+plt.show()
+```
+
+The resulting heatmap illustrates the attention mechanism in action. Each cell in the heatmap shows the strength of attention between two words (tokens) in the sentence. For instance, if the token “fox” has a high attention score with “quick,” the model views "quick" as important for understanding “fox” in context. Darker colors in the heatmap indicate stronger attention between words.
+
+### How self-attention enables language models to generate responses
+
+In practice, this attention mechanism helps LLMs produce coherent responses by establishing relationships between words as each new token is generated. Here’s how it works: 
+
+- *Understanding word relationships*. Self-attention enables the model to weigh the importance of each word in a sentence, no matter where it appears, to make sense of the sentence as a whole.
+
+- *Predicting next words based on context*. With these relationships mapped out, the model can predict the next word in a sequence. For example, in “The fox,” self-attention allows the model to anticipate that “jumps” or “runs” might come next rather than something unrelated like “table.”
+
+- *Structuring responses*. As each word is generated, the model assesses how each new token impacts the entire sentence, ensuring that responses are relevant, logically sound, and grammatically correct. This ability to “structure” language is why LLMs can produce responses that are contextually meaningful and well-organized.
+  
+By leveraging self-attention to build meaningful relationships across tokens, transformers power LLMs to generate responses that feel relevant, accurate, and human-like.
+
+---
+
 
 ## Examples of existing LLMs (gpt, llama, mistral etc.)
 - number of existing models (maybe also a timeline)
