@@ -283,4 +283,11 @@ classifier = pipeline("text-classification", model="yhavinga/t5-base-dutch")
 
 ::::::::::::
 
+## Key points to remember
+
+- *Transformer models power LLMs*: The Transformer architecture and its self-attention mechanism allow LLMs to handle long-range dependencies in text effectively.
+- *LLMs excel at multiple tasks*: From text generation to classification and summarization, LLMs like Llama are versatile and perform well on various NLP tasks.
+- *Prompt engineering is crucial*: Designing effective prompts can significantly improve the quality of outputs from LLMs, especially for creative tasks like text generation and translation.
+- *Real-world use cases*: LLMs can be applied to real-world problems like news classification, summarization, and headline generation, improving efficiency in content management and delivery.
+
 
