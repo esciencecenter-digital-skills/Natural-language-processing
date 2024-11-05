@@ -217,10 +217,11 @@ tokens[:10]
 As one can see the tokeniser has split each word in a token, however it has considered also blank spaces `\n` and also punctuation.
 
 ### Remove punctuation
-The next step we will apply is to remove punctuation. We are interested in training our model to learn the meaning of the words. This task is highly influnced by the state of our text and punctuation would decrease the quality of the learning as it would add spurious information. We'll see how the learning process works later in the episode.
+The next step we will apply is to remove punctuation. We are interested in training our model to learn the meaning of the words. This task is highly influenced by the state of our text and punctuation would decrease the quality of the learning as it would add spurious information. We'll see how the learning process works later in the episode.
 
 The punctuation symbols are defined in:
 ```python
+import string
 string.punctuation
 ```
 
@@ -236,6 +237,8 @@ for punct in string.punctuation:
 ```python
 print(len(tokens_no_punct))
 ```
+
+# after that let's do a visualisation of the tokens
 
 :::::::::::::::::::: challenge
 
