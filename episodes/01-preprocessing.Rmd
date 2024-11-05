@@ -583,7 +583,7 @@ word_vectors.most_similar('maan', topn=5)
 
 `[('plek', 0.48467501997947693), ('ouders', 0.46935707330703735), ('supe|', 0.3929591178894043), ('rotterdam', 0.37788015604019165), ('verkeerden', 0.33672046661376953)]`
 
-We have trained our model only one page of the newspaper and the training was very quick. However, to approach our problem it's best to train our model on the entire dataset. We dont' have the resources for doing that on our local laptop, but luckily for us, [Wevers, M (2019)](https://zenodo.org/records/3237380) did that already for us and released it publicly. Let's download this dataset on our laptop and let's save them in a folder called `w2v`.
+We have trained our model on one page only of the newspaper and the training was very quick. However, to approach our problem it's best to train our model on the entire dataset. We dont' have the resources for doing that on our local laptop, but luckily for us, [Wevers, M (2019)](https://zenodo.org/records/3237380) did that already for us and released it publicly. Let's download this dataset on our laptop and let's save them in a folder called `w2v`.
 
 ```python
 folder_path = 'data/w2v/'
@@ -591,40 +591,40 @@ folder_path = 'data/w2v/'
 
 ### Load the Word2Vec Models Dutch Newspapers
 
-We proceed to load our models. We will dynamically read all model files from the folder and organizing them into lists based on their decades.
+We proceed to load our models. We will dynamically read all model files from the folder and organizing them into lists based on their decades. We'll do this with a function called `load_models_by_decade`:
+
 
 ```python
-import os
-import re
-from collections import defaultdict
+# maybe this function can go somewhere else and be loaded directly as part of a custom library?
+# I don't see people writing the whole thing
 
-# Get list of files in the folder
-filenames = os.listdir(folder_path)
+def load_models_by_decade(folder_path):
+    filenames = os.listdir(folder_path)
+    models_by_decade = defaultdict(list)
+    pattern = re.compile(r'_(\d{4})_(\d{4})\.w2v$')
+    
+    for filename in filenames:
+        match = pattern.search(filename)
+        if match:
+            start_year = int(match.group(1))
+            end_year = int(match.group(2))
+            decade_key = f"{str(start_year)[2]}0_{str(end_year)[2]}9"
+            path = os.path.join(folder_path, filename)
+            try:
+                model = KeyedVectors.load_word2vec_format(path, binary=True)
+                models_by_decade[decade_key].append(model)
+            except Exception as e:
+                print(f"Error loading model {path}: {e}")
+    return models_by_decade
 
-# Create a dictionary to hold the models grouped by decade
-models_by_decade = defaultdict(list)
-
-# Regular expression pattern to extract the decades / these are in the format: name_start-year_end-year.w2v
-pattern = re.compile(r'_(\d{4})_(\d{4})\.w2v$')
-
-for filename in filenames:
-    match = pattern.search(filename)
-    if match:
-        start_year = int(match.group(1))
-        end_year = int(match.group(2))
-        # Create a key for the decade, e.g., 'models_50_59'
-        decade_key = f"models_{str(start_year)[2]}0_{str(end_year)[2]}9"
-        models_by_decade[decade_key].append(filename)
-
-# Sort the decades
-decades = sorted(models_by_decade.keys())
 
 ```
 
-Next we will create a list of models:
+Next we will use it to load our models:
 
 ```python
-models = [models_by_decade[decade] for decade in decades]
+models_by_decade = load_models_by_decade(folder_path)
+
 ```
 
 Let's check if we have all models and whether these are organised into decades:
@@ -636,8 +636,35 @@ for decade, model_list in models_by_decade.items():
 ```
 
 ```python
-models_60_69: ['parool_1960_1969.w2v', 'trouw_1960_1969.w2v', 'vk_1960_1969.w2v', 'ah_nrc_1960_1969.w2v', 'vv_1960_1969.w2v', 'telegraaf_1960_1969.w2v']
-models_80_89: ['parool_1980_1989.w2v', 'trouw_1980_1989.w2v', 'vk_1980_1989.w2v', 'ah_nrc_1980_1989.w2v', 'vv_1980_1989.w2v', 'telegraaf_1980_1989.w2v']
-models_70_79: ['vk_1970_1979.w2v', 'trouw_1970_1979.w2v', 'parool_1970_1979.w2v', 'telegraaf_1970_1979.w2v', 'vv_1970_1979.w2v', 'ah_nrc_1970_1979.w2v']
-models_50_59: ['trouw_1950_1959.w2v', 'parool_1950_1959.w2v', 'vk_1950_1959.w2v', 'telegraaf_1950_1959.w2v', 'vv_1950_1959.w2v', 'ah_nrc_1950_1959.w2v']
+60_69: [<gensim.models.keyedvectors.KeyedVectors object at 0x164ae04c0>, <gensim.models.keyedvectors.KeyedVectors object at 0x1698d1610>, <gensim.models.keyedvectors.KeyedVectors object at 0x1695e2ee0>, <gensim.models.keyedvectors.KeyedVectors object at 0x168f85f10>, <gensim.models.keyedvectors.KeyedVectors object at 0x168f85e50>, <gensim.models.keyedvectors.KeyedVectors object at 0x168f85cd0>]
+80_89: [<gensim.models.keyedvectors.KeyedVectors object at 0x164ad5d90>, <gensim.models.keyedvectors.KeyedVectors object at 0x1698d18e0>, <gensim.models.keyedvectors.KeyedVectors object at 0x1695e2f70>, <gensim.models.keyedvectors.KeyedVectors object at 0x168f85ee0>, <gensim.models.keyedvectors.KeyedVectors object at 0x168f85e20>, <gensim.models.keyedvectors.KeyedVectors object at 0x168f85d00>]
+70_79: [<gensim.models.keyedvectors.KeyedVectors object at 0x164ad5fa0>, <gensim.models.keyedvectors.KeyedVectors object at 0x1695e2eb0>, <gensim.models.keyedvectors.KeyedVectors object at 0x164aa2e50>, <gensim.models.keyedvectors.KeyedVectors object at 0x164aa2fa0>, <gensim.models.keyedvectors.KeyedVectors object at 0x168f85e80>, <gensim.models.keyedvectors.KeyedVectors object at 0x168f85ca0>]
+50_59: [<gensim.models.keyedvectors.KeyedVectors object at 0x1698d1280>, <gensim.models.keyedvectors.KeyedVectors object at 0x1698d1fd0>, <gensim.models.keyedvectors.KeyedVectors object at 0x1695e2f10>, <gensim.models.keyedvectors.KeyedVectors object at 0x168f85c40>, <gensim.models.keyedvectors.KeyedVectors object at 0x168f85ac0>, <gensim.models.keyedvectors.KeyedVectors object at 0x168f85c10>]
 ```
+
+Let's import first other classes, one `KeyedVectors` from `gensim` allows us to extract embeddings from the model, while `cosine_similarity` from `sklearn` will help us compute the similarity across words.
+
+```python
+from gensim.models import KeyedVectors
+from sklearn.metrics.pairwise import cosine_similarity
+import os
+```
+
+Secondly, we need to average out the embeddings across the decades. The reason for this is that we have many newspapers, and each one of them has separate embeddings for our word. We want our embeddings to reflect all the newspapers considered.
+
+We do this with a function, `get_average_embeddings`:
+
+```python
+def get_average_embeddings(word, models_by_decade):
+    embeddings = {}
+    for decade, models in models_by_decade.items():
+        vectors = [model[word] for model in models if word in model]
+        if vectors:
+            embeddings[decade] = np.mean(vectors, axis=0)
+        else:
+            embeddings[decade] = None
+            print(f"'{word}' not found in any models for decade {decade}, skipping.")
+    return embeddings
+```
+
+Then to look at how these
