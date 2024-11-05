@@ -33,6 +33,11 @@ general description
 - how do you use an LLM such that you get the best results?
 -- what is prompt engineering? (code along)
 
+## Prompt engineering
+- Set up OLlama (start up, and download model)
+- Explain prompt engineering
+- 
+
 ## Hands on
 code along and challenge(s)
 
