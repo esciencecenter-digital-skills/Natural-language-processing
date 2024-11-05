@@ -581,6 +581,8 @@ We can inspect already what's the output of this training, by checking the top 5
 word_vectors.most_similar('maan', topn=5)
 ```
 
+`[('plek', 0.48467501997947693), ('ouders', 0.46935707330703735), ('supe|', 0.3929591178894043), ('rotterdam', 0.37788015604019165), ('verkeerden', 0.33672046661376953)]`
+
 We have trained our model only one page of the newspaper and the training was very quick. However, to approach our problem it's best to train our model on the entire dataset. We dont' have the resources for doing that on our local laptop, but luckily for us, [Wevers, M (2019)](https://zenodo.org/records/3237380) did that already for us and released it publicly. Let's download this dataset on our laptop and let's save them in a folder called `w2v`.
 
 ```python
@@ -633,3 +635,9 @@ for decade, model_list in models_by_decade.items():
     print(f"{decade}: {model_list}")
 ```
 
+```python
+models_60_69: ['parool_1960_1969.w2v', 'trouw_1960_1969.w2v', 'vk_1960_1969.w2v', 'ah_nrc_1960_1969.w2v', 'vv_1960_1969.w2v', 'telegraaf_1960_1969.w2v']
+models_80_89: ['parool_1980_1989.w2v', 'trouw_1980_1989.w2v', 'vk_1980_1989.w2v', 'ah_nrc_1980_1989.w2v', 'vv_1980_1989.w2v', 'telegraaf_1980_1989.w2v']
+models_70_79: ['vk_1970_1979.w2v', 'trouw_1970_1979.w2v', 'parool_1970_1979.w2v', 'telegraaf_1970_1979.w2v', 'vv_1970_1979.w2v', 'ah_nrc_1970_1979.w2v']
+models_50_59: ['trouw_1950_1959.w2v', 'parool_1950_1959.w2v', 'vk_1950_1959.w2v', 'telegraaf_1950_1959.w2v', 'vv_1950_1959.w2v', 'ah_nrc_1950_1959.w2v']
+```
