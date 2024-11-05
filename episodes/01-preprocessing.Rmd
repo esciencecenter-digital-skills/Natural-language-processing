@@ -23,7 +23,7 @@ After following this lesson, learners will be able to:
 ::::::::::
 
 # Introduction
-In this episode, we’ll train a neural network to obtain word embeddings. We will only briefly touch upon the concept of `word embedding`, and the steps to generate and explore it with Word2vec. 
+In this episode, we’ll train a neural network to obtain word embeddings. We will only briefly touch upon the concepts of `preprocessing` and `word embedding` with Word2vec. 
 
 The idea is to get you over a practical example first, without diving into the technical or mathematical intricacies of neural networks and word embeddings. The goal for this episode, in fact, is for you to get an intuition of how computers represent language. This is key to understand how NLP applications work and what are their limits.
 
@@ -40,27 +40,41 @@ In this episode, we will build a workflow following these steps:
 6. Save the model
 7. Load the embeddings and Inspect them 
 
-Note that for step 5 we will cover only briefly the code to train your own model, but then we will load the output of already pretrained models.
+Note that for step 5 we will cover only briefly the code to train your own model, but then we will load the output of already pretrained models. That is because training requires a large amount of data and considerable computing resources/time which are not suitable for a local laptop/computer.
 
 # Formulate the problem
-In this episode we will be using Dutch newpaper texts to train a Word2Vec model to investigate the notion of *semantic shift*. 
+In this episode we will be using Dutch newspaper texts to train a Word2Vec model to investigate the notion of *semantic shift*. 
 
 ### Semantic shift
 Semantic shift, as it is used here, refers to a pair of meanings A and B which are linked by some relation. Either
 diachronically (e.g., Latin *caput* "head" and Italian *capo* "chief") or synchronically, e.g. as two meanings that co-exist
 in a word simoultaneously (English "head", as in "I have covered my head with a hat" and as in "I am the head of the department"). **How do words acquire multiple meanings? Can we measure this semantic shift?**
 
-Newspapers make an interesting dataset for investigating this phenomenon, as they contain information about current events and the language it uses is clear and reflective of its time. We will specifically look at the evolution of specific words in Dutch across a period of time from 1950 to 1990. In order to do that, we need to train a model to extract the meaning of every single word and track in which context they occur. 
+Newspapers make an interesting dataset for investigating this phenomenon, as they contain information about current events and the language it uses is clear and reflective of its time. We will specifically look at the evolution of specific words in Dutch across a period of time from 1950 to 1990. In order to do that, we need to train a model to extract the meaning of every single word and track in which context they occur, over decades. 
 
 ::: callout
 ## Goal
 The goal is to analyze the semantic shift of specific Dutch words from 1950 to 1990 using newspapers as a dataset.
 :::
 
-To do so we need a dataset large enough to allow our model to learn meaningful associations between a particular set of letters and their meaning. These associations are crystallized into vectors which in the NLP domain are referred to as `embeddings`. We will go into details about those when we actually create them.
+To do so we need a dataset to allow our model to learn meaningful associations between a particular set of letters and their meaning. These associations are crystallized into vectors which in the NLP domain are referred to as `embeddings`. We will go into details about those when we actually create them.
 
 Our dataset is provided by Delpher (developed by the [KB - the National Library of the Netherlands](https://www.kb.nl/)) which contains digitalised historic Dutch newspapers, books, and magazines. This online newspaper collection covers data spanning from 1618 up to 1995 and of many local, national and 
-international publishers. We will initially load only a page to go step-by-step through what it takes to train a model. This makes it easier to know what's going on. However, in practice, when to successfully train a model you need larger quantities of data to allow the model to get more precise and accurate representations. In those cases you will simply condense each of the steps we cover next into one code, to do all these steps at once.
+international publishers. 
+
+We will load only a page to go step-by-step through what it takes to train a model. This makes it easier to know what's going on. However, in practice, when to successfully train a model you need larger quantities of data to allow the model to get more precise and accurate representations. In those cases you will simply condense each of the steps we cover next into one code, to do all these steps at once.
+
+::: callout
+# Dataset size in training
+
+To obtain high-quality embeddings, the size/length of your training dataset plays a crucial role. Generally [tens of thousands of documents](https://cs.stanford.edu/~quocle/paragraph_vector.pdf) are considered a reasonable amount of data for decent results. 
+
+Is there however a strict minimum? Not really. Things to keep in mind is that `vocabulary size`, `document length` and `desired vector size` interacts with each other. The higher the dimensional vectors (e.g. 200-300 dimensions) the more data is required, and of high quality, i.e. that allows the learning of words in a variety of contexts.
+
+While word2vec models typically perform better with large datasets containing millions of words, using a single page is sufficient for demonstration and learning purposes. This smaller dataset allows us to train the model quickly and understand how word2vec works without the need for extensive computational resources.
+:::
+
+For the purpose of this episode and to make training easy on our laptop, we'll train our word2vec model using **just one page**. 
 
 ::::::::::::::::::::::::::::::::::::::: challenge
 ## Exploring Delpher
@@ -228,44 +242,84 @@ string.punctuation
 We can loop over these symbols to remove them from the text:
 ```python
 # remove punctuation from set
-tokens_no_punct = tokens
+tokens_no_punct = [token for token in tokens if token not in string.punctuation]
 
-for punct in string.punctuation:
-    tokens_no_punct = [token for token in tokens_no_punct if token != punct]
+# remove also blank spaces
+tokens_no_punct = [token for token in tokens_no_punct if token.strip() != '']
 ```
 
 ```python
-print(len(tokens_no_punct))
+print(tokens_no_punct[:10])
 ```
 
-# after that let's do a visualisation of the tokens
+`['mens', 'op', 'maan', 'de', 'eagle', 'is', 'geland', 'reisduur', '102', 'uur']`
+
+# Visualise the tokens
+
+This was the end of our preprocessing step. Let's look at what tokens we have extracted and how frequently they occur in the text.
+
+```python
+import matplotlib.pyplot as plt
+from collections import Counter
+
+# count the frequency of occurrence of each token
+token_counts = Counter(tokens_no_punct)
+
+# get the top n most common tokens (otherwise the plot would be too crowded) and their relative frequencies
+most_common = token_counts.most_common(100)
+tokens = [item[0] for item in most_common]
+frequencies = [item[1] for item in most_common]
+
+plt.figure(figsize=(12, 6))
+plt.bar(tokens, frequencies)
+plt.xlabel('Tokens')
+plt.ylabel('Frequency')
+plt.title('Token Frequencies')
+plt.xticks(rotation=90)
+plt.tight_layout()
+plt.show()
+
+```
+
+As one can see, words in the text have a very specific [skewed distribution](https://link.springer.com/article/10.3758/s13423-014-0585-6), such that there are few very high-frequency words that account for most of the tokens in text (e.g., articles, conjunctions) and many low frequency words.
 
 :::::::::::::::::::: challenge
 
-Discuss with each other
+Discuss with each other:
 
 - For which NLP tasks can punctuation removal be applied?
 - For which tasks is punctuation relevant and should punctuation not be removed?
 
 ::::::::: solution
 
-
+- Laura left the solution here missing -- could this be considered an exercise without a solution?
 :::::::::
+
+
 ::::::::::::::::::::
 
 ### Stop word removal
 
-For some NLP tasks only the relevant words in the text are needed. A text however contains a lot of so called stop words: very common words such as 'de', 'het', 'een' that do not contribute to as much the content of the text compared to the nouns and words. In those cases it is common to remove these stop words from your corpus. This reduces the number of words to process. 
+For some NLP tasks only the important words in the text are needed. A text however often contains many `stop words`: common words such as `de`, `het`, `een` that add little meaningful content compared to nouns and words. In those cases, it is best to remove stop words from your corpus to reduce the number of words to process. 
 
-NLP tasks for which stop word removal can be applied are for example text classification or topic modelling. To cluster the words of a text into topic clusters, stop words are irrelevant. Having fewer and more revevant words would give better results. For other tasks such as text generation or question answering the full structure and context of the text are important and hence stop words should not be removed. This is also the case for named entitity recognition, since named entities can contain stop words themselves.
+::: callout
+# Tasks where stop word removal is useful
 
-The Dutch spacy model contains a list of stop words in the Dutch language.
+NLP tasks for which stop word removal can be applied are for example `text classification` or `topic modelling`. When clustering words into topics, stop words are irrelevant. Having fewer and more relevant words gives better results. For other tasks, such as `text generation` or `question answering`, the full structure and context are important, so stop words should *not* be removed. This is also the case for `named entity recognition`, since named entities can contain stop words themselves.
+
+:::
+
+The Dutch spaCy model contains a list of stop words in the Dutch language.
+
 ```python
 stopwords = nlp.Defaults.stop_words
 
-print(stopwords)
+print(list(stopwords)[:20])
 ```
 
+`['bijvoorbeeld', 'ikzelf', 'anderzijds', 'toch', 'jouwe', 'omtrent', 'geleden', 'een', 'met', 'voorts', 'pas', 'zal', 'meer', 'maar', 'wier', 'hen', 'hare', 'vervolgens', 'klaar', 'worden']`
+
+We proceed to remove it: 
 ```python
 # remove stopwords
 tokens_no_stopwords = tokens_no_punct
@@ -273,10 +327,12 @@ tokens_no_stopwords = tokens_no_punct
 for stopword in stopwords:
     tokens_no_stopwords = [token for token in tokens_no_stopwords if token != stopword]
 
-print(len(tokens_no_stopwords))
-```
+print(tokens_no_stopwords[:20])
 
-### Token word cloud
+```
+`['mens', 'maan', 'eagle', 'geland', 'reisduur', '102', 'uur', 'uitstappen', '20', 'iuli', '21.17', 'uur', '45', 'min.', '40', 'sec.', 'vijf', 'uur', 'landing', 'armstrong']`
+
+### Visualise tokens into a word cloud
 
 ```python
 wordcloud = WordCloud().generate(' '.join(tokens_no_stopwords))
