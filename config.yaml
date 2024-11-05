@@ -62,7 +62,9 @@ contact: 'l . ootes at esciencecenter.nl'
 episodes:
 - 00-welcome.md
 - 01-introduction.md
-- episode02.md
+=======
+- 02-preprocessing.md
+- 03-embeddings.md
 - 04-transformers.md
 
 # Information for Learners
