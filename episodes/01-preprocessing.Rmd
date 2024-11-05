@@ -1,6 +1,6 @@
 ---
 title: "Episode 1: From text to vectors"
-teaching: 60
+teaching: 180
 exercises: 50
 ---
 
@@ -335,6 +335,8 @@ print(tokens_no_stopwords[:20])
 ### Visualise tokens into a word cloud
 
 ```python
+from wordcloud import WordCloud
+
 wordcloud = WordCloud().generate(' '.join(tokens_no_stopwords))
 
 plt.imshow(wordcloud, interpolation='bilinear')
