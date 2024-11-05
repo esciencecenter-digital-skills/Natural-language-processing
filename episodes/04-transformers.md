@@ -115,9 +115,9 @@ print(output.last_hidden_state[0])
 
 Once again we can look at the shape of the output and see that it holds a tensor of dimensions `[1, 21, 768]`. The **first dimension is the batch size** (to process several sequences in parallel), the **second dimension is the number of tokens** in the sequences and the **third dimension is always 768** with BERT since those were the dimensions chosen by the creators of the model. 
 
-When we print the vectors we only see a lot of fine-tuned weights which are not very informative in their own, but the full-vectors are meaningful withing the space, which emulates some aspects of linguistic meaning. In the case of wanting to obtain a single vector for *enchanting*, you can average the three vectors that belong to the token pieces that ultimately from that word.
+When we print the vectors we only see a lot of fine-tuned weights which are not very informative in their own, but the full-vectors are meaningful within the embedding space, which emulates some aspects of linguistic meaning. In the case of wanting to obtain a single vector for *enchanting*, you can average the three vectors that belong to the token pieces that ultimately from that word.
 
-We can use the same method to encode another sentence with the word *note* to see how BERT can actually handle polysemy thanks to the representation of each word being contextualized instead of isolated.
+We can use the same method to encode another sentence with the word *note* to see how BERT actually handles polysemy thanks to the representation of each word being contextualized instead of isolated.
 
 ```python
 # Search for the index of 'note' and obtain its vector from the sequence
@@ -130,6 +130,7 @@ note_text_2 = "I could not buy milk in the supermarket because the bank note I w
 encoded_note_2 = tokenizer(note_text_2, return_tensors='pt')
 token_ids = list(encoded_note_2.input_ids[0].detach().numpy())
 string_tokens_2 = tokenizer.convert_ids_to_tokens(token_ids)
+
 note_index_2 = string_tokens_2.index('note')
 note_vector_2 = model(**encoded_note_2).last_hidden_state[0][note_index_2].detach().numpy()
 note_token_id_2 = token_ids[note_index_2]
@@ -140,7 +141,7 @@ print(note_index_2, note_token_id_2, string_tokens_2)
 print(note_vector_2[:5])
 ```
 
-We can compute the cosine similarity of the word *note* and the word *note* in the second sentence as confirm that they are two different representations, even when in both cases they have the same token-id and they are the 12th token of the sentence:
+We can compute the cosine similarity of the word *note* in the first sentence and the word *note* in the second sentence to confirm that they are indeed two different representations, even when in both cases they have the same token-id and they are the 12th token of the sentence:
 
 ```python
 from sklearn.metrics.pairwise import cosine_similarity
@@ -154,7 +155,7 @@ print(f"Cosine Similarity 'note' vs 'note': {similarity[0][0]}")
 
 # BERT as a Language Model
 
-As mentioned before, one of the main pre-training tasks of BERT is Language Modeling. They model language by masking a token and using the whole context to predict it. We can therefore directly use BERT as a predictor for language completion:
+As mentioned before, one of the main pre-training tasks of BERT is Language Modeling. We can therefore directly use BERT as a predictor for word completion:
 
 ```python
 from transformers import pipeline
@@ -172,12 +173,12 @@ model_outputs = nlp(sentences, top_k=5)
 pretty_print_outputs(sentences, model_outputs)
 ```
 
-This prints the top 5 most likely suggestions to complete the sentences. In the first example it shows correctly that the missing token in the first sentence is `capital`, the second example is a bit more ambiguous, but the model at least uses the context to correctly predict a series of items that can be eaten (unfortunately, none of its suggestions sound very tasty); finally, the third example gives almost no information so the model plays it safe and only suggests prepositions or punctuation. This already shows some of the weaknesses of the approach.
+This prints the top 5 most likely suggestions to complete the sentences. In the first example it shows correctly that the missing token in the first sentence is `capital`, the second example is a bit more ambiguous, but the model at least uses the context to correctly predict a series of items that can be eaten (unfortunately, none of its suggestions sound very tasty); finally, the third example gives almost no useful context so the model plays it safe and only suggests prepositions or punctuation. This already shows some of the weaknesses of the approach.
 
 
 # BERT for Text Classification
 
-We can also use Transformer encoders as the base for text classifiers (assigning a label to a whole sentence). With the parameter `task="text_classification"` the `pipeline()` function will load the provided model and add a linear layer on top. This linear layer can be fine-tuned with our own labeled data or we can also load the pre-trained models that are already available in HuggingFace. 
+We can also use Transformer Encoders as the base for text classifiers (assigning a label to a whole sentence). With the parameter `task="text_classification"` the `pipeline()` function will load the provided model and add a linear layer on top. This linear layer can be fine-tuned with our own labeled data or we can also load the fully pre-trained models that are already available in HuggingFace. 
 
 ![BERT as an Emotion Classifier](fig/bert4.png)
 
@@ -198,9 +199,11 @@ This code outputs the Top-3 emotions that each of the two sentences convey. In t
 
 # BERT for Token Classification
 
+Just as we plugged in a trainable text classifier layer, we can add a token-level classifier that assigns a class to each of the tokens encoded by a transformer. A specific example of this task is Named Eentity Recognition.
+
 ## Named Entity Recognition
 
-Named Entity Recognition (NER) is the task of recognizing mentions of real-world entities inside a text. The concept of entity includes proper names that unequivocally identify a unique individual (PER), place (LOC), organization (ORG), or object (MISC). Depending on the domain, the concept has been expanded to recognize other unique (and more conveptual) entities such as dates, money, works of art and numeric expressions, etcetera. In terms of NLP, this boils down to classifying each token into a series of labels (PER, LOC, ORG, O). Since a single entity can be expressed with multiple words (e.g. New York) the usual notation used for labeling the text is IOB (**I**nner **O**ut **B**eginnig of entity) notations which identifies the limits of each entity tokens. For example:
+Named Entity Recognition (NER) is the task of recognizing mentions of real-world entities inside a text. The concept of entity includes proper names that unequivocally identify a unique individual (PER), place (LOC), organization (ORG), or object (MISC). Depending on the domain, the concept has been expanded to recognize other unique (and more conveptual) entities such as DATE, MONEY, WORK_OF_ART, etcetera. In terms of NLP, this boils down to classifying each token into a series of labels (PER, LOC, ORG, O). Since a single entity can be expressed with multiple words (e.g. New York) the usual notation used for labeling the text is IOB (**I**nner **O**ut **B**eginnig of entity) notations which identifies the limits of each entity tokens. For example:
 
 ![BERT as an NER Classifier](fig/bert5.png)
 
