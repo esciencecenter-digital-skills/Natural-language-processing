@@ -640,7 +640,7 @@ loading model data/w2v/telegraaf_1980_1989.w2v
 
 This means that we have loaded the models correctly.
 
-Now let's proceed to inspect the top 10 neighbours of the word `ijzeren` across the decades:
+Now let's proceed to inspect the top 10 neighbours of the word `mobiel` (to start with) across the decades:
 
 ```python
 
@@ -708,4 +708,19 @@ inentingen
 sensoren
 hulpbehoevenden
 ```
+Let's inspect together these results: 
 
+In the 50s, the neighbouring words predominantly point towards military and geopolitical terms (stationeren, landingsvaartuigen, stationering, legeren, and landmijnen). The presence of the word *imperialistisch* also suggests discussions about imperialism, possibly reflecting post WWII tensions (in the 50s Europe was entering Cold War period). 
+
+In the 60s, the term is associated to meanings related to health, safety and mechanical terms. *Stralingsgevaar* and *opgepast* suggest concerns about radiation and the need for caution, possibly reflecting the nuclear anxieties of the era.
+
+In the 70s the word is associated to technological advancement and culture. While finally in the 80s we see a list of words that have solid grounds in technological and infrastracture terms. Words like *communicatieapparatuur*, *sonar*, *alarmsysteem*, *elektromotor*, and *sensoren* signals the push that technology has had in this period, with the advent of mobile phones (communicatieapparatuur).
+
+All in all, the word's meaning evolved from being a means of transport to a modern technology tool employed in urban infrastructure, societal well-being and communication.
+
+
+:::::::::::::::::::: challenge
+
+Reproduce the steps above for the other words: `televisie` and `ijzeren`. What do you expect from their historical semantic evolution? Television was already present in the 50s, although the technology around it has evolved up to the 1989. And what about the term `iron`? When do you expect this term to acquire a meaning related to the Cold War e.g. [Iron Curtain](https://en.wikipedia.org/wiki/Iron_Curtain)?
+
+::::::::::::::::::::
