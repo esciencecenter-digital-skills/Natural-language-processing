@@ -205,15 +205,36 @@ By leveraging self-attention to build meaningful relationships across tokens, tr
 
 
 ## Examples of existing LLMs (gpt, llama, mistral etc.)
-- number of existing models (maybe also a timeline)
-- which one to chose when
-- how do you use an LLM such that you get the best results?
--- what is prompt engineering? (code along)
+### A zoo of Large Language Models
+The era of Large Language Models started with the release of the model called BERT, that we discussed in the previous episode. The techniques used in that model started a movement of the creating of many new models. There are a number of big companies that keep improving on their models and releasing new ones by the XXX. The most famous one that we all probably heard of is ChatGPT, developed by OepnAI. The first version of ChatGPT was released in XXX. Since then, Google released XXX updated versions. A downside of ChatGPT is that the model is not open source, not fully available for free, and most of all that it is unclear what it was trained on. 
 
-## Prompt engineering
-- Set up OLlama (start up, and download model)
-- Explain prompt engineering
-- 
+Other models: UPDATE
+- Llama, now at version 3.2 - Meta
+- Mixtral - Mistral
+- Gemini - Google
+- Claude - Anthropic
+- Phi - Microsoft
+- Grok - xAI
+
+## Which one to chose when
+- how do you use an LLM such that you get the best results?
+
+### Prompt engineering
+We are now going to start with prompt engineering, When you provide input to an LLM, such as asking a question to ChatGPT, this is called prompting a model - you are sending a prompt to the models, which will trigger the LLM to generate an answer.
+
+Starting Ollama
+
+```
+Ollama serve
+```
+
+```
+Ollama pull llama3.1:8b
+```
+
+```
+ollama run Llama3.1:8b
+```
 
 ## Hands on
 code along and challenge(s)
