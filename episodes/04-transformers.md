@@ -61,7 +61,7 @@ Already the second pre-training task gives us an idea of the power of BERT: afte
 
 # BERT as a Language Model
 
-All of the following code is based on the HugingFace's _transformers_ pythonn library. We can install it with:
+All of the following code is based on the HugingFace's _transformers_ python library. We can install it with:
 
 ```sh
 pip install transformers
@@ -86,23 +86,31 @@ model_outputs = nlp(sentences, top_k=5)
 pretty_print_outputs(sentences, model_outputs)
 ```
 
-This prints the top 5 most likely suggestions to complete the sentences. In the first example it shows correctly that the missing token in the first sentence is `capital`, the second example is a bit more ambiguous, but the model at least uses the context to correctly predict a series of items that can be eaten (unfortunately, none of its suggestions sound very tasty); finally, the third example gives almost no useful context so the model plays it safe and only suggests prepositions or punctuation. This already shows some of the weaknesses of the approach.
+We use the `pipeline` function to call the specific model we want to use. In this case `bert-base-cased` refers to the vanilla BERT English model. Once we declared a pipelne, we can feed it with sentences that contain one masked token at a time (beware that BERT can only predict one word at a time, since that was its training scheme). We request the pipelne to provide us with the top 5 most likely suggestions to complete the sentences. 
+
+In the outputs for the first example it shows correctly that the missing token in the first sentence is _capital_, the second example is a bit more ambiguous, but the model at least uses the context to correctly predict a series of items that can be eaten (unfortunately, none of its suggestions sound very tasty); finally, the third example gives almost no useful context so the model plays it safe and only suggests prepositions or punctuation. This already shows some of the weaknesses of the approach.
 
 # BERT Architecture
 
-1. **Tokenizer:** split text into tokens that the model recognizes
-2. **Embedder:** convert each token into a fixed-sized vector that represents it
+Now that we used the BERT language model component we can dive into the architecture of BERT to understand it better.
+
+As in any basic NLP pipeline, the first step is to pre-process the raw text so it is ready to be fed into the Transformer. Tokenization in BERT does not happen at the word-level but rather splits texts into what they call WordPieces (the reason for this decision is complex, but in short, researchers found that splitting *human words* into *subtokens* exploits better the character sub-sequences inside words and helps the model converge faster). A word then sometimes is decomposed into one or several (sub) tokens.
+
+1. **Tokenizer:** splits text into tokens that the model recognizes
+2. **Embedder:** converts each token into a fixed-sized vector that represents it. These vectors are the actual input for the Encoder.
 3. **Encoder** several neural layers that model the token-level interactions of the input sequence to enhance meaning representation
 5. **Output Layer:** the final encoder layer contains arguably the best token-level representations that encode syntactic and semantic properties of each token, but this time each vector is contextualized within the specific sequence.
 6. *OPTIONAL* **Classifier Layer:** an additional classifier can be connected on top of the BERT token vectors which are used as features for performing a downstream task. This can be used to classify at the text level, for example sentiment analysis of a sentence, or at the token-level, for example Named Entity Recognition.
 
 ![BERT Architecture](fig/bert3.png)
 
+We will next see the case of combining BERT with a classifier on top.
+
 # BERT for Text Classification
 
-We can also use Transformer Encoders as the base for text classifiers (assigning a label to a whole sentence). With the parameter `task="text_classification"` the `pipeline()` function will load the provided model and add a linear layer with softmax on top. This layer can be fine-tuned with our own labeled data or we can also load the fully pre-trained models that are already available in HuggingFace.
+The task of text classification is assigning a label to a whole sequence of tokens, for example a sentence. With the parameter `task="text_classification"` the `pipeline()` function will load the base model and automatically add a linear layer with a softmax on top. This layer can be fine-tuned with our own labeled data or we can also directly load the fully pre-trained text classification models that are already available in HuggingFace.
 
-![BERT as an Emotion Classifier](fig/bert4b.png)
+![BERT as an Emotion Classifier](fig/bert4.png)
 
 Let's see the example of an emotion classifier based on `RoBERTa` model. This model was fine-tuned in the Go emotions [dataset](https://huggingface.co/datasets/google-research-datasets/go_emotions) which is annotated data taken from English Reddit. The fine-tuned model is called [roberta-base-go_emotions](https://huggingface.co/SamLowe/roberta-base-go_emotions). This model takes a sentence as input and ouputs a probability distribution over 28 possible emotions that are conveyed in the text. For example:
 
@@ -119,15 +127,16 @@ pretty_print_outputs(sentences, model_outputs)
 This code outputs the Top-3 emotions that each of the two sentences convey. In this case, the first sentence evokes (in order of likelihood) *dissapointment*, *sadness* and *annoyance*; whereas the second sentence evokes *love*, *neutral* and *approval*. Note however that the likelihood of each prediction decreases dramatically below the top choice, so perhaps this specific classifier is only useful for the top emotion.
 
 ::: callout
-Because the _classifier_ is a very small neural network, it can be quickly trained to choose between the classes for your custom classification problem. As mentioned before, this classifier is just a linear layer with softmax that assigns a probability over the label classes (in this case 1 of the 28 emotions) given the input hidden state provided by BERT, which _encodes_ the meaning of the entire sequence in it.  
+Because the _classifier_ is a very small neural network, it can be quickly trained to choose between the classes for your custom classification problem. As mentioned before, this classifier is just a one-layer neural layer with a softmax that assigns a score that can be translated to the probability over the label classes (in this case 1 of the 28 emotions) given the input hidden state provided by BERT, which _encodes_ the meaning of the entire sequence in it.  
 :::
+
+![BERT as an Emotion Classifier](fig/bert4b.png)
 
 
 # Understanding the Tokenizer and Embedder
 
-As in any basic NLP pipeline, the first step is to pre-process the raw text so it is ready to be fed into the Transformer. Tokenization in BERT does not happen at the word-level but rather splits texts into what they call WordPieces (the reason for this decision is complex, but in short, researchers found that splitting *human words* into *subtokens* exploits better the character sub-sequences inside words and helps the model converge faster). A word then sometimes is decomposed into one or several (sub) tokens.
 
-We can see how the tokenizer works by loading the correct pre-trained tokenizer and model. Then we feed a sentence into the tokenizer to obtain a sequence of vectors (also called a *tensor*: by convention, a vector is a sequence of scalar numbers, a matrix is a 2-dimensional sequence and a tensor is a N-dimensional sequence of numbers), each one of them representing a wordPiece:
+We should look now more in detail at how the tokenizer is working. To do this we can load the pre-trained tokenizer and model and play a bit with them. We can feed a sentence into the tokenizer to observe how it outputs a sequence of vectors (also called a *tensor*: by convention, a vector is a sequence of scalar numbers, a matrix is a 2-dimensional sequence and a tensor is a N-dimensional sequence of numbers), each one of them representing a wordPiece:
 
 ```python
 
@@ -205,14 +214,16 @@ print(f"Cosine Similarity 'note' vs 'note': {similarity[0][0]}")
 
 # Understanding the Attention Mechanism
 
-The attention mechanism is a component in between the Encoder and the Decoder that helps the model to _align_ the important information from the input sequence in order to generate a more accurate token in the output sequence:
+The original attention mechanism is a component in between the Encoder and the Decoder that helps the model to _align_ the important information from the input sequence in order to generate a more accurate token in the output sequence:
 
 ![The Attention Mechanism](fig/trans3.png)
 
 In the example above, the attention puts more weight in the input _etudiant_, so the decoder uses that information to _know_ that is should generate _student_. Note that if the decoder based it's next work probability just based in the sequence "I am a ..." it could basically generate any word and still sound natural, but it is thanks to the attention mechanism that it preserves the meaning of the input sequence.
 
-Attention is a neural layer, therefore it can also be plugged-in within the Encoder, this is called self-attention since the mechanism will look at the interactions between the input sequence and the input sequence. This is very useful to let the attention capture longer-range dependencies such as correference, where a pronoun can be linked to the noun it refers to. See the following example where in each sentence the pronoun "it" refers to "animal" or "street" completely depending on the context:
+Attention is a neural layer, therefore it can also be plugged-in within the Encoder, this is called self-attention since the mechanism will look at the interactions between the input sequence and the input sequence. This is how BERT uses (self-) attention, which is very useful to capture longer-range word dependencies such as correference, where, for example, a pronoun can be linked to the noun it refers to previously in the same sentence. See the following example:
 ![The Attention Mechanism](fig/trans5.png)
+
+There are two sentences, in each one the pronoun "it" refers to a different noun, "animal" or "street", and this is completely depending on the sentence context. Thanks to the self-attention BERT relates the pronoun to its relevant correferent.
 
 # BERT for Token Classification
 
@@ -225,8 +236,6 @@ Named Entity Recognition (NER) is the task of recognizing mentions of real-world
 ![BERT as an NER Classifier](fig/bert5.png)
 
 This is a typical sequence classification problem where an imput sequence must be fully mapped into an output sequence of labels with unique constraints (for example, there can't be an inner I-PER label before a beginning B-PER label). Since the labels of the tokens are context dependent a language model with attention mechanism such as BERT is very beneficial for a task like NER.
-
-## BERT Token Classifier
 
 Because this is one of the core tasks in NLP, there are dozens of pre-trained NER classifiers in HuggingFace that you can use right away. Since the task is similar to any other task, that is, just add a classification layer on top of a pre-trained transformer you can still use the `pipeline()` function to run the model in your custom data, in this case with `task="ner"`. For example:
 
