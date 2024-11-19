@@ -146,49 +146,6 @@ Below is a simplified diagram of the transformer architecture, which highlights 
 
 Let’s see how this actually works with a hands-on example. We’ll use Hugging Face’s library to load a pretrained model and visualize the self-attention scores for a sentence.
 
-### Challenge 2: Exploring the transformer model
-
-- Goal:  Explore the mechanisms of transformers with a hands-on task
-
-- Instructions:
-  - Load a pretrained transformer model
-  - Extract and visualize attention scores for a sentence.
-  - This exercise will show how models like GPT-4 or BERT understand language relationships.
-
-
-```sh
-pip install transformers
-```
-
-```python
-import torch
-from transformers import BertTokenizer, BertModel
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-# Load pretrained model and tokenizer
-model_name = "bert-base-uncased"
-tokenizer = BertTokenizer.from_pretrained(model_name)
-model = BertModel.from_pretrained(model_name, output_attentions=True)
-
-# Encode a sample sentence
-sentence = "The quick brown fox jumps over the lazy dog."
-inputs = tokenizer(sentence, return_tensors="pt")
-
-# Run the model and extract attention weights
-with torch.no_grad():
-    outputs = model(**inputs)
-    attentions = outputs.attentions
-
-# Visualize the attention for one of the layer
-# Attention for the first layer and first head
-attention_scores = attentions[0][0][0].numpy()
-sns.heatmap(attention_scores, annot=True)
-plt.show()
-```
-
-The resulting heatmap illustrates the attention mechanism in action. Each cell in the heatmap shows the strength of attention between two words (tokens) in the sentence. For instance, if the token “fox” has a high attention score with “quick,” the model views "quick" as important for understanding “fox” in context. Darker colors in the heatmap indicate stronger attention between words.
-
 ### How self-attention enables language models to generate responses
 
 In practice, this attention mechanism helps LLMs produce coherent responses by establishing relationships between words as each new token is generated. Here’s how it works: 
