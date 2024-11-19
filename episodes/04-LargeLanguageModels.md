@@ -173,26 +173,39 @@ Other models: UPDATE
 - Phi - Microsoft
 - Grok - xAI
 
+Training a large language model is extremely resource intensive; while you can train for example a simple classifier to identify if a sentence is positive or negative yourselve, this is not possible for training a LLM. For example, llama published Llama 3.1 405B; this is model that has 405 billion paramters, and that was trained on 15 trillion tokens, taking 31 million GPU hours (H100 gpus), and emmittion almost 9000 tons of CO_2 (for the training process only).
+
 ## Which one to chose when
 - how do you use an LLM such that you get the best results?
 
-### Prompt engineering
+### Building a chatbot
 We are now going to start working with LLM models. We will set up a chatbot ourselves and do some prompt engineering. When you provide input to an LLM, such as asking a question to ChatGPT, this is called prompting a model - you are sending a prompt to the models, which will trigger the LLM to generate an answer. We are not going to train our own LLM, but we will be using Meta's open source Llama model.
 
 Starting Ollama
-We will use ollama to run the LLM we want to use. Ollama is a platform that allows users to run various LLM locally on your own computer. This is different from for example using chatgpt, where you log in and use the online api. Chatgpt collects the input you are providing and uses this to their own benefit. Running an LLM locally using Ollama thus preserves your privacy. It also allows you to customize a model, by setting certain parameters, or even by finetuning a model.
+We will use ollama to run the LLM we want to use. Ollama is a platform that allows users to run various LLM locally on your own computer. This is different from for example using chatgpt, where you log in and use the online api. ChatGPT collects the input you are providing and uses this to their own benefit. Running an LLM locally using Ollama thus preserves your privacy. It also allows you to customize a model, by setting certain parameters, or even by finetuning a model.
 
+To start ollama, you open your terminal and type:
 ```
-Ollama serve
-```
-
-```
-Ollama pull llama3.1:8b
+ollama serve
 ```
 
+Next, we will download the large language model we want to use. We are going to use the smallest open source llama model, which is llama3.1:8b. Here 3.1 is the version of the model and 8b stands for the number of paramters that the model has. 
 ```
-ollama run Llama3.1:8b
+!ollama pull llama3.1:8b
 ```
+
+Import the packages that will be used:
+```python
+from langchain_ollama import ChatOllama
+```
+
+We can now create a model instance. Here, model defines the LLM we want to use, and temperature sets the randomness of the mode, using the value zero ensures that repeating a question will give the same model output (answer).
+```
+local_llm = "llama3.1:8b"
+llm = ChatOllama(model=local_llm, temperature=0)
+```
+
+Now that the model is running, we can prompt it - ask it a question.
 
 ## Hands on
 code along and challenge(s)
@@ -206,8 +219,9 @@ from transformers import pipeline
 import re
 
 # Step 1: Load the file with the Dutch newspaper
-with open('../30041951.txt', 'r', encoding='utf-8') as file:
-    newspaper_text = file.read()
+path = "episodes/data/ad.txt"
+with open(path) as myfile:
+    corpus = myfile.read()
 
 # Step 2: Split the text by articles (using a pattern that identifies article dividers, like headings or dates)
 # Adjust regex as needed based on file structure
@@ -248,6 +262,8 @@ classifier = pipeline("text-classification", model="yhavinga/t5-base-dutch")
 ```
 
 - Compare the writing styles
+
+## RAG agents
 
 ## Pitfalls, limitations, caveats, privacy
 
