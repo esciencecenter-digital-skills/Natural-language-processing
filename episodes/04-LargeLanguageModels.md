@@ -220,9 +220,10 @@ Other models: UPDATE
 - how do you use an LLM such that you get the best results?
 
 ### Prompt engineering
-We are now going to start with prompt engineering, When you provide input to an LLM, such as asking a question to ChatGPT, this is called prompting a model - you are sending a prompt to the models, which will trigger the LLM to generate an answer.
+We are now going to start working with LLM models. We will set up a chatbot ourselves and do some prompt engineering. When you provide input to an LLM, such as asking a question to ChatGPT, this is called prompting a model - you are sending a prompt to the models, which will trigger the LLM to generate an answer. We are not going to train our own LLM, but we will be using Meta's open source Llama model.
 
 Starting Ollama
+We will use ollama to run the LLM we want to use. Ollama is a platform that allows users to run various LLM locally on your own computer. This is different from for example using chatgpt, where you log in and use the online api. Chatgpt collects the input you are providing and uses this to their own benefit. Running an LLM locally using Ollama thus preserves your privacy. It also allows you to customize a model, by setting certain parameters, or even by finetuning a model.
 
 ```
 Ollama serve
