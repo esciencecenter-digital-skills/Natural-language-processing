@@ -158,25 +158,20 @@ In practice, this attention mechanism helps LLMs produce coherent responses by e
   
 By leveraging self-attention to build meaningful relationships across tokens, transformers power LLMs to generate responses that feel relevant, accurate, and human-like.
 
----
+## A zoo of Large Language Models
+The era of Large Language Models started with the release of the model called BERT, created by Google, that was discussed in the previous episode. The techniques used in that model started a movement of the creating of many new models. There are a number of big companies that keep improving on their models and releasing new ones rapidly. The most famous one that we all probably heard of is GPT, the model developed by OpenAI and that is used for ChatGPT. The first version of GPT was released in 2018. Since then various versions have been released, each improved in performance by using more parameters and a larger training data set.  While the first GPT model was open source, the recent versions are not. This means that the model architecture, number of parameters, and used training data is undisclosed. There are however many more competing models, some of which are more transparent of even fully open source. Llama is currently one of the best-performing open-source models
 
-
-## Examples of existing LLMs (gpt, llama, mistral etc.)
-### A zoo of Large Language Models
-The era of Large Language Models started with the release of the model called BERT, that we discussed in the previous episode. The techniques used in that model started a movement of the creating of many new models. There are a number of big companies that keep improving on their models and releasing new ones by the XXX. The most famous one that we all probably heard of is ChatGPT, developed by OepnAI. The first version of ChatGPT was released in XXX. Since then, Google released XXX updated versions. A downside of ChatGPT is that the model is not open source, not fully available for free, and most of all that it is unclear what it was trained on. 
-
-Other models: UPDATE
-- Llama, now at version 3.2 - Meta
-- Mixtral - Mistral
+Other models:
+- Llama  - Meta 
+- Mistral / Mixtral - Mistral AI
 - Gemini - Google
 - Claude - Anthropic
-- Phi - Microsoft
 - Grok - xAI
 
 Training a large language model is extremely resource intensive; while you can train for example a simple classifier to identify if a sentence is positive or negative yourselve, this is not possible for training a LLM. For example, llama published Llama 3.1 405B; this is model that has 405 billion paramters, and that was trained on 15 trillion tokens, taking 31 million GPU hours (H100 gpus), and emmittion almost 9000 tons of CO_2 (for the training process only).
 
 ## Which one to chose when
-- how do you use an LLM such that you get the best results?
+XXX how do you use an LLM such that you get the best results? XXX
 
 ### Building a chatbot
 We are now going to start working with LLM models. We will set up a chatbot ourselves and do some prompt engineering. When you provide input to an LLM, such as asking a question to ChatGPT, this is called prompting a model - you are sending a prompt to the models, which will trigger the LLM to generate an answer. We are not going to train our own LLM, but we will be using Meta's open source Llama model.
