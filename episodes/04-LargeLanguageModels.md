@@ -192,20 +192,118 @@ Next, we will download the large language model we want to use. We are going to 
 Import the packages that will be used:
 ```python
 from langchain_ollama import ChatOllama
+from langchain_core.messages import HumanMessage, SystemMessage
 ```
 
-We can now create a model instance. Here, model defines the LLM we want to use, and temperature sets the randomness of the mode, using the value zero ensures that repeating a question will give the same model output (answer).
+We can now create a model instance. Here, `model` defines the LLM we want to use, and `temperature` sets the randomness of the mode, using the value zero ensures that repeating a question will give the same model output (answer).
+
 ```
 local_llm = "llama3.1:8b"
-llm = ChatOllama(model=local_llm, temperature=0)
 ```
 
-Now that the model is running, we can prompt it - ask it a question.
+Let's set up the chatbot. We define XXX, and chain it with a parser. Chain with this specific StrOutPutparser function will give us XXX
+
+```
+llm = ChatOllama(model=local_llm, temperature=0)
+parser = StrOutputParser()
+chain = llm | parser
+```
+
+Now that the model is set up, we can prompt it - ask it a question.
+
+```
+chatresult = chain.invoke("When was the moon landing?")
+print(chatresult)
+```
+
+:::::::::::: challenge 
+
+Play around with the chat bot we have set up. How is the quality of the answers? 
+Is it able to answer general questions, and very specific questions?
+
+Which limitations can you identify?
+
+How could you get better answers?
+
+:::::: solution
+
+::::::
+
+::::::::::::
 
 
-### Build a RAG agent
+### Use context
+
+```python
+messages = [
+    SystemMessage(content="Translate answer of the following question from English into Dutch"),
+    HumanMessage(content="When was the moon landing?"),
+]
+```
+
+```python
+result = chain.invoke(messages)
+print(result)
+```
+
+### Use chat history
+```python
+from langchain_core.chat_history import (
+    BaseChatMessageHistory,
+    InMemoryChatMessageHistory,
+)
+from langchain_core.runnables.history import RunnableWithMessageHistory
+```
+
+```python
+store = {}
+config = {"configurable": {"session_id": "nlp_workshop"}}
+```
+
+```python
+def get_session_history(session_id: str) -> BaseChatMessageHistory:
+    if session_id not in store:
+        store[session_id] = InMemoryChatMessageHistory()
+    return store[session_id]
+```
+
+```python
+with_message_history = RunnableWithMessageHistory(llm, get_session_history)
+```
+
+```python
+# Question
+response = with_message_history.invoke(
+    [HumanMessage(content="When was the moon landing?")],
+    config=config,
+)
+
+print(response.content)
+```
+
+```python
+# Followup question
+response = with_message_history.invoke(
+    [HumanMessage(content="Shorten the answer to 20 words")],
+    config=config,
+)
+
+print(response.content)
+```
+
+```python
+# Followup instruction
+response = with_message_history.invoke(
+    [HumanMessage(content="Translate the answer to Dutch")],
+    config=config,
+)
+
+print(response.content)
+```
 
 ## Pitfalls, limitations, caveats, privacy
+
+
 
 
 :::::::::::: challenge 
