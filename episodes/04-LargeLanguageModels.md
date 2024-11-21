@@ -195,35 +195,27 @@ from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage, SystemMessage
 ```
 
-We can now create a model instance. Here, `model` defines the LLM we want to use, and `temperature` sets the randomness of the mode, using the value zero ensures that repeating a question will give the same model output (answer).
+We can now create a model instance. Here, `model` defines the LLM we want to use, which we set to the model that we just downloaded, and `temperature` sets the randomness of the mode, using the value zero ensures that repeating a question will give the same model output (answer).
 
 ```
-local_llm = "llama3.1:8b"
-```
-
-Let's set up the chatbot. We define XXX, and chain it with a parser. Chain with this specific StrOutPutparser function will give us XXX
-
-```
-llm = ChatOllama(model=local_llm, temperature=0)
-parser = StrOutputParser()
-chain = llm | parser
+llm = ChatOllama(model=llama3.1:8b, temperature=0)
 ```
 
 Now that the model is set up, we can prompt it - ask it a question.
 
 ```
-chatresult = chain.invoke("When was the moon landing?")
-print(chatresult)
+question = "When was the moon landing?"
+chatresult = llm.invoke([HumanMessage(content=question)])
+print(chatresult.content)
 ```
 
 :::::::::::: challenge 
 
-Play around with the chat bot we have set up. How is the quality of the answers? 
-Is it able to answer general questions, and very specific questions?
-
-Which limitations can you identify?
-
-How could you get better answers?
+Play around with the chat bot we have set up by changing the questions.
+- How is the quality of the answers? 
+- Is it able to answer general questions, and very specific questions?
+- Which limitations can you identify?
+- How could you get better answers?
 
 :::::: solution
 
@@ -233,20 +225,25 @@ How could you get better answers?
 
 
 ### Use context
-
+To improve on what we expect the LLM to return, it is also possible to provide it with some context. For example, we can add:
 ```python
+context = "You are a highschool history teacher trying to explain societal impact of historic events."
 messages = [
-    SystemMessage(content="Translate answer of the following question from English into Dutch"),
-    HumanMessage(content="When was the moon landing?"),
+    SystemMessage(content=context),
+    HumanMessage(content=question),
 ]
 ```
 
 ```python
-result = chain.invoke(messages)
-print(result)
+chatresult = llm.invoke(messages)
+print(chatresult.content)
 ```
 
+The benefit here is that your answer will be phrased in a way that fits your context, without having to specify this for every question.
+
 ### Use chat history
+With this chatbot we can now prompt the LLM to generate output based on our input and context. However, what we can not do, is to ask followup questions. This can be useful to refine the output that it generates. So lets implement this as well.
+
 ```python
 from langchain_core.chat_history import (
     BaseChatMessageHistory,
@@ -254,12 +251,12 @@ from langchain_core.chat_history import (
 )
 from langchain_core.runnables.history import RunnableWithMessageHistory
 ```
-
+First we define a storage distionary and a configurable, so that we can save the history of a certain conversation based on a session_id.
 ```python
 store = {}
 config = {"configurable": {"session_id": "nlp_workshop"}}
 ```
-
+Then we can define a function that takes in this session_id and saves it in the storage.
 ```python
 def get_session_history(session_id: str) -> BaseChatMessageHistory:
     if session_id not in store:
@@ -271,18 +268,19 @@ def get_session_history(session_id: str) -> BaseChatMessageHistory:
 with_message_history = RunnableWithMessageHistory(llm, get_session_history)
 ```
 
+And then 
 ```python
-# Question
-response = with_message_history.invoke(
-    [HumanMessage(content="When was the moon landing?")],
+# Followup question
+response_history = with_message_history.invoke(
+    messages,
     config=config,
 )
 
-print(response.content)
+print(response_history.content)
 ```
 
 ```python
-# Followup question
+# Followup
 response = with_message_history.invoke(
     [HumanMessage(content="Shorten the answer to 20 words")],
     config=config,
