@@ -24,15 +24,13 @@ After following this lesson, learners will be able to:
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
-# Language Model
+In the previous lesson we learned how Word2Vec can be used to represent words as vectors. Having these representations allows us to apply operations directly on the vectors that have a direct mapping to some syntactic and semantic properties of words; such as the cases of analogies or finding synonyms. These vectors can also be used as **features** that can be used by classifiers to predict any supervised NLP task. 
 
-In the previous lesson we learned how Word2Vec can be used to represent words as vectors. Having these representations allows us to apply operations directly on the vectors that have a direct mapping to some syntactic and semantic properties of words; such as the cases of analogies or finding synonyms. The main drawback of Word2Vec is that each word is represented in isolation, and unfortunately that is not how language works. Words get their meanings based on the specific context in which they are used (take for example polysemy, the cases where the same word can have very different meanings depending on the context); therefore, we would like to have richer vector representations of words that also integrate context into account in order to obtain more powerful representations. 
-
-One way to obtain rich word representations is via Language Modelling. In general, this is the task of calculating the probability of a word based on the known neighboring words. Obtaining training data for this task is very cheap, as all we need is millions of words written in existing texts. One of the most common ways of modelling language is by training a neural network that predicts the next word based on the previous ones.
+The main drawback of Word2Vec is that each word is represented in isolation, and unfortunately that is not how language works. Words get their meanings based on the specific context in which they are used (take for example polysemy, the cases where the same word can have very different meanings depending on the context); therefore, we would like to have richer vector representations of words that also integrate context into account in order to obtain more powerful representations. 
 
 In 2019, the BERT language model was introduced using a novel architecture called Transformer (2017), which allowed precisely to integrate words' context into representations. To understand BERT, we will first look at what a transformer is and we will then directly use some code to make use of BERT.
 
-# Tranformers
+# Transformers
 
 Every text can be seen as a sequence of sentences and likewise each sentence can be seen as a sequence of tokens (we use the term _token_ instead of _word_ because it is more general: tokens can be words, punctuation symbols, numbers, or even sub-words). Traditionally Recurrent Neural Networks (RNNs; and later their fancy version, LSTMs) were used to tackle token and sentence classification problems to account for the interdependencies inherent to sequences of symbols (i.e. sentences). RNNs were in theory powerful enough to capture these dependencies, something that is very valuable when dealing with language, but in practice they were resource consuming (both in training time and computational resources) and also the longer the sequences got, the harder it was to capture long-distance dependencies succesfully.
 
@@ -47,7 +45,7 @@ Now that we understand the general architecture of Transformers, let's see how i
 
 # BERT
 
-[BERT](https://aclanthology.org/N19-1423.pdf) is an acronym that stands for **B**idirectional **E**ncoder **R**epresentations from **T**ransformers. The name describes it all: the idea is to use the power of the Encoder component of the Transformer architecture to create powerful (vectorized) token representations that preserve the contextual meaning of the whole input segment. The BERT vector representations of each token take into account both the left context (what comes before the word) and the right context (what comes after the word). Another advantage of the transformer Encoder is that it is parallelizable, which made it posible for the first time to train these networks on millions of datapoints, dramatically improving model generalization. 
+[BERT](https://aclanthology.org/N19-1423.pdf) is an acronym that stands for **B**idirectional **E**ncoder **R**epresentations from **T**ransformers. The name describes it all: the idea is to use the power of the Encoder component of the Transformer architecture to create powerful token representations that preserve the contextual meaning of the whole input segment. The BERT vector representations of each token take into account both the left context (what comes before the word) and the right context (what comes after the word). Another advantage of the transformer Encoder is that it is parallelizable, which made it posible for the first time to train these networks on millions of datapoints, dramatically improving model generalization. 
 
 ::: callout
 ## Pretraining BERT
@@ -67,7 +65,13 @@ All of the following code is based on the HugingFace's _transformers_ python lib
 pip install transformers
 ```
 
-As mentioned before, the main pre-training task of BERT is Language Modeling. We can therefore directly use BERT as a predictor for word completion:
+As mentioned before, the main pre-training task of BERT is Language Modeling (LM). In general, this is the task of calculating the probability of a word based on the known neighboring words. Obtaining training data for this task is very cheap, as all we need is millions of sentences from existing texts. In this setting, BERT encodes a sequence of words, and predicts from a set of English tokens, what is the most likely token that could be inserted in the `[MASK]` position
+
+![BERT Language Modeling](fig/bert1b.png)
+
+
+
+We can therefore start using BERT as a predictor for word completion, and the word can be in any position inside the sentence, for example:
 
 
 ```python
@@ -86,9 +90,11 @@ model_outputs = nlp(sentences, top_k=5)
 pretty_print_outputs(sentences, model_outputs)
 ```
 
-We use the `pipeline` function to call the specific model we want to use. In this case `bert-base-cased` refers to the vanilla BERT English model. Once we declared a pipelne, we can feed it with sentences that contain one masked token at a time (beware that BERT can only predict one word at a time, since that was its training scheme). We request the pipelne to provide us with the top 5 most likely suggestions to complete the sentences. 
+We define the `pipeline`with the specific model we want to use. In this case `bert-base-cased`, which refers to the vanilla BERT English model. Once we declared a pipeline, we can feed it with sentences that contain one masked token at a time (beware that BERT can only predict one word at a time, since that was its training scheme).
 
-In the outputs for the first example it shows correctly that the missing token in the first sentence is _capital_, the second example is a bit more ambiguous, but the model at least uses the context to correctly predict a series of items that can be eaten (unfortunately, none of its suggestions sound very tasty); finally, the third example gives almost no useful context so the model plays it safe and only suggests prepositions or punctuation. This already shows some of the weaknesses of the approach.
+When we call the `nlp` pipeline, requesting to return the `top_k` most likely suggestions to complete the provided sentences (in this case `k=5`). The pipeline returns a list of outputs as python dictionaries. Depending on the task, the fields of the dictionary will differ. In this case, the `fill-mask` task returns a score (between 0 and 1, the higher the score the more likely the token is), a tokenId, and its corresponding string, as well as the full "unmasked" sequence. 
+
+In the list of outputs we can observe: the first example shows correctly that the missing token in the first sentence is _capital_, the second example is a bit more ambiguous, but the model at least uses the context to correctly predict a series of items that can be eaten (unfortunately, none of its suggestions sound very tasty); finally, the third example gives almost no useful context so the model plays it safe and only suggests prepositions or punctuation. This already shows some of the weaknesses of the approach.
 
 # BERT Architecture
 
@@ -98,8 +104,8 @@ As in any basic NLP pipeline, the first step is to pre-process the raw text so i
 
 1. **Tokenizer:** splits text into tokens that the model recognizes
 2. **Embedder:** converts each token into a fixed-sized vector that represents it. These vectors are the actual input for the Encoder.
-3. **Encoder** several neural layers that model the token-level interactions of the input sequence to enhance meaning representation
-5. **Output Layer:** the final encoder layer contains arguably the best token-level representations that encode syntactic and semantic properties of each token, but this time each vector is contextualized within the specific sequence.
+3. **Encoder** several neural layers that model the token-level interactions of the input sequence to enhance meaning representation. The output of the encoder is a set of **H**idden layers, the vector representation of the ingested sequence.
+5. **Output Layer:** the final encoder layer (which we depict as a sequence **H**'s in the figure) contains arguably the best token-level representations that encode syntactic and semantic properties of each token, but this time each vector is already contextualized with the  the specific sequence.
 6. *OPTIONAL* **Classifier Layer:** an additional classifier can be connected on top of the BERT token vectors which are used as features for performing a downstream task. This can be used to classify at the text level, for example sentiment analysis of a sentence, or at the token-level, for example Named Entity Recognition.
 
 ![BERT Architecture](fig/bert3.png)
@@ -112,7 +118,7 @@ The task of text classification is assigning a label to a whole sequence of toke
 
 ![BERT as an Emotion Classifier](fig/bert4.png)
 
-Let's see the example of an emotion classifier based on `RoBERTa` model. This model was fine-tuned in the Go emotions [dataset](https://huggingface.co/datasets/google-research-datasets/go_emotions) which is annotated data taken from English Reddit. The fine-tuned model is called [roberta-base-go_emotions](https://huggingface.co/SamLowe/roberta-base-go_emotions). This model takes a sentence as input and ouputs a probability distribution over 28 possible emotions that are conveyed in the text. For example:
+Let's see the example of a ready pre-trained emotion classifier based on `RoBERTa` model. This model was fine-tuned in the Go emotions [dataset](https://huggingface.co/datasets/google-research-datasets/go_emotions), taken from English Reddit and labeled for 28 different emotions at the sentence level. The fine-tuned model is called [roberta-base-go_emotions](https://huggingface.co/SamLowe/roberta-base-go_emotions). This model takes a sentence as input and ouputs a probability distribution over the 28 possible emotions that might be conveyed in the text. For example:
 
 ```python
 
@@ -124,19 +130,24 @@ model_outputs = classifier(sentences)
 pretty_print_outputs(sentences, model_outputs)
 ```
 
-This code outputs the Top-3 emotions that each of the two sentences convey. In this case, the first sentence evokes (in order of likelihood) *dissapointment*, *sadness* and *annoyance*; whereas the second sentence evokes *love*, *neutral* and *approval*. Note however that the likelihood of each prediction decreases dramatically below the top choice, so perhaps this specific classifier is only useful for the top emotion.
+This code outputs again a list of dictionaries with the `top-k` (`k=3`) emotions that each of the two sentences convey. In this case, the first sentence evokes (in order of likelihood) *dissapointment*, *sadness* and *annoyance*; whereas the second sentence evokes *love*, *neutral* and *approval*. Note however that the likelihood of each prediction decreases dramatically below the top choice, so perhaps this specific classifier is only useful for the top emotion.
 
 ::: callout
-Because the _classifier_ is a very small neural network, it can be quickly trained to choose between the classes for your custom classification problem. As mentioned before, this classifier is just a one-layer neural layer with a softmax that assigns a score that can be translated to the probability over the label classes (in this case 1 of the 28 emotions) given the input hidden state provided by BERT, which _encodes_ the meaning of the entire sequence in it.  
+Because the _classifier_ is a very small neural network, it can be quickly trained to choose between the classes for your custom classification problem, without needing a big amount of annotated data. As mentioned before, this classifier is just a one-layer neural layer with a softmax that assigns a score that can be translated to the probability over a set of labels, given the input features provided by BERT, which _encodes_ the meaning of the entire sequence in its hidden states.
 :::
 
 ![BERT as an Emotion Classifier](fig/bert4b.png)
 
 
-# Understanding the Tokenizer and Embedder
+# Understanding BERT Architecture
 
+This will help to understand some of the strengths and weaknesses of using BERT-based classifiers.
 
-We should look now more in detail at how the tokenizer is working. To do this we can load the pre-trained tokenizer and model and play a bit with them. We can feed a sentence into the tokenizer to observe how it outputs a sequence of vectors (also called a *tensor*: by convention, a vector is a sequence of scalar numbers, a matrix is a 2-dimensional sequence and a tensor is a N-dimensional sequence of numbers), each one of them representing a wordPiece:
+## Tokenizer and Embedder
+
+We should look now more in detail at how the tokenizer is working. To do this we can load the pre-trained tokenizer and model separately (instead of using the pipeline), and play a bit with them. The tokenization step might seem trivial but in reality models' tokenizers might make a big difference in the end results of your classifiers, depending on the task you are trying to solve. 
+
+We can feed a sentence into the tokenizer to observe how it outputs a sequence of vectors (also called a *tensor*: by convention, a vector is a sequence of scalar numbers, a matrix is a 2-dimensional sequence and a tensor is a N-dimensional sequence of numbers), each one of them representing a wordPiece:
 
 ```python
 
@@ -212,7 +223,7 @@ similarity = cosine_similarity(vector1, vector2)
 print(f"Cosine Similarity 'note' vs 'note': {similarity[0][0]}")
 ```
 
-# Understanding the Attention Mechanism
+## The Attention Mechanism
 
 The original attention mechanism is a component in between the Encoder and the Decoder that helps the model to _align_ the important information from the input sequence in order to generate a more accurate token in the output sequence:
 
@@ -227,17 +238,19 @@ There are two sentences, in each one the pronoun "it" refers to a different noun
 
 # BERT for Token Classification
 
-Just as we plugged in a trainable text classifier layer, we can add a token-level classifier that assigns a class to each of the tokens encoded by a transformer. A specific example of this task is Named Entity Recognition.
+Just as we plugged in a trainable text classifier layer, we can add a token-level classifier that assigns a class to each of the tokens encoded by a transformer (as opposed to one label for the whole sequence). A specific example of this task is Named Entity Recognition, but you can basically define any task that requires to *highlight* sub-strings of text and classify them using this technique.
 
 ## Named Entity Recognition
 
-Named Entity Recognition (NER) is the task of recognizing mentions of real-world entities inside a text. The concept of entity includes proper names that unequivocally identify a unique individual (PER), place (LOC), organization (ORG), or object (MISC). Depending on the domain, the concept has been expanded to recognize other unique (and more conveptual) entities such as DATE, MONEY, WORK_OF_ART, etcetera. In terms of NLP, this boils down to classifying each token into a series of labels (PER, LOC, ORG, O). Since a single entity can be expressed with multiple words (e.g. New York) the usual notation used for labeling the text is IOB (**I**nner **O**ut **B**eginnig of entity) notations which identifies the limits of each entity tokens. For example:
+Named Entity Recognition (NER) is the task of recognizing mentions of real-world entities inside a text. The concept of **Entity** includes proper names that unequivocally identify a unique individual (PER), place (LOC), organization (ORG), or other object/name (MISC). Depending on the domain, the concept can expanded to recognize other unique (and more conceptual) entities such as DATE, MONEY, WORK_OF_ART, DISEASE, PROTEIN_TYPE, etcetera... 
+
+In terms of NLP, this boils down to classifying each token into a series of labels (`PER`, `LOC`, `ORG`, `O`[no-entity] ). Since a single entity can be expressed with multiple words (e.g. New York) the usual notation used for labeling the text is IOB (**I**nner **O**ut **B**eginnig of entity) notations which identifies the limits of each entity tokens. For example:
 
 ![BERT as an NER Classifier](fig/bert5.png)
 
-This is a typical sequence classification problem where an imput sequence must be fully mapped into an output sequence of labels with unique constraints (for example, there can't be an inner I-PER label before a beginning B-PER label). Since the labels of the tokens are context dependent a language model with attention mechanism such as BERT is very beneficial for a task like NER.
+This is a typical sequence classification problem where an imput sequence must be fully mapped into an output sequence of labels with global constraints (for example, there can't be an inner I-LOC label before a beginning B-LOC label). Since the labels of the tokens are context dependent, a language model with attention mechanism such as BERT is very beneficial for a task like NER.
 
-Because this is one of the core tasks in NLP, there are dozens of pre-trained NER classifiers in HuggingFace that you can use right away. Since the task is similar to any other task, that is, just add a classification layer on top of a pre-trained transformer you can still use the `pipeline()` function to run the model in your custom data, in this case with `task="ner"`. For example:
+Because this is one of the core tasks in NLP, there are dozens of pre-trained NER classifiers in HuggingFace that you can use right away. We use once again the `pipeline()` to run the model for predictions in your custom data, in this case with `task="ner"`. For example:
 
 ```python
 from transformers import AutoTokenizer, AutoModelForTokenClassification
@@ -254,10 +267,10 @@ for nr in ner_results:
     print(nr)
 ```
 
-This prints all the entity labels that were found in the provided text. Note that the labels are assigned at the token level (wordPieces), and there is also an indication of the substring in the original sentence where you can recover these entities. You can assume all the rest of the tokens qwere labeled as no-entity, that is `"O"`. To recover the full-word entities you can initialize the pipeline with `aggregation_strategy="simple"`:
+In this case the output of the pipeline is a list of dictionaries, each one representing only entity `IOB` labels at the token level. NOTE: this list is per wordPiece and NOT per *human word* even if the provided text is pre-tokenized. You can assume all of the tokens that don't appear in the output were labeled as no-entity, that is `"O"`. To recover the full-word entities you can initialize the pipeline with `aggregation_strategy="first"`:
 
 ```python
-ner_classifier = pipeline("ner", model=model, tokenizer=tokenizer, aggregation_strategy="simple")
+ner_classifier = pipeline("ner", model=model, tokenizer=tokenizer, aggregation_strategy="first")
 example = "My name is Wolfgang Schmid and I live in Berlin"
 
 ner_results = ner_classifier(example)
@@ -265,13 +278,138 @@ for nr in ner_results:
     print(nr)
 ```
 
-As you can see, the entities now are given at the Span Leven instead of the Token Level (that is, multiword entities are assigned a single entity label).
+As you can see, entities aggregated at the Span Leven (instead of the Token Level). Word pieces are merged back into *human words* and also multiword entities are assigned a single entity label unifying the `IOB` labels into one. Depending on your use case you can request the pipeline to give different `aggregation_strateg[ies]`. More info about the pipeline can be found [here](https://huggingface.co/docs/transformers/main_classes/pipelines).
 
-The next very important step is to evaluate how does the pre-trained model actually performs in **your dataset**. This is important since the fine-tuned model could be overfitted to other custom benchmarks that do not share the characteristics of your dataset.
+The next step is crucial: evaluate how does the pre-trained model actually performs in **your dataset**. This is important since the fine-tuned model could be overfitted to other custom benchmarks that do not share the characteristics of your dataset.
+
+To observe this, we can first see the performance on the test portion of the dataset in which this classifier was trained, and then evaluate the same pre-trained classifier on a NER dataset form a different domain.
+
+## Testing on CoNLL-03 Benchmark
+
+This model was trained on the CoNLL-03 dataset, therefore we can corroborate how it performs using the test portion of this dataset. To get the data we can use the `datasets` library which is also part of theHuggingFace landscape
+
+```
+pip install datasets
+```
+
+```python
+from datasets import load_dataset
+
+conll03_data = load_dataset("eriktks/conll2003", split="test", trust_remote_code=True)
+conll03_data
+```
+This shows the features and number of records of the CoNLL-03 Dataset. Next we can observe which labels we have in the data
+
+```python
+conll03_data.features['ner_tags']
+```
+
+As expected, the labels are in IOB notation, where each label corresponds to one word in the dataset, however the dataset contains the labelIDs and we need to map them to their string representations. We can double check this by looking at one of the records of the dataset:
+
+```python
+def labelid2str(label_int):
+    d = conll03_data.features['ner_tags'].feature._int2str
+    return d[label_int]
+
+example_id = 10
+
+print(conll03_data['tokens'][example_id])
+print(conll03_data['ner_tags'][example_id])
+print([labelid2str(tag) for tag in conll03_data['ner_tags'][example_id]])
+```
+
+These are the Gold Labels of the dataset. We can use our pre-trained BERT model to predict the labels for each example and compare the outputs to the gold labels provided in the data. 
+
+### Predictions using Pipeline
+
+This could be done using the pipeline as we have been doing so far, example by example:
+
+```python
+
+from transformers import AutoTokenizer, AutoModelForTokenClassification
+from transformers import pipeline
+
+def get_gold_labels(label_ids):
+    return [labelid2str(tag) for tag in label_ids]
+
+
+def token_to_spans(tokens):
+    token2spans = {}
+    char_start = 0
+    for i, tok in enumerate(tokens):
+        tok_end = char_start + len(tok)
+        token2spans[i] = (char_start, tok_end)
+        char_start = tok_end + 1
+    return token2spans
+
+def get_iob_from_aggregated(tokenized_sentence, entities):
+    # Initialize all labels empty
+    iob_labels = ['O'] * len(tokenized_sentence)
+    # Get Token <-> Chars Mapping
+    tok2spans = token_to_spans(tokenized_sentence)
+    start2tok = {v[0]:k for k, v in tok2spans.items()}
+    end2tok = {v[1]:k for k, v in tok2spans.items()}
+    # Iterate over each entity to populate labels
+    for entity in entities:
+        label = entity['entity_group']
+        token_start = start2tok.get(entity['start'])
+        token_end = end2tok.get(entity['end'])
+        
+        if token_start is not None:
+            iob_labels[token_start] = f'B-{label}'
+            if token_end is not None:
+                for i in range(token_start+1, token_end+1):
+                    iob_labels[i] = f'I-{label}'
+    
+    return iob_labels
+
+tokenizer = AutoTokenizer.from_pretrained("dslim/bert-base-NER")
+model = AutoModelForTokenClassification.from_pretrained("dslim/bert-base-NER")
+
+example = conll03_data['tokens'][example_id]
+example_str = " ".join(example)
+
+ner_classifier = pipeline("ner", model=model, tokenizer=tokenizer, aggregation_strategy="first")
+predictions = ner_classifier(example_str)
+print("SENTENCE:", example_str)
+print("PREDICTED:", get_iob_from_aggregated(example, predictions))
+print("GOLD:", get_gold_labels(conll03_data['ner_tags'][example_id]))
+
+```
+
+Now that we understand how to get a list of Predicted labels for one example we can run the model for the whole test data:
+
+
+```python
+all_predictions = []
+for example in conll03_data['tokens']:
+    output = ner_classifier(" ".join(example))
+    predictions = get_iob_from_aggregated_simple(example, output)
+    all_predictions.append(predictions)
+
+gold_labels = [get_gold_labels(lbl) for lbl in conll03_data['ner_tags']]
+
+```
+
+We can use the `seqeval` package to directly evaluate the outputs:
+
+
+```python
+from seqeval.metrics import classification_report
+
+report = classification_report(gold_labels, all_predictions)
+print(report)
+```
+
+The three most basic metrics for NLP classifiers are traditionally Precision, Recall and F1 score. They come from the Information Extraction field and roughly they aim to measure the following:
+- **Precision (P):** From the predicted entities, how many of them are correct (i.e. match the gold labels)?
+- **Recall (R):** From the known gold entities, how many of them were predicted by the model?
+- **F1 Score (F1):** the harmonic mean of precison and recall, which aims to provide a balance between both metrics. It has two variants: the Micro-F1 which treats all errors equally, being the same as measuring Accuracy; and Macro-F1, which aims to show the model performance taking into account the label distribution, this is normally the score reported through main benchmarks as it shows better the model's weaknesses across classes. 
+
 
 ## Using a Pre-trained Model on LitBank
 
-Now that you know how to use the NER tagger you can apply it to a custom dataset. We will use the [LitBank](https://github.com/dbamman/litbank) corpus, an annotated dataset of 100 works of English-language fiction to support tasks in natural language processing and the computational humanities. Specifically they have human annotations of entities on these books. We can measure how good is this pre-trained classifier by making the model predict the entities inside the text and them compare the outputs with the humam annotations. The NER portion of the dataset we will use is the tabulated data from [here](https://github.com/dbamman/litbank/tree/master/entities/tsv) and one example looks like this:
+We can of course also use the pre-trained NER classifier with any **custom dataset**, it will just need come pre- and post-processing steps to make it work. For this example, we will use the [LitBank](https://github.com/dbamman/litbank) corpus, an annotated dataset of 100 works of English-language fiction to support tasks in natural language processing and the computational humanities. Specifically they have human annotations of entities on these books. We can measure how good is this pre-trained classifier by making the model predict the entities inside the text and them compare the outputs with the humam annotations. The NER portion of the dataset we will use is the tabulated data from [here](https://github.com/dbamman/litbank/tree/master/entities/tsv) and one example looks like this:
 
 | Index 	| Token    	| IOB-1 	| IOB-2 	| IOB-3 	| IOB-4 	|
 |-------	|----------	|-------	|-------	|-------	|-------	|
@@ -291,10 +429,11 @@ The format of the dataset resembles the conll format, a widely used format in co
 def quick_conll_reader(filepath):
     all_sentences, all_labels = [], []
     sent_txt, sent_lbl = [], []
+    label_vocab = {}
     gold_label_column = 1
     label_translator = {
-        "B-FAC": "B-LOC",
-        "I-FAC": "I-LOC",
+        "B-FAC": "O",
+        "I-FAC": "O",
         "B-GPE": "B-LOC",
         "I-GPE": "I-LOC",
         "B-VEH": "O",
@@ -307,19 +446,24 @@ def quick_conll_reader(filepath):
                 sent_txt.append(row[0])
                 label = row[gold_label_column]
                 if label in label_translator:
-                    sent_lbl.append(label_translator[label])
+                    final_label = label_translator[label]
                 else:
-                    sent_lbl.append(label)
+                    final_label = label
+                sent_lbl.append(final_label)
+                if final_label not in label_vocab:
+                    label_vocab[final_label] = len(label_vocab) 
             else:
                 all_sentences.append(" ".join(sent_txt))
                 all_labels.append(sent_lbl)
                 sent_txt, sent_lbl = [], []
-    return all_sentences, all_labels
+    return all_sentences, all_labels, label_vocab
 
 
-sentences, gold_labels = quick_conll_reader("1023_bleak_house_brat.tsv")
+sentences, gold_labels, label_vocab = quick_conll_reader("1023_bleak_house_brat.tsv")
+
 print(sentences[0].split(' '))
 print(gold_labels[0])
+
 ```
 
 This code processes the *Bleak House* book and extracts a list of tokenized sentences (as strings) and a list of IOB Labels corresponding to each token in the sentence. You can see the first sentence and its corresponding list of *gold labels* on this example. Next, we load the NER pre-trained model again and process the sentences to obtain model predictions. The problem here is that the model predictions are lists of dictionaries and we need to post-process them so they are also on IOB-format. We use the get_iob_labels() function to do this conversion. 
@@ -336,7 +480,7 @@ def token_to_spans(tokens):
     return token2spans
 
 
-def get_iob_labels(tokenized_sentence, entities):
+def get_litbank_labels(tokenized_sentence, entities):
     # Initialize all labels empty
     iob_labels = ['O'] * len(tokenized_sentence)
     # Get Token <-> Chars Mapping
@@ -364,8 +508,6 @@ And we finally apply the model to the sentences that we previously read:
 
 ```python
 
-ner_classifier = pipeline("ner", model=model, tokenizer=tokenizer, aggregation_strategy="simple")
-
 ner_results = ner_classifier(sentences)
 model_predictions = []
 for i, sentence_ner in enumerate(ner_results):
@@ -374,7 +516,7 @@ for i, sentence_ner in enumerate(ner_results):
     print('GOLD:', gold_labels[i])
     # Get the IOB labels for the tokenized sentence
     tokenized_sentence = sentences[i].split()
-    predicted_iob_labels = get_iob_labels(tokenized_sentence, sentence_ner)
+    predicted_iob_labels = get_litbank_labels(tokenized_sentence, sentence_ner)
     model_predictions.append(predicted_iob_labels)
     print('MODEL:', predicted_iob_labels)
     for nr in sentence_ner:
@@ -386,9 +528,7 @@ For each model prediction we are printing the sentence tokens, the IOB gold labe
 
 ##  Model Evaluation
 
-To evaluate a token classification model the basic metrics are Precision (of all the labeled words, how many of them are correct), Recall (of the expected gold entities, howe many of them were recognized by the model) and F1 (a harmonic mean of precision and recall that leverages both metrics and shows a unified score of performance). The three metrics range from 0 to 1, also sometimes niromalized from 0 to 100. A score of 0 means everything is wrong, and 100 means everything is correct. Many English NER benchmarks nowadays report scores above the 90 F1 scores, but this does not say anything about the performance in your own dataset.
-
-To perform evaluation in your data
+To perform evaluation in your data you can use again the `seqeval` package:
 
 ```python
 
@@ -397,4 +537,6 @@ print(classification_report(gold_labels, model_predictions))
 
 ```
 
-Since we took a classifier that was not trained for the book domain, the performance is quite poor. The solution in this case is to use another of the great characteristics of BERT: fine-tuning for domain adaptation. It is possible to train your own classifier with relatively small data (given that a lot of linguistic knowledge was already provided during the language modeling pre-training). In the following section we will see how to train your own NER model and use it for predictions.
+Since we took a classifier that was not trained for the book domain, the performance is quite poor. But this example shows us that classifiers performing very well on their own domain most of the times transfer poorly to other apparently similar datasets. 
+
+The solution in this case is to use another of the great characteristics of BERT: fine-tuning for domain adaptation. It is possible to train your own classifier with relatively small data (given that a lot of linguistic knowledge was already provided during the language modeling pre-training). In the following section we will see how to train your own NER model and use it for predictions.
