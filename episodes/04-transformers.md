@@ -1,6 +1,6 @@
 ---
-title: "Episode 4: BERT and Transformers"
-teaching: 10 
+title: 'Episode 4: BERT and Transformers'
+teaching: 10
 exercises: 0
 ---
 :::::::::::::::::::::::::::::::::::::::::::::::: questions
@@ -35,7 +35,8 @@ Every text can be seen as a sequence of sentences and likewise each sentence can
 
 The Transformer is a neural network architecture proposed by Google researchers [in 2017](https://arxiv.org/pdf/1706.03762) to address these and other limitations of RNNs and LSTMs. In their paper, *Attention is all you Need*, they tackled especifically the problem of Machine Translation (MT), which in NLP terms is stated as: how to generate a sentence (sequence of words) in target language B given a sentence in source language A? In order to translate, first one neural network needs to _encode_ the meaning of the source language A into vector representations, and then a second neural network needs to _decode_ that representation into tokens that are understandable in language B. Therefore translation is modeling language B _conditioned_ on what language A originally said.
 
-![The general architecture for the Transformer](fig/trans1.png)
+
+![Transformer Architecture](fig/trans1.png)
 
 As seen in the picture, the original Transformer is an Encoder-Decoder network that tackles translation. We first need a token embedder which converts the string of words into a sequence of vectors that the Transformer network can process. The first component, the __Encoder__, is optimized for creating rich representations of the source sequence (in this case an English sentence) while the second one, the __Decoder__ is a generative network that is conditioned on the encoded representation and, with the help of the attention mechanism, generates the most likely token in the target sequence (in this case Dutch words) based on both the tokens generated so far and the full initial English context. 
 
@@ -69,7 +70,6 @@ As in any basic NLP pipeline, the first step is to pre-process the raw text so i
 
 ![BERT Architecture](fig/bert3.png)
 
-
 ## BERT Code
 
 Let's see how these components can be manipulated with code. For this we will be using the HugingFace's _transformers_ python library. We can install it with:
@@ -95,23 +95,91 @@ text = "Maria's passion for music is clearly heard in every note and every encha
 # text = "Maria loves Groningen"
 encoded_input = tokenizer(text, return_tensors='pt')
 print(encoded_input)
-print(encoded_input.input_ids[0].shape)
 ```
 
-The tokenizer returns an object with the following fields `input_ids`, `token_type_ids`, and `attention_mask`. The `input_ids` are the most important output for now, as these are the token IDs recognized by BERT. In order to see what these IDs represent, we can _translate_ them into human readable strings:
+The print shows the `encoded_input` object returned by the tokenizer, with its attributes and values. The `input_ids` are the most important output for now, as these are the token IDs recognized by BERT
+
+```
+{
+    'input_ids': tensor([[  101,  3406,   112,   188,  7615,  1111,  1390, 1110,  3817,  1767, 1107,  1451,  3805,  1105,  1451,  4035, 18546,  1916, 11961,   119, 102]]), 
+    'token_type_ids': tensor([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]), 
+    'attention_mask': tensor([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
+}
+```
+
+ NOTE: the printing function shows transformers objects as dictionaries; however, to access the attributes, you must use the python object syntax, such as in the following example:
+
+```python
+print(encoded_input.input_ids.shape)
+```
+Output:
+
+`torch.Size([1, 21])`
+
+The output is a 2-dimensional tensor where the first dimention contains 1 element (this dimension represents the batch size), and the second dimension contains 21 elements which are equivalent to the 21 tokens that BERT generated with our string input.
+
+::: callout
+
+You noticed tin the previous outputs the `tensor()` and `torch()` wrappers around the arrays of integers. This is showing that the `transformers` library uses `pytorch` underneath, one of the most popular libraries for Deep Learning in Python. Pytorch's basic unit is the Tensor.
+
+A *tensor* is a generalization for multidimentional array data. By convention, a vector is a 1-dimensional sequence of scalar numbers (or a 1-dim tensor), a matrix is a 2-dimensional sequence (2-dim tensor) and for N-dimensions where N > 2 we use the concept of tensor.
+
+:::
+
+In order to see what these Token IDs represent, we can _translate_ them into human readable strings. This includes converting the tensors into numpy arrays and converting each ID into its string representation:
 
 ```python
 token_ids = list(encoded_input.input_ids[0].detach().numpy())
 string_tokens = tokenizer.convert_ids_to_tokens(token_ids)
-print(token_ids)
-print(string_tokens)
+print("IDs:", token_ids)
+print("TOKENS:", string_tokens)
 ```
 
-These shows us the WordPieces that BERT will pass to the Encoder Model.
+`IDs: [101, 3406, 112, 188, 7615, 1111, 1390, 1110, 3817, 1767, 1107, 1451, 3805, 1105, 1451, 4035, 18546, 1916, 11961, 119, 102]`
+
+`TOKENS: ['[CLS]', 'Maria', "'", 's', 'passion', 'for', 'music', 'is', 'clearly', 'heard', 'in', 'every', 'note', 'and', 'every', 'en', '##chan', '##ting', 'melody', '.', '[SEP]']`
+
+These show us the WordPieces that the BERT Encoder will receive and process. The encoder actually just needs the IDs to retrieve the embedding from its vocabulary, the string representations are just for the human reader.
 
 ## BERT Output Object
 
 To give a forward pass of the Encoder and obtain the vector representations, we pass the `encoded_input` object generated by the tokenizer.
+
+```python
+output = model(**encoded_input)
+print(output)
+```
+The `output` variable in this case stores an ModelOutput object, which contains a handful of values:
+
+```
+BaseModelOutputWithPoolingAndCrossAttentions(
+    last_hidden_state=tensor([[
+        [-0.0538, -0.1110, -0.0882,  ..., -0.0252,  0.3524,  0.0407],
+        [ 0.0814, -0.4825,  0.8327,  ...,  0.3548, -0.1697,  0.0871],
+        [-0.2964, -0.1967,  0.3091,  ...,  0.5346,  0.4037, -0.1648],
+        ...
+    ]]),
+    pooler_output=tensor([[-7.2911e-01,  4.2630e-01,  9.9979e-01, -9.9045e-01,  9.3354e-01, ..., 7.7559e-01,  9.8086e-01
+    ]]),
+    hidden_states=None, 
+    past_key_values=None, 
+    attentions=None, 
+    cross_attentions=None
+)
+```
+
+We must focus for now on the `last_hidden_state` field, which contains the last layer vector of weights for each token, arguably the best contextualized representation of the token. 
+
+```python
+print(output.last_hidden_state.shape)
+```
+`torch.Size([1, 21, 768])`
+
+When we print the shape of this field, we obtain again a Pytorch Tensor `torch.Size([1, 21, 768])`: the first dimension is the batch size, the second is the number of tokens (we have 21 tokens for this example as seen before), and the third, the dimensionality of the vectors. In the case of BERT-base each token vector always has a shape of 768. As opposed to the previous tensor, each of the 21 tokens are not just one integer anymore, but a whole vector of weights, hence the 3-dimensionality of the tensor.
+
+::: callout
+
+When running examples in a BERT pre-trained model, it is advisable to wrap your code inside a `torch.no_grad():` context. This is linked to the fact that BERT is a Neural Network that has been trained (and can be further finetuned) with the Backpropagation algorithm. Essentially, this wrapper tells the model that we are not in training mode, and we are not interested in _updating_ the weights (as it would happen when training any neural network), because the weights are already optimal enough. By using this wrapper, we make the model more efficient as it does not need to calculate the gradients for an eventual backpropagation step, since we are only interested in what _comes out_ of the Encoder. So the previous code can be made more efficient like this:
 
 ```python
 import torch 
@@ -119,21 +187,21 @@ import torch
 with torch.no_grad():
     output = model(**encoded_input)
     print(output)
-    print(output.last_hidden_state[0])
     print(output.last_hidden_state.shape)
 ```
 
-The `output` variable in this case stores an ModelOutput object. The  `last_hidden_state` field contains the vector of weights for each token. When we print the shape of this field we obtain a Pytorch Tensor `torch.Size([1, 21, 768])`: the first dimension is the batch size, the second is the number of tokens (we have 21 tokens for this example as seen before), and the third the dimensionality of the vectors. In the case of BERT-base each token vector always has a shape of 768.
+:::
 
 
 # BERT as a Language Model
 
-As mentioned before, the main pre-training task of BERT is Language Modeling (LM). In general, this is the task of calculating the probability of a word based on the known neighboring words. Obtaining training data for this task is very cheap, as all we need is millions of sentences from existing texts. In this setting, BERT encodes a sequence of words, and predicts from a set of English tokens, what is the most likely token that could be inserted in the `[MASK]` position
+Now that we know hoe to embedd and run the model for obtaining the representations we can test the code for our first NLP Task: Language Modelling (LM). As mentioned before, the main pre-training task of BERT is, LM; in general this is the task of calculating the probability of a word based on the known neighboring words (yes, Word2Vec was also a kind of LM). Obtaining training data for this task is very cheap, as all we need is millions of sentences from existing texts, without any labels. In this setting, BERT encodes a sequence of words, and predicts from a set of English tokens, what is the most likely token that could be inserted in the `[MASK]` position
+
 
 ![BERT Language Modeling](fig/bert1b.png)
 
 
-We can therefore start using BERT as a predictor for word completion, and the word can be in any position inside the sentence. We will also learn here how to use the `pipeline` object, this is very useful when we only want to use a pre-trained model for predictions (no need to fine-tune). For example:
+We can therefore start using BERT as a predictor for word completion, and the word can be in any position inside the sentence. We will also learn here how to use the `pipeline` object, this is very useful when we only want to use a pre-trained model for predictions (no need to fine-tune). The `pipeline` will internally initialize both model and tokenizer for us. In this case again we use `bert-base-cased`, which refers to the vanilla BERT English model. Once we declared a pipeline, we can feed it with sentences that contain one masked token at a time (beware that BERT can only predict one word at a time, since that was its training scheme). For example:
 
 
 ```python
@@ -152,7 +220,29 @@ model_outputs = nlp(sentences, top_k=5)
 pretty_print_outputs(sentences, model_outputs)
 ```
 
-The `pipeline` will internally initialize both model and tokenizer for us. In this case again we use `bert-base-cased`, which refers to the vanilla BERT English model. Once we declared a pipeline, we can feed it with sentences that contain one masked token at a time (beware that BERT can only predict one word at a time, since that was its training scheme).
+```
+=====	 Paris is the [MASK] of France
+{'score': 0.9807965755462646, 'token': 2364, 'token_str': 'capital', 'sequence': 'Paris is the capital of France'}
+{'score': 0.004513159394264221, 'token': 6299, 'token_str': 'Capital', 'sequence': 'Paris is the Capital of France'}
+{'score': 0.004281804896891117, 'token': 2057, 'token_str': 'center', 'sequence': 'Paris is the center of France'}
+{'score': 0.002848200500011444, 'token': 2642, 'token_str': 'centre', 'sequence': 'Paris is the centre of France'}
+{'score': 0.0022805952467024326, 'token': 1331, 'token_str': 'city', 'sequence': 'Paris is the city of France'}
+
+=====	 I want to eat a cold [MASK] this afternoon
+{'score': 0.19168031215667725, 'token': 13473, 'token_str': 'pizza', 'sequence': 'I want to eat a cold pizza this afternoon'}
+{'score': 0.14800849556922913, 'token': 25138, 'token_str': 'turkey', 'sequence': 'I want to eat a cold turkey this afternoon'}
+{'score': 0.14620967209339142, 'token': 14327, 'token_str': 'sandwich', 'sequence': 'I want to eat a cold sandwich this afternoon'}
+{'score': 0.09997560828924179, 'token': 5953, 'token_str': 'lunch', 'sequence': 'I want to eat a cold lunch this afternoon'}
+{'score': 0.06001955270767212, 'token': 4014, 'token_str': 'dinner', 'sequence': 'I want to eat a cold dinner this afternoon'}
+
+=====	 Maria [MASK] Groningen
+{'score': 0.24399833381175995, 'token': 117, 'token_str': ',', 'sequence': 'Maria, Groningen'}
+{'score': 0.12300779670476913, 'token': 1104, 'token_str': 'of', 'sequence': 'Maria of Groningen'}
+{'score': 0.11991506069898605, 'token': 1107, 'token_str': 'in', 'sequence': 'Maria in Groningen'}
+{'score': 0.07722211629152298, 'token': 1306, 'token_str': '##m', 'sequence': 'Mariam Groningen'}
+{'score': 0.0632941722869873, 'token': 118, 'token_str': '-', 'sequence': 'Maria - Groningen'}
+
+```
 
 When we call the `nlp` pipeline, requesting to return the `top_k` most likely suggestions to complete the provided sentences (in this case `k=5`). The pipeline returns a list of outputs as python dictionaries. Depending on the task, the fields of the dictionary will differ. In this case, the `fill-mask` task returns a score (between 0 and 1, the higher the score the more likely the token is), a tokenId, and its corresponding string, as well as the full "unmasked" sequence. 
 
@@ -165,7 +255,9 @@ We will next see the case of combining BERT with a classifier on top.
 
 The task of text classification is assigning a label to a whole sequence of tokens, for example a sentence. With the parameter `task="text_classification"` the `pipeline()` function will load the base model and automatically add a linear layer with a softmax on top. This layer can be fine-tuned with our own labeled data or we can also directly load the fully pre-trained text classification models that are already available in HuggingFace.
 
+
 ![BERT as an Emotion Classifier](fig/bert4.png)
+
 
 Let's see the example of a ready pre-trained emotion classifier based on `RoBERTa` model. This model was fine-tuned in the Go emotions [dataset](https://huggingface.co/datasets/google-research-datasets/go_emotions), taken from English Reddit and labeled for 28 different emotions at the sentence level. The fine-tuned model is called [roberta-base-go_emotions](https://huggingface.co/SamLowe/roberta-base-go_emotions). This model takes a sentence as input and ouputs a probability distribution over the 28 possible emotions that might be conveyed in the text. For example:
 
@@ -179,11 +271,31 @@ model_outputs = classifier(sentences)
 pretty_print_outputs(sentences, model_outputs)
 ```
 
+```
+=====	 I am not having a great day
+{'label': 'disappointment', 'score': 0.46669483184814453}
+{'label': 'sadness', 'score': 0.39849498867988586}
+{'label': 'annoyance', 'score': 0.06806594133377075}
+
+=====	 This is a lovely and innocent sentence
+{'label': 'admiration', 'score': 0.6457845568656921}
+{'label': 'approval', 'score': 0.5112180113792419}
+{'label': 'love', 'score': 0.09214121848344803}
+
+=====	 Maria loves Groningen
+{'label': 'love', 'score': 0.8922032117843628}
+{'label': 'neutral', 'score': 0.10132959485054016}
+{'label': 'approval', 'score': 0.02525361441075802}
+```
+
 This code outputs again a list of dictionaries with the `top-k` (`k=3`) emotions that each of the two sentences convey. In this case, the first sentence evokes (in order of likelihood) *dissapointment*, *sadness* and *annoyance*; whereas the second sentence evokes *love*, *neutral* and *approval*. Note however that the likelihood of each prediction decreases dramatically below the top choice, so perhaps this specific classifier is only useful for the top emotion.
 
 ::: callout
-Because the _classifier_ is a very small neural network, it can be quickly trained to choose between the classes for your custom classification problem, without needing a big amount of annotated data. As mentioned before, this classifier is just a one-layer neural layer with a softmax that assigns a score that can be translated to the probability over a set of labels, given the input features provided by BERT, which _encodes_ the meaning of the entire sequence in its hidden states.
+
+Finetunning BERT is very cheap, because we only need to train the _classifier_ layer,  a very small neural network, that can learn to choose between the classes (labels) for your custom classification problem, without needing a big amount of annotated data. This classifier is just a one-layer neural layer with a softmax that assigns a score that can be translated to the probability over a set of labels, given the input features provided by BERT, which _encodes_ the meaning of the entire sequence in its hidden states.
+
 :::
+
 
 ![BERT as an Emotion Classifier](fig/bert4b.png)
 
@@ -194,9 +306,9 @@ This will help to understand some of the strengths and weaknesses of using BERT-
 
 ## Tokenizer and Embedder
 
-We should revisit the tokenizer to understand more in detail how is it working. The tokenization step might seem trivial but in reality models' tokenizers might make a big difference in the end results of your classifiers, depending on the task you are trying to solve. Understanding the tokenizer of each model (as well as the modle type!) can save us a lot of debugging when we work on our custom data.
+Let's revisit the tokenizer to better grasp how it is working. The tokenization step might seem trivial but in reality models' tokenizers might make a big difference in the end results of your classifiers, depending on the task you are trying to solve. Understanding the tokenizer of each model (as well as the model type!) can save us a lot of debugging when we work on our custom data.
 
-We can feed again a sentence into the tokenizer to observe how it outputs a sequence of vectors (also called a *tensor*: by convention, a vector is a sequence of scalar numbers, a matrix is a 2-dimensional sequence and a tensor is a N-dimensional sequence of numbers), each one of them representing a wordPiece:
+We will feed again a sentence into the tokenizer to observe how it outputs a sequence of vectors (also called a *tensor*: by convention, a vector is a sequence of scalar numbers, a matrix is a 2-dimensional sequence and a tensor is a N-dimensional sequence of numbers), each one of them representing a wordPiece:
 
 ```python
 
@@ -225,12 +337,25 @@ When we print the vectors we only see a lot of fine-tuned weights which are not 
 
 We can use the same method to encode another two sentences containing the word *note* to see how BERT actually handles polysemy (*note* means something very different in each sentence) thanks to the representation of each word being contextualized instead of isolated.
 
+
 ```python
 # Search for the index of 'note' and obtain its vector from the sequence
 note_index_1 = string_tokens.index('note')
 note_vector_1 = output.last_hidden_state[0][note_index_1].detach().numpy()
 note_token_id_1 = token_ids[note_index_1]
 
+print(note_index_1, note_token_id_1, string_tokens)
+print(note_vector_1[:5])
+```
+We are basically printing the tokenized sentence from the previous exaple and shoging the index of the token `note` in the list of tokens. We are also printing the tokenID assigned to this token and the list of tokens. Finally, the last print shows the first five dimensions of the vector representing the token `note`.
+```
+12 3805 ['[CLS]', 'Maria', "'", 's', 'passion', 'for', 'music', 'is', 'clearly', 'heard', 'in', 'every', 'note', 'and', 'every', 'en', '##chan', '##ting', 'melody', '.', '[SEP]']
+[0.15780845 0.38866335 0.41498923 0.03389652 0.40278202]
+```
+
+Let's encode now another sentence, also containing the word `note`, and confirm that the same token string, with the same assigned tokenID holds a vector with different weights:
+
+```python
 # Encode and then take the 'note' token from the second sentence
 note_text_2 = "I could not buy milk in the supermarket because the bank note I wanted to use was fake."
 encoded_note_2 = tokenizer(note_text_2, return_tensors='pt')
@@ -241,13 +366,17 @@ note_index_2 = string_tokens_2.index('note')
 note_vector_2 = model(**encoded_note_2).last_hidden_state[0][note_index_2].detach().numpy()
 note_token_id_2 = token_ids[note_index_2]
 
-print(note_index_1, note_token_id_1, string_tokens)
-print(note_vector_1[:5])
 print(note_index_2, note_token_id_2, string_tokens_2)
 print(note_vector_2[:5])
 ```
 
-We can compute the cosine similarity of the word *note* in the first sentence and the word *note* in the second sentence to confirm that they are indeed two different representations, even when in both cases they have the same token-id and they are the 12th token of the sentence:
+```
+12 3805 ['[CLS]', 'I', 'could', 'not', 'buy', 'milk', 'in', 'the', 'supermarket', 'because', 'the', 'bank', 'note', 'I', 'wanted', 'to', 'use', 'was', 'fake', '.', '[SEP]']
+[ 0.5003222   0.653664    0.22919582 -0.32637975  0.52929205]
+```
+
+
+To be sure, we can compute the cosine similarity of the word *note* in the first sentence and the word *note* in the second sentence confirming that they are indeed two different representations, even when in both cases they have the same token-id and they are the 12th token of the sentence:
 
 ```python
 from sklearn.metrics.pairwise import cosine_similarity
@@ -266,12 +395,15 @@ With this small experiment, we have confirmed that the Encoder produces context-
 
 The original attention mechanism (remember this was developed for language translation) is a component in between the Encoder and the Decoder that helps the model to _align_ the important information from the input sequence in order to generate a more accurate token in the output sequence:
 
-![The Attention Mechanism](fig/trans3.png)
+
+![The Encoder-Decoder Attention Mechanism](fig/trans3.png)
 
 In the example above, the attention puts more weight in the input _etudiant_, so the decoder uses that information to _know_ that is should generate _student_. Note that if the decoder based it's next work probability just based in the sequence "I am a ..." it could basically generate any word and still sound natural, but it is thanks to the attention mechanism that it preserves the meaning of the input sequence.
 
-Attention is a neural layer, therefore it can also be plugged-in within the Encoder, this is called **self-attention** since the mechanism will look at the interactions between the input sequence and the input sequence. This is how BERT uses (self-) attention, which is very useful to capture longer-range word dependencies such as correference, where, for example, a pronoun can be linked to the noun it refers to previously in the same sentence. See the following example:
-![The Attention Mechanism](fig/trans5.png)
+Attention is a neural layer, therefore it can also be plugged-in within the Encoder, this is called **self-attention** since the mechanism will look at the interactions between the input sequence itself (measure inportance between input sequence tokens vs input sequence tokens). This is how BERT uses (self-) attention, which is very useful to capture longer-range word dependencies such as correference, where, for example, a pronoun can be linked to the noun it refers to previously in the same sentence. See the following example:
+
+
+![The Encoder Self-Attention Mechanism](fig/trans5.png)
 
 There are two sentences, in each one the pronoun "it" refers to a different noun, "animal" or "street", and this is completely depending on the sentence context. Thanks to the self-attention BERT relates the pronoun to its relevant correferent.
 
@@ -287,6 +419,7 @@ Named Entity Recognition (NER) is the task of recognizing mentions of real-world
 
 In terms of NLP, this boils down to classifying each token into a series of labels (`PER`, `LOC`, `ORG`, `O`[no-entity] ). Since a single entity can be expressed with multiple words (e.g. New York) the usual notation used for labeling the text is IOB (**I**nner **O**ut **B**eginnig of entity) notations which identifies the limits of each entity tokens. For example:
 
+
 ![BERT as an NER Classifier](fig/bert5.png)
 
 This is a typical sequence classification problem where an imput sequence must be fully mapped into an output sequence of labels with global constraints (for example, there can't be an inner I-LOC label before a beginning B-LOC label). Since the labels of the tokens are context dependent, a language model with attention mechanism such as BERT is very beneficial for a task like NER.
@@ -300,7 +433,7 @@ from transformers import pipeline
 tokenizer = AutoTokenizer.from_pretrained("dslim/bert-base-NER")
 model = AutoModelForTokenClassification.from_pretrained("dslim/bert-base-NER")
 
-ner_classifier = pipeline("ner", model=model, tokenizer=tokenizer)
+ner_classifier = pipeline("token-classification", model=model, tokenizer=tokenizer)
 example = "My name is Wolfgang Schmid and I live in Berlin"
 
 ner_results = ner_classifier(example)
@@ -308,22 +441,43 @@ for nr in ner_results:
     print(nr)
 ```
 
-In this case the output of the pipeline is a list of dictionaries, each one representing only entity `IOB` labels at the token level. NOTE: this list is per wordPiece and NOT per *human word* even if the provided text is pre-tokenized. You can assume all of the tokens that don't appear in the output were labeled as no-entity, that is `"O"`. To recover the full-word entities you can initialize the pipeline with `aggregation_strategy="first"`:
+The code prints the following:
+
+```
+{'entity': 'B-PER', 'score': 0.9996068, 'index': 4, 'word': 'Wolfgang', 'start': 11, 'end': 19}
+{'entity': 'I-PER', 'score': 0.999582, 'index': 5, 'word': 'Sc', 'start': 20, 'end': 22}
+{'entity': 'I-PER', 'score': 0.9990482, 'index': 6, 'word': '##hm', 'start': 22, 'end': 24}
+{'entity': 'I-PER', 'score': 0.9951691, 'index': 7, 'word': '##id', 'start': 24, 'end': 26}
+{'entity': 'B-LOC', 'score': 0.99956733, 'index': 12, 'word': 'Berlin', 'start': 41, 'end': 47}
+```
+
+In this case the output of the pipeline is a list of dictionaries, each one representing only entity `IOB` labels at the BERT token level. IMPORTANT: this list is per wordPiece and NOT per *human word* even if the provided text is pre-tokenized. You can assume all of the tokens that don't appear in the output were labeled as no-entity, that is `"O"`. To recover the full-word entities you can initialize the pipeline with `aggregation_strategy="first"`:
 
 ```python
-ner_classifier = pipeline("ner", model=model, tokenizer=tokenizer, aggregation_strategy="first")
+ner_classifier = pipeline("token-classification", model=model, tokenizer=tokenizer, aggregation_strategy="first")
 example = "My name is Wolfgang Schmid and I live in Berlin"
 
 ner_results = ner_classifier(example)
 for nr in ner_results:
     print(nr)
 ```
+The code now prints the following:
+```
+{'entity_group': 'PER', 'score': 0.9995944, 'word': 'Wolfgang Schmid', 'start': 11, 'end': 26}
+{'entity_group': 'LOC', 'score': 0.99956733, 'word': 'Berlin', 'start': 41, 'end': 47}
+```
+
 
 As you can see, entities aggregated at the Span Leven (instead of the Token Level). Word pieces are merged back into *human words* and also multiword entities are assigned a single entity label unifying the `IOB` labels into one. Depending on your use case you can request the pipeline to give different `aggregation_strateg[ies]`. More info about the pipeline can be found [here](https://huggingface.co/docs/transformers/main_classes/pipelines).
 
 The next step is crucial: evaluate how does the pre-trained model actually performs in **your dataset**. This is important since the fine-tuned model could be overfitted to other custom benchmarks that do not share the characteristics of your dataset.
 
 To observe this, we can first see the performance on the test portion of the dataset in which this classifier was trained, and then evaluate the same pre-trained classifier on a NER dataset form a different domain.
+
+# ---------- END HERE ??? ----------
+
+
+The rest is more advanced content (still I leave it here just in case for now).
 
 ## Testing on CoNLL-03 Benchmark
 
