@@ -120,7 +120,7 @@ The output is a 2-dimensional tensor where the first dimention contains 1 elemen
 
 ::: callout
 
-You noticed tin the previous outputs the `tensor()` and `torch()` wrappers around the arrays of integers. This is showing that the `transformers` library uses `pytorch` underneath, one of the most popular libraries for Deep Learning in Python. Pytorch's basic unit is the Tensor.
+You noticed in the previous outputs the `tensor()` and `torch()` wrappers around the arrays of integers. This is showing that the `transformers` library uses `pytorch` underneath, one of the most popular libraries for Deep Learning in Python. Pytorch's basic unit is the Tensor.
 
 A *tensor* is a generalization for multidimentional array data. By convention, a vector is a 1-dimensional sequence of scalar numbers (or a 1-dim tensor), a matrix is a 2-dimensional sequence (2-dim tensor) and for N-dimensions where N > 2 we use the concept of tensor.
 
