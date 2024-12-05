@@ -398,7 +398,7 @@ The original attention mechanism (remember this was developed for language trans
 
 ![The Encoder-Decoder Attention Mechanism](fig/trans3.png)
 
-In the example above, the attention puts more weight in the input _etudiant_, so the decoder uses that information to _know_ that is should generate _student_. Note that if the decoder based it's next work probability just based in the sequence "I am a ..." it could basically generate any word and still sound natural, but it is thanks to the attention mechanism that it preserves the meaning of the input sequence.
+In the example above, the attention puts more weight in the input _etudiant_, so the decoder uses that information to _know_ that is should generate _student_. Note that if the decoder based it's next word probability just on the sequence "I am a ...", it could basically generate any word and still sound natural. However, it is thanks to the attention mechanism that it preserves the meaning of the input sequence.
 
 Attention is a neural layer, therefore it can also be plugged-in within the Encoder, this is called **self-attention** since the mechanism will look at the interactions between the input sequence itself (measure inportance between input sequence tokens vs input sequence tokens). This is how BERT uses (self-) attention, which is very useful to capture longer-range word dependencies such as correference, where, for example, a pronoun can be linked to the noun it refers to previously in the same sentence. See the following example:
 
