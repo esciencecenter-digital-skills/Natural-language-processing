@@ -347,7 +347,7 @@ note_token_id_1 = token_ids[note_index_1]
 print(note_index_1, note_token_id_1, string_tokens)
 print(note_vector_1[:5])
 ```
-We are basically printing the tokenized sentence from the previous exaple and shoging the index of the token `note` in the list of tokens. We are also printing the tokenID assigned to this token and the list of tokens. Finally, the last print shows the first five dimensions of the vector representing the token `note`.
+We are basically printing the tokenized sentence from the previous example and showing the index of the token `note` in the list of tokens. We are also printing the tokenID assigned to this token and the list of tokens. Finally, the last print shows the first five dimensions of the vector representing the token `note`.
 ```
 12 3805 ['[CLS]', 'Maria', "'", 's', 'passion', 'for', 'music', 'is', 'clearly', 'heard', 'in', 'every', 'note', 'and', 'every', 'en', '##chan', '##ting', 'melody', '.', '[SEP]']
 [0.15780845 0.38866335 0.41498923 0.03389652 0.40278202]
