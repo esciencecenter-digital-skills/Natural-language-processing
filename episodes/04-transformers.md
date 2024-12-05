@@ -195,7 +195,7 @@ with torch.no_grad():
 
 # BERT as a Language Model
 
-Now that we know hoe to embedd and run the model for obtaining the representations we can test the code for our first NLP Task: Language Modelling (LM). As mentioned before, the main pre-training task of BERT is, LM; in general this is the task of calculating the probability of a word based on the known neighboring words (yes, Word2Vec was also a kind of LM). Obtaining training data for this task is very cheap, as all we need is millions of sentences from existing texts, without any labels. In this setting, BERT encodes a sequence of words, and predicts from a set of English tokens, what is the most likely token that could be inserted in the `[MASK]` position
+Now that we know how to embedd and run the model to obtain the representations, we can test the code for our first NLP Task: Language Modelling (LM). As mentioned before, the main pre-training task of BERT is LM: calculating the probability of a word based on the known neighboring words (yes, Word2Vec was also a kind of LM). Obtaining training data for this task is very cheap, as all we need is millions of sentences from existing texts, without any labels. In this setting, BERT encodes a sequence of words, and predicts from a set of English tokens, what is the most likely token that could be inserted in the `[MASK]` position
 
 
 ![BERT Language Modeling](fig/bert1b.png)
