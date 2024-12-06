@@ -91,8 +91,7 @@ model = BertModel.from_pretrained("bert-base-cased")
 We start with a string of text as written in any blog, book, newspaper etcetera. The `tokenizer` object is responsible of splitting the string into recognizable tokens for the model and embedding the tokens into their vector representations
 
 ```python
-text = "Maria's passion for music is clearly heard in every note and every enchanting melody."
-# text = "Maria loves Groningen"
+text = "Maria loves Groningen"
 encoded_input = tokenizer(text, return_tensors='pt')
 print(encoded_input)
 ```
@@ -101,10 +100,11 @@ The print shows the `encoded_input` object returned by the tokenizer, with its a
 
 ```
 {
-    'input_ids': tensor([[  101,  3406,   112,   188,  7615,  1111,  1390, 1110,  3817,  1767, 1107,  1451,  3805,  1105,  1451,  4035, 18546,  1916, 11961,   119, 102]]), 
-    'token_type_ids': tensor([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]), 
-    'attention_mask': tensor([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
+    'input_ids': tensor([[  101,  3406,  7871,   144,  3484, 15016,   102]]), 
+    'token_type_ids': tensor([[0, 0, 0, 0, 0, 0, 0]]), 
+    'attention_mask': tensor([[1, 1, 1, 1, 1, 1, 1]])
 }
+
 ```
 
  NOTE: the printing function shows transformers objects as dictionaries; however, to access the attributes, you must use the python object syntax, such as in the following example:
@@ -114,9 +114,9 @@ print(encoded_input.input_ids.shape)
 ```
 Output:
 
-`torch.Size([1, 21])`
+`torch.Size([1, 7])`
 
-The output is a 2-dimensional tensor where the first dimention contains 1 element (this dimension represents the batch size), and the second dimension contains 21 elements which are equivalent to the 21 tokens that BERT generated with our string input.
+The output is a 2-dimensional tensor where the first dimention contains 1 element (this dimension represents the batch size), and the second dimension contains 7 elements which are equivalent to the 7 tokens that BERT generated with our string input.
 
 ::: callout
 
@@ -135,11 +135,11 @@ print("IDs:", token_ids)
 print("TOKENS:", string_tokens)
 ```
 
-`IDs: [101, 3406, 112, 188, 7615, 1111, 1390, 1110, 3817, 1767, 1107, 1451, 3805, 1105, 1451, 4035, 18546, 1916, 11961, 119, 102]`
+`IDs: [101, 3406, 7871, 144, 3484, 15016, 102]`
 
-`TOKENS: ['[CLS]', 'Maria', "'", 's', 'passion', 'for', 'music', 'is', 'clearly', 'heard', 'in', 'every', 'note', 'and', 'every', 'en', '##chan', '##ting', 'melody', '.', '[SEP]']`
+`TOKENS: ['[CLS]', 'Maria', 'loves', 'G', '##ron', '##ingen', '[SEP]']`
 
-These show us the WordPieces that the BERT Encoder will receive and process. The encoder actually just needs the IDs to retrieve the embedding from its vocabulary, the string representations are just for the human reader.
+These show us the WordPieces that the BERT Encoder will receive and process. We will look more in detail into the tokenization and special tokens later. For now, you just need to know that the encoder uses this token IDs to retrieve the corresponding embedding vector from its vocabulary, the string representations are just for the human reader.
 
 ## BERT Output Object
 
@@ -154,13 +154,12 @@ The `output` variable in this case stores an ModelOutput object, which contains 
 ```
 BaseModelOutputWithPoolingAndCrossAttentions(
     last_hidden_state=tensor([[
-        [-0.0538, -0.1110, -0.0882,  ..., -0.0252,  0.3524,  0.0407],
-        [ 0.0814, -0.4825,  0.8327,  ...,  0.3548, -0.1697,  0.0871],
-        [-0.2964, -0.1967,  0.3091,  ...,  0.5346,  0.4037, -0.1648],
+        [6.3959e-02, -4.8466e-03, -8.4682e-02,  ..., -2.8042e-02, 4.3824e-01,  2.0693e-02],
+        [-3.7276e-04, -2.0076e-01,  2.5096e-01,  ...,  9.9699e-01, -5.4226e-01,  1.7926e-01],
         ...
+        [ 7.1929e-01, -1.1457e-01,  1.4804e-01,  ...,  5.3051e-01, 7.4839e-01,  7.8224e-02]
     ]]),
-    pooler_output=tensor([[-7.2911e-01,  4.2630e-01,  9.9979e-01, -9.9045e-01,  9.3354e-01, ..., 7.7559e-01,  9.8086e-01
-    ]]),
+    pooler_output=tensor([[-0.6889,  0.4869,  0.9998, -0.9888,  0.9296,  0.8637, ...,  1.0000, -0.7488,  0.9860]]),
     hidden_states=None, 
     past_key_values=None, 
     attentions=None, 
@@ -173,9 +172,9 @@ We must focus for now on the `last_hidden_state` field, which contains the last 
 ```python
 print(output.last_hidden_state.shape)
 ```
-`torch.Size([1, 21, 768])`
+`torch.Size([1, 7, 768])`
 
-When we print the shape of this field, we obtain again a Pytorch Tensor `torch.Size([1, 21, 768])`: the first dimension is the batch size, the second is the number of tokens (we have 21 tokens for this example as seen before), and the third, the dimensionality of the vectors. In the case of BERT-base each token vector always has a shape of 768. As opposed to the previous tensor, each of the 21 tokens are not just one integer anymore, but a whole vector of weights, hence the 3-dimensionality of the tensor.
+When we print the shape of this field, we obtain again a Pytorch Tensor: `torch.Size([1, 7, 768])`. This time, the first dimension is the batch size, the second is the number of tokens (we have 7 tokens for this example as seen before), and the third, the dimensionality of the vectors. In the case of BERT-base each token vector always has a shape of 768. As opposed to the previous tensor, each of the 7 tokens are not just one integer anymore, but a whole vector of weights, hence the 3-dimensionality of the tensor.
 
 ::: callout
 
@@ -214,8 +213,8 @@ def pretty_print_outputs(sentences, model_outputs):
             print(label_scores)
 
 
-nlp = pipeline(task='fill-mask', model='bert-base-cased', tokenizer='bert-base-cased')
-sentences = ['Paris is the [MASK] of France', 'I want to eat a cold [MASK] this afternoon', 'Maria [MASK] Groningen']
+nlp = pipeline(task="fill-mask", model="bert-base-cased", tokenizer="bert-base-cased")
+sentences = ["Paris is the [MASK] of France", "I want to eat a cold [MASK] this afternoon", "Maria [MASK] Groningen"]
 model_outputs = nlp(sentences, top_k=5)
 pretty_print_outputs(sentences, model_outputs)
 ```
@@ -265,7 +264,7 @@ Let's see the example of a ready pre-trained emotion classifier based on `RoBERT
 
 classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", top_k=3)
 
-sentences = ["I am not having a great day", "Maria loves Groningen"]
+sentences = ["I am not having a great day", "This is a lovely and innocent sentence", "Maria loves Groningen"]
 model_outputs = classifier(sentences)
 
 pretty_print_outputs(sentences, model_outputs)
@@ -306,7 +305,7 @@ This will help to understand some of the strengths and weaknesses of using BERT-
 
 ## Tokenizer and Embedder
 
-Let's revisit the tokenizer to better grasp how it is working. The tokenization step might seem trivial but in reality models' tokenizers might make a big difference in the end results of your classifiers, depending on the task you are trying to solve. Understanding the tokenizer of each model (as well as the model type!) can save us a lot of debugging when we work on our custom data.
+Let's revisit the tokenizer to better grasp how it is working. The tokenization step might seem trivial but in reality models' tokenizers make a big difference in the final results of your classifiers, depending on the task you are trying to solve. Understanding the tokenizer of each model (as well as the model type!) can save us a lot of debugging when we work with our custom problem.
 
 We will feed again a sentence into the tokenizer to observe how it outputs a sequence of vectors (also called a *tensor*: by convention, a vector is a sequence of scalar numbers, a matrix is a 2-dimensional sequence and a tensor is a N-dimensional sequence of numbers), each one of them representing a wordPiece:
 
@@ -318,10 +317,11 @@ encoded_input = tokenizer(text, return_tensors='pt')
 token_ids = list(encoded_input.input_ids[0].detach().numpy())
 string_tokens = tokenizer.convert_ids_to_tokens(token_ids)
 print(string_tokens)
-
 ```
 
-As we saw before, this shows a list of 21 token IDs (the ID identifies each token in the embedding layer of the transformer). 
+`['[CLS]', 'Maria', "'", 's', 'passion', 'for', 'music', 'is', 'clearly', 'heard', 'in', 'every', 'note', 'and', 'every', 'en', '##chan', '##ting', 'melody', '.', '[SEP]']`
+
+This shows a list of token IDs, as we saw with our first example, this time the list consists of 21 BERT tokens. 
 
 When inspecting the string tokens, we see that most "words" were converted into a single token, however *enchanting* was splitted into three sub-tokens: `'en', '##chan', '##ting'` the hashtags indicate wether a sub-token was part of a bigger word or not, this is useful to recover the human-readable strings later. The `[CLS]` token was added at a beginning and is intended to represent the meaning of the whole sequence, likewise the `[SEP]` token was added to indicate that it is where the sentence ends.
 
@@ -330,17 +330,41 @@ The next step is to give the sequence of tokens to the Encoder which processes i
 ```python
 with torch.no_grad():
     output = model(**encoded_input)
-    print(output.last_hidden_state[0])
+    print(output.last_hidden_state.shape)
+    print(output.last_hidden_state[0][0])
+```
+`torch.Size([1, 21, 768])`
+
+```
+tensor([-5.3755e-02, -1.1100e-01, -8.8204e-02, -1.1233e-01,  8.1979e-02,
+        -7.2656e-03,  2.5323e-01, -3.0361e-01,  1.7344e-01, -1.1212e+00, ...    
 ```
 
-When we print the vectors we only see a lot of fine-tuned weights which are not very informative in their own, but the full-vectors are meaningful within the embedding space, which emulates some aspects of linguistic meaning. In the case of wanting to obtain a single vector for *enchanting*, you can average the three vectors that belong to the token pieces that ultimately form that word.
+We chose to print here the vector representation of `[CLS]`: by indexing the `last_hidden_state[0]` we access to the first batch (21 vectors of 768-dimensionality), and by again indexing `last_hidden_state[0][0]` we access the first of the last_hidden_vectors, which as we saw in the token strings, belong to `[CLS]` and is there to represent the whole sequence. We only see a lot of fine-tuned weights which are not very informative in their own, but the full-vectors are meaningful within the embedding space, which emulates some aspects of linguistic meaning. 
+
+::: callout
+
+In the case of wanting to obtain a single vector for *enchanting*, you can average the three vectors that belong to the token pieces that ultimately form that word. For example:
+
+```python
+import numpy as np
+tok_en = output.last_hidden_state[0][15].detach().numpy()
+tok_chan = output.last_hidden_state[0][16].detach().numpy()
+tok_ting = output.last_hidden_state[0][17].detach().numpy()
+
+tok_enchanting = np.mean([tok_en, tok_chan, tok_ting], axis=0)
+tok_enchanting.shape
+```
+We use the functions `detach().numpy()` to bring the values from the Pytorch execution environment (for example a GPU) into the main python thread and treat it as a numpy vector for convenvience. Then, since we are dealing with three numpy vectors we can average the three of them and end op with a single `enchanting` vector of 768-dimensions representing the average of `'en', '##chan', '##ting'`.
+
+:::
 
 We can use the same method to encode two other sentences containing the word *note* to see how BERT actually handles polysemy (*note* means something very different in each sentence) thanks to the representation of each word now being contextualized instead of isolated as was the case with word2vec.
 
 
 ```python
 # Search for the index of 'note' and obtain its vector from the sequence
-note_index_1 = string_tokens.index('note')
+note_index_1 = string_tokens.index("note")
 note_vector_1 = output.last_hidden_state[0][note_index_1].detach().numpy()
 note_token_id_1 = token_ids[note_index_1]
 
@@ -358,11 +382,11 @@ Let's encode now another sentence, also containing the word `note`, and confirm 
 ```python
 # Encode and then take the 'note' token from the second sentence
 note_text_2 = "I could not buy milk in the supermarket because the bank note I wanted to use was fake."
-encoded_note_2 = tokenizer(note_text_2, return_tensors='pt')
+encoded_note_2 = tokenizer(note_text_2, return_tensors="pt")
 token_ids = list(encoded_note_2.input_ids[0].detach().numpy())
 string_tokens_2 = tokenizer.convert_ids_to_tokens(token_ids)
 
-note_index_2 = string_tokens_2.index('note')
+note_index_2 = string_tokens_2.index("note")
 note_vector_2 = model(**encoded_note_2).last_hidden_state[0][note_index_2].detach().numpy()
 note_token_id_2 = token_ids[note_index_2]
 
@@ -398,7 +422,7 @@ The original attention mechanism (remember this was developed for language trans
 
 ![The Encoder-Decoder Attention Mechanism](fig/trans3.png)
 
-In the example above, the attention puts more weight in the input _etudiant_, so the decoder uses that information to _know_ that is should generate _student_. Note that if the decoder based it's next word probability just on the sequence "I am a ...", it could basically generate any word and still sound natural. However, it is thanks to the attention mechanism that it preserves the meaning of the input sequence.
+In the example above, the attention puts more weight in the input _Groningen_, so the decoder uses that information to _know_ that is should generate _Groningen_. Note that if the decoder based it's next word probability just on the sequence "Maria houdt van ...", it could basically generate any word and still sound natural. However, it is thanks to the attention mechanism that it preserves the meaning of the input sequence.
 
 Attention is a neural layer, therefore it can also be plugged-in within the Encoder, this is called **self-attention** since the mechanism will look at the interactions between the input sequence itself (measure inportance between input sequence tokens vs input sequence tokens). This is how BERT uses (self-) attention, which is very useful to capture longer-range word dependencies such as correference, where, for example, a pronoun can be linked to the noun it refers to previously in the same sentence. See the following example:
 
