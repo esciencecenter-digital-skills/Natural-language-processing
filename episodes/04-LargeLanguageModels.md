@@ -171,7 +171,7 @@ Other models:
 Training a large language model is extremely resource intensive; while you can train for example a simple classifier to identify if a sentence is positive or negative yourselve, this is not possible for training a LLM. For example, llama published Llama 3.1 405B; this is model that has 405 billion paramters, and that was trained on 15 trillion tokens, taking 31 million GPU hours (H100 gpus), and emmittion almost 9000 tons of CO_2 (for the training process only).
 
 ## Which one to chose when
-XXX how do you use an LLM such that you get the best results? XXX
+With so many available models the question arises which model you should use when? One thing to consider here is whether you want to use an open source model or not. But another important aspect is that it depends on the task at hand. There are various leaderboards that track which tasks specific models are good at, based on widely used benchmarks. Also, which language are you using? Most models are fully trained on English, not many models are trained on Dutch text. So if you are using Dutch texts, you may want to look for a model that is trained on Dutch. Additionally, some LLMs are multimodal models,meaning they can process various forms of input; text, images, timeseries, audio, videos and so on.
 
 ### Building a chatbot
 We are now going to start working with LLM models. We will set up a chatbot ourselves and do some prompt engineering. When you provide input to an LLM, such as asking a question to ChatGPT, this is called prompting a model - you are sending a prompt to the models, which will trigger the LLM to generate an answer. We are not going to train our own LLM, but we will be using Meta's open source Llama model.
