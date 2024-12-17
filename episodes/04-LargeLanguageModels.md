@@ -159,7 +159,7 @@ In practice, this attention mechanism helps LLMs produce coherent responses by e
 By leveraging self-attention to build meaningful relationships across tokens, transformers power LLMs to generate responses that feel relevant, accurate, and human-like.
 
 ## A zoo of Large Language Models
-The era of Large Language Models started with the release of the model called BERT, created by Google, that was discussed in the previous episode. The techniques used in that model started a movement of the creating of many new models. There are a number of big companies that keep improving on their models and releasing new ones rapidly. The most famous one that we all probably heard of is GPT, the model developed by OpenAI and that is used for ChatGPT. The first version of GPT was released in 2018. Since then various versions have been released, each improved in performance by using more parameters and a larger training data set.  While the first GPT model was open source, the recent versions are not. This means that the model architecture, number of parameters, and used training data is undisclosed. There are however many more competing models, some of which are more transparent of even fully open source. Llama is currently one of the best-performing open-source models
+The era of Large Language Models started with the release of the model called BERT, created by Google, that was discussed in the previous episode. The techniques used in that model started a movement of the creating of many new models. There are a number of big companies that keep improving on their models and releasing new ones rapidly. One of the most well-known is GPT, the model developed by OpenAI and that is used for ChatGPT. The first version of GPT was released in 2018. Since then various versions have been released, each improved in performance by using more parameters and a larger training data set.  While the first GPT model was open source, the recent versions are not. This means that the model architecture, number of parameters, and used training data is undisclosed. There are however many more competing models, some of which are more transparent of even fully open source. Llama is currently one of the best-performing open-source models
 
 Other models:
 - ChatGPT - OpenAI
@@ -175,20 +175,21 @@ Training a large language model is extremely resource intensive; while you can t
 With so many available models the question arises which model you should use when? One thing to consider here is whether you want to use an open source model or not. But another important aspect is that it depends on the task at hand. There are various leaderboards that track which tasks specific models are good at, based on widely used benchmarks. Also, which language are you using? Most models are fully trained on English, not many models are trained on Dutch text. So if you are using Dutch texts, you may want to look for a model that is trained on Dutch. Additionally, some LLMs are multimodal models,meaning they can process various forms of input; text, images, timeseries, audio, videos and so on.
 
 ### Building a chatbot
-We are now going to start working with LLM models. We will set up a chatbot ourselves and do some prompt engineering. When you provide input to an LLM, such as asking a question to ChatGPT, this is called prompting a model - you are sending a prompt to the models, which will trigger the LLM to generate an answer. We are not going to train our own LLM, but we will be using Meta's open source Llama model.
+ It is time to start working with LLM models. We are not going to train our own LLM, but use Meta's open source Llama model to set up a chatbot. The chat model can be used for prompt engineering - When you provide input to an LLM, such as asking a question to ChatGPT, this is called prompting a model - you are sending a prompt to the models, which will trigger the LLM to generate an answer. Prompt engineering 
 
 Starting Ollama
 We will use ollama to run the LLM we want to use. Ollama is a platform that allows users to run various LLM locally on your own computer. This is different from for example using chatgpt, where you log in and use the online api. ChatGPT collects the input you are providing and uses this to their own benefit. Running an LLM locally using Ollama thus preserves your privacy. It also allows you to customize a model, by setting certain parameters, or even by finetuning a model.
 
-To start ollama, you open your terminal and type:
+To start ollama:
 ```
 ollama serve
 ```
 
-Next, we will download the large language model we want to use. We are going to use the smallest open source llama model, which is llama3.1:8b. Here 3.1 is the version of the model and 8b stands for the number of paramters that the model has. 
+Next, download the large language model to be used. In this case we will use the smallest open source llama model, which is llama3.1:8b. Here 3.1 is the version of the model and 8b stands for the number of paramters that the model has. 
 ```
 !ollama pull llama3.1:8b
 ```
+In general, a bigger version of the same model (such as Llama3.170b) is better in accuracy, but since it is larger it takes more resources to run and can hence be too much for a laptop.
 
 Import the packages that will be used:
 ```python
@@ -196,13 +197,13 @@ from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage, SystemMessage
 ```
 
-We can now create a model instance. Here, `model` defines the LLM we want to use, which we set to the model that we just downloaded, and `temperature` sets the randomness of the mode, using the value zero ensures that repeating a question will give the same model output (answer).
+Create a model instance. Here, `model` defines the LLM we want to use, which we set to the model that we just downloaded, and `temperature` sets the randomness of the mode, using the value zero ensures that repeating a question will give the same model output (answer).
 
 ```
 llm = ChatOllama(model=llama3.1:8b, temperature=0)
 ```
 
-Now that the model is set up, we can prompt it - ask it a question.
+Now that the model is set up, it can be prompted - ask it a question.
 
 ```python
 question = "When was the moon landing?"
@@ -212,7 +213,7 @@ print(chatresult.content)
 
 :::::::::::: challenge 
 
-Play around with the chat bot we have set up by changing the questions.
+Play around with the chat bot by changing the questions.
 - How is the quality of the answers? 
 - Is it able to answer general questions, and very specific questions?
 - Which limitations can you identify?
@@ -226,7 +227,7 @@ Play around with the chat bot we have set up by changing the questions.
 
 
 ### Use context
-To improve on what we expect the LLM to return, it is also possible to provide it with some context. For example, we can add:
+To improve on what to expect the LLM to return, it is also possible to provide it with some context. For example, we can add:
 ```python
 context = "You are a highschool history teacher trying to explain societal impact of historic events."
 messages = [
@@ -243,7 +244,7 @@ print(chatresult.content)
 The benefit here is that your answer will be phrased in a way that fits your context, without having to specify this for every question.
 
 ### Use chat history
-With this chatbot we can now prompt the LLM to generate output based on our input and context. However, what we can not do, is to ask followup questions. This can be useful to refine the output that it generates. So lets implement this as well.
+With this chatbot the LLM can be prompted to generate output based on the provided input and context. However, what is not possible in this state, is to ask followup questions. This can be useful to refine the output that it generates. So lets implement this as well.
 
 ```python
 from langchain_core.chat_history import (
@@ -252,13 +253,13 @@ from langchain_core.chat_history import (
 )
 from langchain_core.runnables.history import RunnableWithMessageHistory
 ```
-First we define a storage distionary and a configurable, so that we can save the history of a certain conversation based on a session_id.
+First define a storage distionary and a configurable, so that the history of a certain conversation can be saved based on a session_id.
 ```python
 store = {}
 config = {"configurable": {"session_id": "nlp_workshop"}}
 ```
 
-Then we can define a function that takes in this session_id and saves it in the storage.
+Then define a function that takes in this session_id and saves it in the storage.
 
 ```python
 def get_session_history(session_id: str) -> BaseChatMessageHistory:
