@@ -162,10 +162,11 @@ By leveraging self-attention to build meaningful relationships across tokens, tr
 The era of Large Language Models started with the release of the model called BERT, created by Google, that was discussed in the previous episode. The techniques used in that model started a movement of the creating of many new models. There are a number of big companies that keep improving on their models and releasing new ones rapidly. The most famous one that we all probably heard of is GPT, the model developed by OpenAI and that is used for ChatGPT. The first version of GPT was released in 2018. Since then various versions have been released, each improved in performance by using more parameters and a larger training data set.  While the first GPT model was open source, the recent versions are not. This means that the model architecture, number of parameters, and used training data is undisclosed. There are however many more competing models, some of which are more transparent of even fully open source. Llama is currently one of the best-performing open-source models
 
 Other models:
+- ChatGPT - OpenAI
 - Llama  - Meta 
 - Mistral / Mixtral - Mistral AI
 - Gemini - Google
-- Claude - Anthropic
+- Claude - Anthropic - (fouded by former OpenAI employees)
 - Grok - xAI
 
 Training a large language model is extremely resource intensive; while you can train for example a simple classifier to identify if a sentence is positive or negative yourselve, this is not possible for training a LLM. For example, llama published Llama 3.1 405B; this is model that has 405 billion paramters, and that was trained on 15 trillion tokens, taking 31 million GPU hours (H100 gpus), and emmittion almost 9000 tons of CO_2 (for the training process only).
@@ -203,7 +204,7 @@ llm = ChatOllama(model=llama3.1:8b, temperature=0)
 
 Now that the model is set up, we can prompt it - ask it a question.
 
-```
+```python
 question = "When was the moon landing?"
 chatresult = llm.invoke([HumanMessage(content=question)])
 print(chatresult.content)
@@ -256,7 +257,9 @@ First we define a storage distionary and a configurable, so that we can save the
 store = {}
 config = {"configurable": {"session_id": "nlp_workshop"}}
 ```
+
 Then we can define a function that takes in this session_id and saves it in the storage.
+
 ```python
 def get_session_history(session_id: str) -> BaseChatMessageHistory:
     if session_id not in store:
@@ -268,7 +271,6 @@ def get_session_history(session_id: str) -> BaseChatMessageHistory:
 with_message_history = RunnableWithMessageHistory(llm, get_session_history)
 ```
 
-And then 
 ```python
 # Followup question
 response_history = with_message_history.invoke(
@@ -364,7 +366,7 @@ print(documents)
 
 This text splitter splits text based on the defined character chunk size, but also on new lines. This is useful because the different newspapaer articles can not end up in the same split. Documents now contains all the different text splits, and the corresponding file name.
 
-Finally, we convert each text split into a vector, and save all vectors in a vector store. The text is converted into embeddings using the earlier defined model.
+Finally, we convert each text split into a vector, and save all vectors in a vector store. The text is converted into embeddings using the earlier defined embeddings model.
 
 ```python
 vectorstore = InMemoryVectorStore.from_texts(
@@ -372,6 +374,92 @@ vectorstore = InMemoryVectorStore.from_texts(
     embedding=embeddings,
 )
 ```
+
+#### Setting up the retriever and generator
+Define the structure of the dictionary with the keys `question`, `context`, and `answer`.
+
+```python
+class State(TypedDict):
+    question: str
+    context: List[Document]
+    answer: str
+```
+
+Define the retriever function of the RAG. It taked in the question and does a similarity search in the vectorstore that we created and returns the text snippets that were found to be similar. The similarity search converts the question into an embeddings vector and uses the cosine similarity to determine the similarity between the question and snippets. It then returns the top 4 snippets with the highest cosine similarity score.
+
+```python
+def retrieve(state: State):
+    "Retrieve documents that are similar to the question."
+    retrieved_docs = vectorstore.similarity_search(state["question"], k=4)
+    return {"context": retrieved_docs}
+```
+
+Define the generator function of the RAG. In this function a prompt is defined for the rag using the context and question. The large language model (the Llama model, defined above) is then invoked with this question and generates an answer for the provided prompt, which is returned as the answer key of the dictionary.
+
+```python
+def generate(state: State):
+    docs_content = "\n\n".join(doc.page_content for doc in state["context"])
+    
+    rag_prompt = """You are an assistant for question-answering tasks.
+    Here is the context to use to answer the question:
+    {context}
+    Think carefully about the above context.
+    Now, review the user question:
+    {question}
+    Provide an answer to this questions using only the above context.
+    Use 10 sentences maximum and keep the answer concise.
+    Answer:"""
+
+    rag_prompt_formatted = rag_prompt.format(context=docs_content, question=State["question"])
+    
+    generate = llm.invoke([HumanMessage(content=rag_prompt_formatted)])
+    return {"answer": generate.content}
+```
+
+#### Build the workflow
+The retriever and generator are combined into a workflow graph. The workflow is defined as a StateGraph that uses the dictionary structure (with the keys `question`, `context`, and `answer`) defined above. The retriever and generator are added as nodes, and the two are connected via the edge. The retrieve is set as the start point of the workflow, and finally the graph is compiled into an executable.
+```
+workflow = StateGraph(State)
+workflow.add_node("retrieve", retrieve)
+workflow.add_node("generate", generate)
+workflow.add_edge("retrieve", "generate")
+workflow.set_entry_point("retrieve")
+
+graph = workflow.compile()
+```
+```python
+display(Image(graph.get_graph().draw_mermaid_png()))
+```
+
+![workflow](../workflow.png)
+
+That's it! The RAG can now be asked questions. Let's see what it can tell about the moon landing:
+
+```python
+response = graph.invoke({"question": "Who landed on the Moon?"})
+print(response["answer"])
+```
+
+This is quite a specific answer. It can be seen why by looking at the text snippets that were used:
+```
+print(response["context"])
+```
+
+While a general chatbot uses all the information in the material that it was trained on, the RAG only uses the information that was stored in the vectorstore to generate the answer.
+
+:::::::::::: challenge 
+Try generating more answers with the RAG based on other questions, perhaps also looking at the newspaper texts that are used. What stands out?
+
+:::::: solution
+For example:
+- The RAG returns in some cases that no answer can be generated on the context it was provided with
+- For some questions, the LLM returns that it cannot provide an answer because of safety precausions that are inherent to the LLM used, such as information about violent acts.
+::::::
+
+::::::::::::
+
+This is the simpelest form of a RAG, with a retriever and a generator. However, one can make the RAG more complex by adding more components to the workflow.
+
 
 
 ## Pitfalls, limitations, caveats, privacy
