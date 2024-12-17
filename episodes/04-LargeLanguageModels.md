@@ -299,6 +299,81 @@ response = with_message_history.invoke(
 print(response.content)
 ```
 
+### Retrieval Augmented Generation - Build a RAG
+We have seen that a chatbot tends to give quite generalised answers. We can make a more specific chatbot by building a Retrieval Argumented Generation agent. This is an information that you youself provide with a knowledge base: a large number of documents. When prompted with a questions, the agent first retrieves relevant sections of the data that is in the knowledge base, and then generates and answer based on that data. In this way you can build an agent with very specific knowledge.
+
+The simplest form of a rag consists of two parts, a retriever and a generator. The retriever part will collect data from the provided data, so we first have to create a knowledge base for the retriever.
+
+To build a RAG we will use again the pretrained Llama model, which works well for English text. We will therefore also provide some English text to the knowledge base.
+
+Let's download three newpaper pages, these are pages from a Curacoa newspaper. This is a Dutch newspaper with an additional page in English. Let's download the jpg versions of the newspapers to only get these English pages, and save them in a folder called "rag_data":
+- [page1](https://www.delpher.nl/nl/kranten/view?query=the+moon&coll=ddd&identifier=ddd:010460545:mpeg21:p012&resultsidentifier=ddd:010460545:mpeg21:a0134&rowid=4)
+- [page2](https://www.delpher.nl/nl/kranten/view?query=moon+landing&coll=ddd&page=1&facets%5Bspatial%5D%5B%5D=Nederlandse+Antillen&identifier=ddd:010460616:mpeg21:a0146&resultsidentifier=ddd:010460616:mpeg21:a0146&rowid=1)
+- [page3](https://www.delpher.nl/nl/kranten/view?query=moon+landing&coll=ddd&page=1&facets%5Bspatial%5D%5B%5D=Nederlandse+Antillen&identifier=ddd:010460520:mpeg21:a0167&resultsidentifier=ddd:010460520:mpeg21:a0167&rowid=7)
+
+#### The knowledge base - a vector store
+Language models al work with vectors - embedded text. We will therefore save our data in a vector store, where the retriever can shop around for the relevant text. 
+
+There a number of packages that we will use in this section
+```python
+import os
+from IPython.display import Image, display
+from typing_extensions import List, TypedDict
+
+from langchain_ollama import ChatOllama, OllamaEmbeddings
+from langchain_core.messages import HumanMessage
+from langchain_core.documents import Document
+from langchain_core.vectorstores import InMemoryVectorStore
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langgraph.graph import START, StateGraph
+from langchain_nomic.embeddings import NomicEmbeddings
+```
+
+Define the large language model:
+```python
+llm = ChatOllama(model="llama3.1:8b", temperature=0)
+```
+
+Define the embeddings model, this is the model we will use to convert our texts into vector embeddings:
+```python
+embeddings=NomicEmbeddings(model="nomic-embed-text-v1.5", inference_mode="local")
+```
+
+Define the file names and read the data into a list called `pages`:
+```python
+dir = "./rag_data"
+files = [os.path.join(dir, file) for file in os.listdir(dir)]
+pages =[]
+
+for file in files:
+    with open(file, "r") as f:
+        pages.append(f.read())
+```
+
+The generator will in the end provide an answer based on the text snippet that is retireved from the knowledge base. If the fragment is very long, like a full newspage page, it will contain a lot of irrelevant information, which will blurr the generated answer. Therefor it is better to split the data into smaller parts, so that the retriever can collect very specific pieces of text to generate an answer from. We will use some overlap between the splits, so that information does not get lost because of a random split.
+
+```python
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=500, chunk_overlap=100
+)
+
+documents = text_splitter.create_documents(pages, metadatas=[{'filename': file} for file in files])
+
+print(documents)
+```
+
+This text splitter splits text based on the defined character chunk size, but also on new lines. This is useful because the different newspapaer articles can not end up in the same split. Documents now contains all the different text splits, and the corresponding file name.
+
+Finally, we convert each text split into a vector, and save all vectors in a vector store. The text is converted into embeddings using the earlier defined model.
+
+```python
+vectorstore = InMemoryVectorStore.from_texts(
+    [doc.page_content for doc in documents],
+    embedding=embeddings,
+)
+```
+
+
 ## Pitfalls, limitations, caveats, privacy
 
 
