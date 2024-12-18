@@ -80,13 +80,6 @@ Imagine asking a computer a question and getting a human-like response. An LLM, 
 
 This example shows how LLMs can maintain context across multiple questions. Notice how the model connects information across each question, keeping the conversation relevant and informed.
 
-### Challenge 1: Try chatting yourself with an LLM
-If you’d like to try this yourself, here’s a small exercise:
-
-- Open an LLM interface (such as ChatGPT or a similar service).
-- Think of a question on a topic you’re interested in, like a famous historical event, a scientific question, or even advice on writing.
-- Notice how the model responds to your follow-up questions, using previous context to build its responses.
-
 This quick chat example introduces you to the conversational abilities of LLMs, demonstrating their ability to respond contextually, provide coherent answers, and follow up on earlier parts of the conversation.
 
 ## How are LLMs different from other NLP techniques?
