@@ -8,6 +8,9 @@ This lesson is using the template from [The Carpentries Workbench][workbench] an
 
 - [Eva Viviani][eva_escience]
 
+- [Thijs Vroegh][thijs_escience]
+
 [workbench]: https://carpentries.github.io/sandpaper-docs/
 [laura_escience]: https://www.esciencecenter.nl/team/dr-laura-ootes/
 [eva_escience]: https://www.esciencecenter.nl/team/eva-viviani/
+[thijs_escience]: https://www.esciencecenter.nl/team/thijs-vroegh/
