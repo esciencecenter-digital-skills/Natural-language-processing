@@ -385,6 +385,12 @@ vectorstore = InMemoryVectorStore.from_texts(
 )
 ```
 
+The contents of the vectorstore can be printed as
+```python
+print(vectorstore.store)
+```
+It shows that for each text fragment that was given, a vector is created and it is saved in the vectorstore together with the original text.
+
 #### Setting up the retriever and generator
 Define the structure of a dictionary with the keys `question`, `context`, and `answer`.
 
