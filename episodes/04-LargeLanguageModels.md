@@ -474,9 +474,7 @@ For example:
 
 ::::::::::::
 
-This is the simpelest form of a RAG, with a retriever and a generator. However, one can make the RAG more complex by adding more components to the workflow.
-
-
+This is the simplest form of a RAG, with a retriever and a generator. However, one can make the RAG more complex by adding more components and options to the workflow, for example one to check the relevance of the retrieved documents, removing those that turn out to be irrelevant to be used for the answer generation, or having a component that can  reformulate the question. Another example is to add a hallucination checker step after the generator that checks if the generated answer can altually be found in the provided context. 
 
 ## Pitfalls, limitations, caveats, privacy
 
