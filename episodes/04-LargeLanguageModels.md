@@ -216,6 +216,8 @@ Play around with the chat bot by changing the questions.
 
 ::::::
 
+This Llama chat bot, just like ChatGPT, is quite generic. It is good at answering general questions; things that a lot of people know. Going deeper and asking very specific questions often leads to vague or inaccurate results. 
+
 ::::::::::::
 
 
