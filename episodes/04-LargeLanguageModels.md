@@ -350,15 +350,20 @@ using inference_model="local" uses (Embed4All)[https://docs.gpt4all.io/old/gpt4a
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-In the text files, the articles are split by '---'. This information can be used to store the data into a list called `pages`:
+In the text files, the articles are split by '---'. This information can be used to store the individual articles into a list. Store the filename of the articles in a list as well, so that one can find easily in from which file a text snippet was taken.
+
 ```python
 dir = "./rag_data"
-files = [os.path.join(dir, file) for file in os.listdir(dir)]
-pages =[]
+articles = []
+metadata = []
 
-for file in files:
-    with open(file, "r") as f:
-        pages.append(f.read())
+# Iterate over files and add individual articles and corresponding filenames to lists
+for file in os.listdir(dir):
+    file_path = os.path.join(dir, file)
+    with open(file_path, "r") as f:
+        content = f.read().split('---')
+        articles.extend(content)
+        metadata.extend([file_path] * len(content))
 ```
 
 The generator will in the end provide an answer based on the text snippet that is retrieved from the knowledge base. If the fragment is very long, it may contain a lot of irrelevant information, which will blur the generated answer. Therefor it is better to split the data into smaller parts, so that the retriever can collect very specific pieces of text to generate an answer from. It is usefull to keep some overlap between the splits, so that information does not get lost because of for example splits in the middle of a sentence.
@@ -368,7 +373,7 @@ text_splitter = RecursiveCharacterTextSplitter(
     chunk_size=500, chunk_overlap=100
 )
 
-documents = text_splitter.create_documents(pages, metadatas=[{'filename': file} for file in files])
+documents = text_splitter.create_documents(articles, metadatas=[{'filename': file} for file in files])
 
 print(documents)
 ```
