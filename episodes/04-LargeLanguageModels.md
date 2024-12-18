@@ -10,7 +10,7 @@ exercises:
 - What is the Transformer architecture, and why is it important for LLMs?
 - How does prompt engineering influence LLM outputs?
 - What are some real-world applications of LLMs?
-- How can LLMs generate, classify, and summarize text?
+- How can LLMs generate, classify, and summarise text?
 
 ...
 ::::::
@@ -34,7 +34,7 @@ Large Language Models (LLMs) are a hot and a big topic these days, and are conti
 
 In this episode, we will:
 - Explore LLMs, which represent a significant advancement in natural language processing (NLP). We will begin by defining what LLMs are and touching on their foundational architecture, particularly the Transformer model, which allows the LLM to understand and generate human-like text. 
-- Through practical examples, you will discover how to work with thse models for specific tasks with content generation.
+- Through practical examples, you will discover how to work with these models for specific tasks with content generation.
 - We'll also discuss real-world applications of LLMs, such as analyzing news articles and generating insights from large amounts of text data. 
 
 This episode aims to equip you with both theoretical knowledge and practical skills, preparing you to harness the power of LLMs in your own projects and applications.
@@ -42,9 +42,9 @@ This episode aims to equip you with both theoretical knowledge and practical ski
 ## What are Large Language Models?
 Large language models (LLMs) represent a significant advancement in artificial intelligence, designed to process and interpret large-scale natural language data to generate responses to user queries. By being trained on extensive datasets through advanced machine learning algorithms, these models learn the intricate patterns, structures and nuances of human language. This enables them to produce coherent and natural-sounding language outputs across various inputs. As a result, large language models are becoming increasingly essential in a range of tasks such as text generation, text summarisation, rewriting, question answering, and language translation.
 
-The emergence of *ChatGPT*, powered by OpenAI's advanced LLMs, has brought these capabilities into the mainstream. With ChatGPT, users interact through natural language, enabling seamless conversations and performing complex tasks across various sectors, like customer service, education, and content creation. Models like GPT-4, BERT, and LLaMA are also used across various applications; from chatbots, virtual assistants, text analysis, translation, summarization, and more.
+The emergence of *ChatGPT*, powered by OpenAI's advanced LLMs, has brought these capabilities into the mainstream. With ChatGPT, users interact through natural language, enabling seamless conversations and performing complex tasks across various sectors, like customer service, education, and content creation. Models like GPT-4, BERT, and LLaMA are also used across various applications; from chatbots, virtual assistants, text analysis, translation, summarisation, and more.
 
-Notably, the success of ChatGPT and other LLM-driven applications highlights their versatility and potential to transform how we interact with digital systems. These models continue to push the boundaries of what's possible in human-computer interaction, offering a glimpse into a future where machines and humans communicate more naturally and effectively.
+Notably, the success of ChatGPT and other LLM-driven applications highlights their versatility and potential to transform how humans interact with digital systems. These models continue to push the boundaries of what's possible in human-computer interaction, offering a glimpse into a future where machines and humans communicate more naturally and effectively.
 
 ### Timeline
 The journey of large language models over the past decade highlights the rapid evolution and growing impact of AI in language processing:
@@ -98,7 +98,7 @@ LLMs stand apart from traditional NLP techniques due to their scale, versatility
 
 ### Model architecture
 - LLMs: Use the Transformer architecture, particularly self-attention, to analyze relationships between words regardless of position. This allows them to capture long-range dependencies and context better than traditional models.
-- Traditional NLP: Often use simpler models like bag-of-words, TF-IDF (term frequency-inverse document frequency), or shallow neural networks, which treat words independently or consider only local context, missing the complex, global relationships.
+- Traditional NLP: Often use simpler models like bag-of-words, TF-IDF (term frequency-inverse document frequency), RNNs (recurrent neural networks), and LSTMs (long-short-term memory models),  which treat words independently or consider only local context, missing the complex, global relationships.
 
 ### Generalization vs. task-specific models
 - LLMs: Can be applied across a wide range of tasks—summarization, translation, question answering, etc.—without the need for separate models for each. Fine-tuning makes them even more adaptable to specific needs.
@@ -106,7 +106,7 @@ LLMs stand apart from traditional NLP techniques due to their scale, versatility
 
 ### Learning from unlabeled data
 - LLMs: Leverage unsupervised or self-supervised learning during pretraining, enabling them to learn language patterns from raw text without human-labeled data.
-- Traditional NLP: Often relies on labeled data for training (e.g., labeled sentiment or part-of-speech tags), which can be costly and time-consuming to create at scale.
+- Traditional NLP: are often supervised models, relying on labeled data for training (e.g., labeled sentiment or part-of-speech tags), which can be costly and time-consuming to create at scale.
 
 ### Context and language nuance
 - LLMs: Excel at understanding context, tone, and nuance, due to their ability to weigh word relationships dynamically. This enables better handling of idioms, sarcasm, and ambiguous phrases.
@@ -160,33 +160,33 @@ In practice, this attention mechanism helps LLMs produce coherent responses by e
 By leveraging self-attention to build meaningful relationships across tokens, transformers power LLMs to generate responses that feel relevant, accurate, and human-like.
 
 ## A zoo of Large Language Models
-The era of Large Language Models started with the release of the model called BERT, created by Google, that was discussed in the previous episode. The techniques used in that model started a movement of the creating of many new models. There are a number of big companies that keep improving on their models and releasing new ones rapidly. One of the most well-known is GPT, the model developed by OpenAI and that is used for ChatGPT. The first version of GPT was released in 2018. Since then various versions have been released, each improved in performance by using more parameters and a larger training data set.  While the first GPT model was open source, the recent versions are not. This means that the model architecture, number of parameters, and used training data is undisclosed. There are however many more competing models, some of which are more transparent of even fully open source. Llama is currently one of the best-performing open-source models
+The era of Large Language Models started with the release of the BERT model in 2018, created by Google, that was discussed in the previous episode. There are a number of big companies that keep improving on their models and releasing new ones rapidly. One of the most well-known is GPT, the model developed by OpenAI and that is used for ChatGPT. The first version of GPT was released in 2018. Since then various versions have been released, each improved in performance by using more parameters and a larger training data set.  While the first GPT model was open source, the recent versions are not. This means that the model architecture, number of parameters, and used training data is undisclosed. There are however many more competing models, some of which are more transparent of even fully open source. Llama is currently (2024) one of the best-performing open-source models.
 
-Other models:
-- ChatGPT - OpenAI
+A list of LLMs:
+- GPT - OpenAI
 - Llama  - Meta 
-- Mistral / Mixtral - Mistral AI
-- Gemini - Google
-- Claude - Anthropic - (fouded by former OpenAI employees)
-- Grok - xAI
+- Mistral / Mixtral - Mistral AI (founded by former engineers from Google DeepMind and Meta)
+- Gemini - Google DeepMind
+- Claude - Anthropic - (founded by former OpenAI employees)
+- Grok - xAI (Elon Musk)
 
 Training a large language model is extremely resource intensive; while you can train for example a simple classifier to identify if a sentence is positive or negative yourselve, this is not possible for training a LLM. For example, llama published Llama 3.1 405B; this is model that has 405 billion paramters, and that was trained on 15 trillion tokens, taking 31 million GPU hours (H100 gpus), and emmittion almost 9000 tons of CO_2 (for the training process only).
 
 ## Which one to chose when
-With so many available models the question arises which model you should use when? One thing to consider here is whether you want to use an open source model or not. But another important aspect is that it depends on the task at hand. There are various leaderboards that track which tasks specific models are good at, based on widely used benchmarks. Also, which language are you using? Most models are fully trained on English, not many models are trained on Dutch text. So if you are using Dutch texts, you may want to look for a model that is trained on Dutch. Additionally, some LLMs are multimodal models,meaning they can process various forms of input; text, images, timeseries, audio, videos and so on.
+With so many available models the question arises "which model you should use when"? One thing to consider here is whether you want to use an open source model or not. But another important aspect is that it depends on the task at hand. There are various leaderboards that track which tasks specific models are good at, based on widely used benchmarks. Also, which language are you using? Most models are fully trained on English, not many models are trained on Dutch text. So if you are using Dutch texts, you may want to look for a model that is trained on or finetuned for Dutch. Additionally, some LLMs are multimodal models, meaning they can process various forms of input; text, images, timeseries, audio, videos and so on.
 
 ### Building a chatbot
- It is time to start working with LLM models. We are not going to train our own LLM, but use Meta's open source Llama model to set up a chatbot. The chat model can be used for prompt engineering - When you provide input to an LLM, such as asking a question to ChatGPT, this is called prompting a model - you are sending a prompt to the models, which will trigger the LLM to generate an answer. Prompt engineering 
+It is time to start using an LLM! We are not going to train our own LLM, but use Meta's open source Llama model to set up a chatbot. 
 
 Starting Ollama
 Ollama will be used to run a chosen LLM. Ollama is a platform that allows users to run various LLM locally on your own computer. This is different from for example using chatgpt, where you log in and use the online api. ChatGPT collects the input you are providing and uses this to their own benefit. Running an LLM locally using Ollama thus preserves your privacy. It also allows you to customize a model, by setting certain parameters, or even by finetuning a model.
 
-To start ollama:
+To start Ollama:
 ```
 ollama serve
 ```
 
-Next, download the large language model to be used. In this case use the smallest open source llama model, which is llama3.1:8b. Here 3.1 is the version of the model and 8b stands for the number of paramters that the model has. 
+Next, download the large language model to be used. In this case use the smallest open source llama model, which is llama3.1:8b. Here 3.1 is the version of the model and 8b stands for the number of parameters that the model has. 
 ```
 !ollama pull llama3.1:8b
 ```
@@ -204,7 +204,7 @@ Create a model instance. Here, `model` defines the LLM to be used, which is set 
 llm = ChatOllama(model=llama3.1:8b, temperature=0)
 ```
 
-Now that the model is set up, it can be prompted - ask it a question.
+Now that the model is set up, it can be invoked - ask it a question.
 
 ```python
 question = "When was the moon landing?"
@@ -245,7 +245,7 @@ print(chatresult.content)
 The benefit here is that your answer will be phrased in a way that fits your context, without having to specify this for every question.
 
 ### Use chat history
-With this chatbot the LLM can be prompted to generate output based on the provided input and context. However, what is not possible in this state, is to ask followup questions. This can be useful to refine the output that it generates. So lets implement this as well.
+With this chatbot the LLM can be invoked to generate output based on the provided input and context. However, what is not possible in this state, is to ask followup questions. This can be useful to refine the output that it generates. So lets implement this as well.
 
 ```python
 from langchain_core.chat_history import (
@@ -254,7 +254,8 @@ from langchain_core.chat_history import (
 )
 from langchain_core.runnables.history import RunnableWithMessageHistory
 ```
-First define a storage distionary and a configurable, so that the history of a certain conversation can be saved based on a session_id.
+
+First define a storage dictionary and a configurable, so that the history of a conversation can be saved based on a session_id.
 ```python
 store = {}
 config = {"configurable": {"session_id": "nlp_workshop"}}
@@ -304,13 +305,13 @@ print(response.content)
 ```
 
 ### Retrieval Augmented Generation - Build a RAG
-A chatbot tends to give quite generalised answers. A more specific chatbot can be made by building a Retrieval Argumented Generation agent. This is an information that you youself provide with a knowledge base: a large number of documents. When prompted with a questions, the agent first retrieves relevant sections of the data that is in the knowledge base, and then generates and answer based on that data. In this way you can build an agent with very specific knowledge.
+A chatbot tends to give quite generalised answers. A more specific chatbot can be made by building a Retrieval Augmented Generation agent. This is an information that you yourself provide with a knowledge base: a large number of documents. When prompted with a questions, the agent first retrieves relevant sections of the data that is in the knowledge base, and then generates and answer based on that data. In this way you can build an agent with very specific knowledge.
 
 The simplest form of a rag consists of two parts, a retriever and a generator. The retriever part will collect data from the provided data, so first a knowledge base has to be created for the retriever.
 
 To generate text in the RAG the trained Llama model will be used, which works well for English text. Because this model was not trained on Dutch text, the RAG will work better for an English knowledge base.
 
-Three newpaper pages will be used for the example RAG, these are pages from a Curacoa newspaper. This is a Dutch newspaper with an additional page in English. The text versions of the newspapers can be downloaded to only get these specific English pages. Save them in a folder called "rag_data" for further processing:
+Three newspaper pages will be used for the example RAG, these are pages from a Curacao newspaper. This is a Dutch newspaper with an additional page in English. The text versions of the newspapers can be downloaded to only get these specific English pages. Save them in a folder called "rag_data" for further processing:
 - [page1](https://www.delpher.nl/nl/kranten/view?query=the+moon&coll=ddd&identifier=ddd:010460545:mpeg21:p012&resultsidentifier=ddd:010460545:mpeg21:a0134&rowid=4)
 - [page2](https://www.delpher.nl/nl/kranten/view?query=moon+landing&coll=ddd&page=1&facets%5Bspatial%5D%5B%5D=Nederlandse+Antillen&identifier=ddd:010460616:mpeg21:a0146&resultsidentifier=ddd:010460616:mpeg21:a0146&rowid=1)
 - [page3](https://www.delpher.nl/nl/kranten/view?query=moon+landing&coll=ddd&page=1&facets%5Bspatial%5D%5B%5D=Nederlandse+Antillen&identifier=ddd:010460520:mpeg21:a0167&resultsidentifier=ddd:010460520:mpeg21:a0167&rowid=7)
@@ -367,7 +368,7 @@ for file in os.listdir(dir):
         metadata.extend([file_path] * len(content))
 ```
 
-The generator will in the end provide an answer based on the text snippet that is retrieved from the knowledge base. If the fragment is very long, it may contain a lot of irrelevant information, which will blur the generated answer. Therefor it is better to split the data into smaller parts, so that the retriever can collect very specific pieces of text to generate an answer from. It is usefull to keep some overlap between the splits, so that information does not get lost because of for example splits in the middle of a sentence.
+The generator will in the end provide an answer based on the text snippet that is retrieved from the knowledge base. If the fragment is very long, it may contain a lot of irrelevant information, which will blur the generated answer. Therefor it is better to split the data into smaller parts, so that the retriever can collect very specific pieces of text to generate an answer from. It is useful to keep some overlap between the splits, so that information does not get lost because of for example splits in the middle of a sentence.
 
 ```python
 text_splitter = RecursiveCharacterTextSplitter(
@@ -379,7 +380,7 @@ documents = text_splitter.create_documents(articles, metadatas=[{'filename': fil
 print(documents)
 ```
 
-This text splitter splits text based on the defined character chunk size, but also takes into account spaces and newlines to slit in "smart" chunks, so the chunks will not be exactely of length 500.
+This text splitter splits text based on the defined character chunk size, but also takes into account spaces and newlines to slit in "smart" chunks, so the chunks will not be exactly of length 500.
 
 Finally, convert each text split into a vector, and save all vectors in a vector store. The text is converted into embeddings using the earlier defined embeddings model.
 
@@ -400,7 +401,7 @@ class State(TypedDict):
     answer: str
 ```
 
-Define the retriever function of the RAG. It taked in the question and does a similarity search in the created vectorstore and returns the text snippets that were found to be similar. The similarity search converts the question into an embeddings vector and uses the cosine similarity to determine the similarity between the question and snippets. It then returns the top 4 snippets with the highest cosine similarity score. The snippets are returned in the original text form, i.e. the retrieved vectors are transformed back into text.
+Define the retriever function of the RAG. It takes in the question and does a similarity search in the created vectorstore and returns the text snippets that were found to be similar. The similarity search converts the question into an embeddings vector and uses the cosine similarity to determine the similarity between the question and snippets. It then returns the top 4 snippets with the highest cosine similarity score. The snippets are returned in the original text form, i.e. the retrieved vectors are transformed back into text.
 
 ```python
 def retrieve(state: State):
@@ -468,7 +469,7 @@ Try generating more answers with the RAG based on other questions, perhaps also 
 :::::: solution
 For example:
 - The RAG returns in some cases that no answer can be generated on the context it was provided with
-- For some questions, the LLM returns that it cannot provide an answer because of safety precausions that are inherent to the LLM used, such as information about violent acts.
+- For some questions, the LLM returns that it cannot provide an answer because of safety precautions that are inherent to the LLM used, such as information about violent acts.
 ::::::
 
 ::::::::::::
@@ -495,8 +496,8 @@ This is the simpelest form of a RAG, with a retriever and a generator. However, 
 ## Key points to remember
 
 - *Transformer models power LLMs*: The Transformer architecture and its self-attention mechanism allow LLMs to handle long-range dependencies in text effectively.
-- *LLMs excel at multiple tasks*: From text generation to classification and summarization, LLMs like Llama are versatile and perform well on various NLP tasks.
+- *LLMs excel at multiple tasks*: From text generation to classification and summarisation, LLMs like Llama are versatile and perform well on various NLP tasks.
 - *Prompt engineering is crucial*: Designing effective prompts can significantly improve the quality of outputs from LLMs, especially for creative tasks like text generation and translation.
-- *Real-world use cases*: LLMs can be applied to real-world problems like news classification, summarization, and headline generation, improving efficiency in content management and delivery.
+- *Real-world use cases*: LLMs can be applied to real-world problems like news classification, summarisation, and headline generation, improving efficiency in content management and delivery.
 
 
