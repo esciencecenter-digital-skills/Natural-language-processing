@@ -378,7 +378,7 @@ documents = text_splitter.create_documents(articles, metadatas=[{'filename': fil
 print(documents)
 ```
 
-This text splitter splits text based on the defined character chunk size, but also on new lines. This is useful because the different newspapaer articles can not end up in the same split. Documents now contains all the different text splits, and the corresponding file name.
+This text splitter splits text based on the defined character chunk size, but also takes into account spaces and newlines to slit in "smart" chunks, so the chunks will not be exactely of length 500.
 
 Finally, convert each text split into a vector, and save all vectors in a vector store. The text is converted into embeddings using the earlier defined embeddings model.
 
@@ -399,7 +399,7 @@ class State(TypedDict):
     answer: str
 ```
 
-Define the retriever function of the RAG. It taked in the question and does a similarity search in the created vectorstore and returns the text snippets that were found to be similar. The similarity search converts the question into an embeddings vector and uses the cosine similarity to determine the similarity between the question and snippets. It then returns the top 4 snippets with the highest cosine similarity score.
+Define the retriever function of the RAG. It taked in the question and does a similarity search in the created vectorstore and returns the text snippets that were found to be similar. The similarity search converts the question into an embeddings vector and uses the cosine similarity to determine the similarity between the question and snippets. It then returns the top 4 snippets with the highest cosine similarity score. The snippets are returned in the original text form, i.e. the retrieved vectors are transformed back into text.
 
 ```python
 def retrieve(state: State):
@@ -408,7 +408,7 @@ def retrieve(state: State):
     return {"context": retrieved_docs}
 ```
 
-Define the generator function of the RAG. In this function a prompt is defined for the rag using the context and question. The large language model (the Llama model, defined above) is then invoked with this question and generates an answer for the provided prompt, which is returned as the answer key of the dictionary.
+Define the generator function of the RAG. In this function a prompt is defined for the RAG using the context and question. The large language model (the Llama model, defined above) is then invoked with this question and generates an answer for the provided prompt, which is returned as the answer key of the dictionary.
 
 ```python
 def generate(state: State):
