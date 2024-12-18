@@ -132,11 +132,7 @@ LLMs are trained on large text datasets and later fine-tuned on specific tasks, 
 
 - **Transformers and self-attention**: The transformer architecture, especially the self-attention mechanism, is at the heart of LLMs. Self-attention enables these models to understand the importance of each word in relation to others in a sequence, regardless of their position.
 - **Pretraining and fine-tuning**: LLMs are first pre-trained on large text datasets using tasks like predicting the next word in a sentence, learning language patterns. They are then fine-tuned on specific tasks (e.g., translation, summarization) to enhance performance for targeted applications.
-- **Generative vs. discriminative models**: LMs can be applied to both generative tasks (e.g., text generation) and discriminative tasks (e.g., classification).
-
-Below is a simplified diagram of the transformer architecture, which highlights the role of self-attention in understanding relationships between words:
-
-[#TODO: ADD A NICE FIGURE. CAN WE USE AN EXISITNG IMAGE FROM SOMEWHERE]
+- **Generative vs. discriminative models**: LLMs can be applied to both generative tasks (e.g., text generation) and discriminative tasks (e.g., classification).
 
 Let’s see how this actually works with a hands-on example. We’ll use Hugging Face’s library to load a pretrained model and visualize the self-attention scores for a sentence.
 
