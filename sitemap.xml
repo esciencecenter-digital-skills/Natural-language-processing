@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/00-introduction.html</loc>
+  </url>
+  <url>
     <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/00-welcome.html</loc>
   </url>
   <url>
     <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/01-introduction.html</loc>
+  </url>
+  <url>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/01-preprocessing.html</loc>
   </url>
   <url>
     <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/02-preprocessing.html</loc>
@@ -40,10 +46,16 @@
     <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/index.html</loc>
   </url>
   <url>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/00-introduction.html</loc>
+  </url>
+  <url>
     <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/00-welcome.html</loc>
   </url>
   <url>
     <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/01-introduction.html</loc>
+  </url>
+  <url>
+    <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/01-preprocessing.html</loc>
   </url>
   <url>
     <loc>https://esciencecenter-digital-skills.github.io/Natural-language-processing/instructor/02-preprocessing.html</loc>
