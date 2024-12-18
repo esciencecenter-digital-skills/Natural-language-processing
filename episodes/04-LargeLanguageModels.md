@@ -342,7 +342,15 @@ Define the embeddings model, this is the model to convert our knowledge base tex
 embeddings=NomicEmbeddings(model="nomic-embed-text-v1.5", inference_mode="local")
 ```
 
-Define the file names and read the data into a list called `pages`:
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: instructor
+For more on Nomic embeddings see: https://python.langchain.com/api_reference/nomic/embeddings/langchain_nomic.embeddings.NomicEmbeddings.html
+
+using inference_model="local" uses (Embed4All)[https://docs.gpt4all.io/old/gpt4all_python_embedding.html]
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+In the text files, the articles are split by '---'. This information can be used to store the data into a list called `pages`:
 ```python
 dir = "./rag_data"
 files = [os.path.join(dir, file) for file in os.listdir(dir)]
