@@ -132,7 +132,7 @@ In short, LLMs represent a leap forward by combining scale, flexibility, and dee
 ## How do LLMs work?
 So, how is it that you can chat with a model and receive responses that seem almost human? The answer lies in the architecture and training of Large Language Models (LLMs), which are powered by advanced neural networks that understand, generate, and even translate human language with surprising accuracy.
 
-At the core of LLMs lies a framework known as the **transformer**; a concept we already encountered in the previous episode. Transformers allow these models to process vast amounts of text and learn the structure and nuances of language. This setup enables LLMs not only to answer questions but also to predict, complete, and even generate coherent text based on the patterns they've learned.
+At the core of LLMs lies a framework known as the **transformer**; a concept already encountered in the previous episode. Transformers allow these models to process vast amounts of text and learn the structure and nuances of language. This setup enables LLMs not only to answer questions but also to predict, complete, and even generate coherent text based on the patterns they've learned.
 
 LLMs are trained on large text datasets and later fine-tuned on specific tasks, which helps them adapt to a wide range of applications, from conversation to text classification. The result? A model that can chat, summarize, translate, and much more—all by leveraging these core mechanisms. LLM's rely on the following key concepts:
 
@@ -178,18 +178,18 @@ With so many available models the question arises which model you should use whe
  It is time to start working with LLM models. We are not going to train our own LLM, but use Meta's open source Llama model to set up a chatbot. The chat model can be used for prompt engineering - When you provide input to an LLM, such as asking a question to ChatGPT, this is called prompting a model - you are sending a prompt to the models, which will trigger the LLM to generate an answer. Prompt engineering 
 
 Starting Ollama
-We will use ollama to run the LLM we want to use. Ollama is a platform that allows users to run various LLM locally on your own computer. This is different from for example using chatgpt, where you log in and use the online api. ChatGPT collects the input you are providing and uses this to their own benefit. Running an LLM locally using Ollama thus preserves your privacy. It also allows you to customize a model, by setting certain parameters, or even by finetuning a model.
+Ollama will be used to run a chosen LLM. Ollama is a platform that allows users to run various LLM locally on your own computer. This is different from for example using chatgpt, where you log in and use the online api. ChatGPT collects the input you are providing and uses this to their own benefit. Running an LLM locally using Ollama thus preserves your privacy. It also allows you to customize a model, by setting certain parameters, or even by finetuning a model.
 
 To start ollama:
 ```
 ollama serve
 ```
 
-Next, download the large language model to be used. In this case we will use the smallest open source llama model, which is llama3.1:8b. Here 3.1 is the version of the model and 8b stands for the number of paramters that the model has. 
+Next, download the large language model to be used. In this case use the smallest open source llama model, which is llama3.1:8b. Here 3.1 is the version of the model and 8b stands for the number of paramters that the model has. 
 ```
 !ollama pull llama3.1:8b
 ```
-In general, a bigger version of the same model (such as Llama3.170b) is better in accuracy, but since it is larger it takes more resources to run and can hence be too much for a laptop.
+In general, a bigger version of the same model (such as Llama3.1:70b) is better in accuracy, but since it is larger it takes more resources to run and can hence be too much for a laptop.
 
 Import the packages that will be used:
 ```python
@@ -197,7 +197,7 @@ from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage, SystemMessage
 ```
 
-Create a model instance. Here, `model` defines the LLM we want to use, which we set to the model that we just downloaded, and `temperature` sets the randomness of the mode, using the value zero ensures that repeating a question will give the same model output (answer).
+Create a model instance. Here, `model` defines the LLM to be used, which is set to the model just downloaded, and `temperature` sets the randomness of the mode, using the value zero ensures that repeating a question will give the same model output (answer).
 
 ```
 llm = ChatOllama(model=llama3.1:8b, temperature=0)
@@ -227,7 +227,7 @@ Play around with the chat bot by changing the questions.
 
 
 ### Use context
-To improve on what to expect the LLM to return, it is also possible to provide it with some context. For example, we can add:
+To improve on what to expect the LLM to return, it is also possible to provide it with some context. For example, add:
 ```python
 context = "You are a highschool history teacher trying to explain societal impact of historic events."
 messages = [
@@ -303,21 +303,21 @@ print(response.content)
 ```
 
 ### Retrieval Augmented Generation - Build a RAG
-We have seen that a chatbot tends to give quite generalised answers. We can make a more specific chatbot by building a Retrieval Argumented Generation agent. This is an information that you youself provide with a knowledge base: a large number of documents. When prompted with a questions, the agent first retrieves relevant sections of the data that is in the knowledge base, and then generates and answer based on that data. In this way you can build an agent with very specific knowledge.
+A chatbot tends to give quite generalised answers. A more specific chatbot can be made by building a Retrieval Argumented Generation agent. This is an information that you youself provide with a knowledge base: a large number of documents. When prompted with a questions, the agent first retrieves relevant sections of the data that is in the knowledge base, and then generates and answer based on that data. In this way you can build an agent with very specific knowledge.
 
-The simplest form of a rag consists of two parts, a retriever and a generator. The retriever part will collect data from the provided data, so we first have to create a knowledge base for the retriever.
+The simplest form of a rag consists of two parts, a retriever and a generator. The retriever part will collect data from the provided data, so first a knowledge base has to be created for the retriever.
 
-To build a RAG we will use again the pretrained Llama model, which works well for English text. We will therefore also provide some English text to the knowledge base.
+To generate text in the RAG the trained Llama model will be used, which works well for English text. Because this model was not trained on Dutch text, the RAG will work better for an English knowledge base.
 
-Let's download three newpaper pages, these are pages from a Curacoa newspaper. This is a Dutch newspaper with an additional page in English. Let's download the jpg versions of the newspapers to only get these English pages, and save them in a folder called "rag_data":
+Three newpaper pages will be used for the example RAG, these are pages from a Curacoa newspaper. This is a Dutch newspaper with an additional page in English. The text versions of the newspapers can be downloaded to only get these specific English pages. Save them in a folder called "rag_data" for further processing:
 - [page1](https://www.delpher.nl/nl/kranten/view?query=the+moon&coll=ddd&identifier=ddd:010460545:mpeg21:p012&resultsidentifier=ddd:010460545:mpeg21:a0134&rowid=4)
 - [page2](https://www.delpher.nl/nl/kranten/view?query=moon+landing&coll=ddd&page=1&facets%5Bspatial%5D%5B%5D=Nederlandse+Antillen&identifier=ddd:010460616:mpeg21:a0146&resultsidentifier=ddd:010460616:mpeg21:a0146&rowid=1)
 - [page3](https://www.delpher.nl/nl/kranten/view?query=moon+landing&coll=ddd&page=1&facets%5Bspatial%5D%5B%5D=Nederlandse+Antillen&identifier=ddd:010460520:mpeg21:a0167&resultsidentifier=ddd:010460520:mpeg21:a0167&rowid=7)
 
 #### The knowledge base - a vector store
-Language models al work with vectors - embedded text. We will therefore save our data in a vector store, where the retriever can shop around for the relevant text. 
+Language models all work with vectors - embedded text. Instead of saving text, a the data has to be stored in embedded versions in a vector store, where the retriever can shop around for the relevant text.
 
-There a number of packages that we will use in this section
+There a number of packages to be used in this section to build the RAG.
 ```python
 import os
 from IPython.display import Image, display
@@ -332,12 +332,12 @@ from langgraph.graph import START, StateGraph
 from langchain_nomic.embeddings import NomicEmbeddings
 ```
 
-Define the large language model:
+Define the large language model to be used to generate an answer based on provided context:
 ```python
 llm = ChatOllama(model="llama3.1:8b", temperature=0)
 ```
 
-Define the embeddings model, this is the model we will use to convert our texts into vector embeddings:
+Define the embeddings model, this is the model to convert our knowledge base texts into vector embeddings and will be used for the retrieval part of the RAG:
 ```python
 embeddings=NomicEmbeddings(model="nomic-embed-text-v1.5", inference_mode="local")
 ```
@@ -353,7 +353,7 @@ for file in files:
         pages.append(f.read())
 ```
 
-The generator will in the end provide an answer based on the text snippet that is retireved from the knowledge base. If the fragment is very long, like a full newspage page, it will contain a lot of irrelevant information, which will blurr the generated answer. Therefor it is better to split the data into smaller parts, so that the retriever can collect very specific pieces of text to generate an answer from. We will use some overlap between the splits, so that information does not get lost because of a random split.
+The generator will in the end provide an answer based on the text snippet that is retrieved from the knowledge base. If the fragment is very long, it may contain a lot of irrelevant information, which will blur the generated answer. Therefor it is better to split the data into smaller parts, so that the retriever can collect very specific pieces of text to generate an answer from. It is usefull to keep some overlap between the splits, so that information does not get lost because of for example splits in the middle of a sentence.
 
 ```python
 text_splitter = RecursiveCharacterTextSplitter(
@@ -367,7 +367,7 @@ print(documents)
 
 This text splitter splits text based on the defined character chunk size, but also on new lines. This is useful because the different newspapaer articles can not end up in the same split. Documents now contains all the different text splits, and the corresponding file name.
 
-Finally, we convert each text split into a vector, and save all vectors in a vector store. The text is converted into embeddings using the earlier defined embeddings model.
+Finally, convert each text split into a vector, and save all vectors in a vector store. The text is converted into embeddings using the earlier defined embeddings model.
 
 ```python
 vectorstore = InMemoryVectorStore.from_texts(
@@ -377,7 +377,7 @@ vectorstore = InMemoryVectorStore.from_texts(
 ```
 
 #### Setting up the retriever and generator
-Define the structure of the dictionary with the keys `question`, `context`, and `answer`.
+Define the structure of a dictionary with the keys `question`, `context`, and `answer`.
 
 ```python
 class State(TypedDict):
@@ -386,7 +386,7 @@ class State(TypedDict):
     answer: str
 ```
 
-Define the retriever function of the RAG. It taked in the question and does a similarity search in the vectorstore that we created and returns the text snippets that were found to be similar. The similarity search converts the question into an embeddings vector and uses the cosine similarity to determine the similarity between the question and snippets. It then returns the top 4 snippets with the highest cosine similarity score.
+Define the retriever function of the RAG. It taked in the question and does a similarity search in the created vectorstore and returns the text snippets that were found to be similar. The similarity search converts the question into an embeddings vector and uses the cosine similarity to determine the similarity between the question and snippets. It then returns the top 4 snippets with the highest cosine similarity score.
 
 ```python
 def retrieve(state: State):
