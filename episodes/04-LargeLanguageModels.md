@@ -370,7 +370,7 @@ The generator will in the end provide an answer based on the text snippet that i
 
 ```python
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=500, chunk_overlap=100
+    chunk_size=500, chunk_overlap=50
 )
 
 documents = text_splitter.create_documents(articles, metadatas=[{'filename': file} for file in files])
