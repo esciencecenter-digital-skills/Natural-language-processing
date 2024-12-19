@@ -1,5 +1,5 @@
 ---
-title: "Episode 4: Using large language models"
+title: "Episode 3: Using large language models"
 teaching: 
 exercises: 
 ---
