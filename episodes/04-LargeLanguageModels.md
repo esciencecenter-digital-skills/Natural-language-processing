@@ -279,7 +279,7 @@ graph = workflow.compile(checkpointer=memory)
 display(Image(graph.get_graph().draw_mermaid_png()))
 ```
 
-![workflow](../workflow_llm.png)
+![workflow](./fig/workflow_llm.png)
 
 Define an memory id for the current conservation.
 ```python
@@ -473,7 +473,7 @@ graph = workflow.compile()
 display(Image(graph.get_graph().draw_mermaid_png()))
 ```
 
-![workflow](../workflow.png)
+![workflow](./fig/workflow_rag.png)
 
 That's it! The RAG can now be asked questions. Let's see what it can tell about the moon landing:
 
