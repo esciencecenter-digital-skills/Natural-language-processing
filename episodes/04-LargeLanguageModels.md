@@ -237,7 +237,7 @@ print(chatresult.content)
 The benefit here is that your answer will be phrased in a way that fits your context, without having to specify this for every question.
 
 ### Use the chat history
-With this chatbot the LLM can be invoked to generate output based on the provided input and context. However, what is not possible in this state, is to ask followup questions. This can be useful to refine the output that it generates. So let's implement this as well.
+With this chatbot the LLM can be invoked to generate output based on the provided input and context. However, what is not possible in this state, is to ask followup questions. This can be useful to refine the output that it generates. The next step is therefore to implement message persistence in the workflow.
 
 ```python
 from langgraph.checkpoint.memory import MemorySaver
@@ -245,9 +245,14 @@ from langgraph.graph import START, MessagesState, StateGraph
 from IPython.display import Image, display
 ```
 
+The package LangGraph is a library that is designed to build LLM agents using workflows represented as graphs. The workflows you create consist of connected components, which allows you to build multi-step processes. The workflow graphs can be easily visualised which makes them quite insightful. LangGraph also has a build-in persistence layer, exactly what we want right now!
+
+First, define an empty workflow graph with the StateGraph class with the MessageState schema (a simple schema with messages as only key)
 ```python
 workflow = StateGraph(state_schema=MessagesState)
 ```
+
+Then define a function to invoke the llm with a message
 
 ```python
 def call_llm(state: MessagesState):
@@ -255,36 +260,54 @@ def call_llm(state: MessagesState):
     return {"messages": response}
 ```
 
-First define a storage dictionary and a configurable, so that the history of a conversation can be saved based on a session_id.
+Then add the call_llm function as a node to the graph and connect it with an edge to the start point of the graph. This start node sends the user input to the graph, which in this case only contains the LLM element.
 
 ```python
+workflow.add_node("LLM", call_llm)
 workflow.add_edge(START, "LLM")
-workflow.add_node("LLM", call_model)
+```
 
+Initialise a memory that will preserve the messages state in a dictionary while going though the graph multiple times asking followup questions.
+```python
 memory = MemorySaver()
 ```
 
+Then compile and visualise the graph with the memory as checkpoint.
 ```python
 graph = workflow.compile(checkpointer=memory)
 
 display(Image(graph.get_graph().draw_mermaid_png()))
 ```
 
+![workflow](../workflow_llm.png)
+
+Define an memory id for the current conservation.
 ```python
 config = {"configurable": {"thread_id": "moonconversation"}}
 ```
 
+Then call the workflow with memory we created with the original question
 ```python
-input_messages = [HumanMessage(question)]
-output = app.invoke({"messages": input_messages}, config)
+question = 'Who landed on the Moon?'
+messages = [HumanMessage(question)]
+output = graph.invoke({"messages": messages}, config)
+
 output["messages"][-1].pretty_print()
 ```
 
+The question and answer are now saved in the graph state with this config, and followup questions and answers with the same config will be added to it.
+
+Everything that is saved can be found in the config state
+```python
+graph.get_state(config)
+```
+
+The workflow can now be used to ask followup questions without having to repeat the original question, and based on the previous generated answer.
 ```python
 # Followup
 followup = "Shorten the answer to 20 words"
 input_messages = [HumanMessage(followup)]
-output = app.invoke({"messages": input_messages}, config)
+output = graph.invoke({"messages": input_messages}, config)
 
 # print the last output
 output["messages"][-1].pretty_print()
