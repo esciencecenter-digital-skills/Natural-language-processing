@@ -27,8 +27,6 @@ After following this lesson, learners will be able to:
 
 ::::::
 
-# WHAT IS THE DIFFERENCE BETWEEN BERT AND GPT? WHY CAN BERT NOT GENERATE?
-
 ## This episode
 Large Language Models (LLMs) are a hot and a big topic these days, and are continuously in the news. Everybody heard of ChatGPT, many tried it out for a variety of purposes, or even incorporated these tools in their daily work. But what are these models exactly, how do they work 'under the hood', and how can you make use of them in the best possible way?
 
@@ -238,64 +236,69 @@ print(chatresult.content)
 
 The benefit here is that your answer will be phrased in a way that fits your context, without having to specify this for every question.
 
-### Use chat history
-With this chatbot the LLM can be invoked to generate output based on the provided input and context. However, what is not possible in this state, is to ask followup questions. This can be useful to refine the output that it generates. So lets implement this as well.
+### Use the chat history
+With this chatbot the LLM can be invoked to generate output based on the provided input and context. However, what is not possible in this state, is to ask followup questions. This can be useful to refine the output that it generates. So let's implement this as well.
 
 ```python
-from langchain_core.chat_history import (
-    BaseChatMessageHistory,
-    InMemoryChatMessageHistory,
-)
-from langchain_core.runnables.history import RunnableWithMessageHistory
+from langgraph.checkpoint.memory import MemorySaver
+from langgraph.graph import START, MessagesState, StateGraph
+from IPython.display import Image, display
+```
+
+```python
+workflow = StateGraph(state_schema=MessagesState)
+```
+
+```python
+def call_llm(state: MessagesState):
+    response = llm.invoke(state["messages"])
+    return {"messages": response}
 ```
 
 First define a storage dictionary and a configurable, so that the history of a conversation can be saved based on a session_id.
-```python
-store = {}
-config = {"configurable": {"session_id": "nlp_workshop"}}
-```
-
-Then define a function that takes in this session_id and saves it in the storage.
 
 ```python
-def get_session_history(session_id: str) -> BaseChatMessageHistory:
-    if session_id not in store:
-        store[session_id] = InMemoryChatMessageHistory()
-    return store[session_id]
+workflow.add_edge(START, "LLM")
+workflow.add_node("LLM", call_model)
+
+memory = MemorySaver()
 ```
 
 ```python
-with_message_history = RunnableWithMessageHistory(llm, get_session_history)
+graph = workflow.compile(checkpointer=memory)
+
+display(Image(graph.get_graph().draw_mermaid_png()))
 ```
 
 ```python
-# Followup question
-response_history = with_message_history.invoke(
-    messages,
-    config=config,
-)
+config = {"configurable": {"thread_id": "moonconversation"}}
+```
 
-print(response_history.content)
+```python
+input_messages = [HumanMessage(question)]
+output = app.invoke({"messages": input_messages}, config)
+output["messages"][-1].pretty_print()
 ```
 
 ```python
 # Followup
-response = with_message_history.invoke(
-    [HumanMessage(content="Shorten the answer to 20 words")],
-    config=config,
-)
+followup = "Shorten the answer to 20 words"
+input_messages = [HumanMessage(followup)]
+output = app.invoke({"messages": input_messages}, config)
 
-print(response.content)
+# print the last output
+output["messages"][-1].pretty_print()
 ```
+
 
 ```python
 # Followup instruction
-response = with_message_history.invoke(
-    [HumanMessage(content="Translate the answer to Dutch")],
-    config=config,
-)
+followup2 = "Translate the answer to Dutch"
+input_messages = [HumanMessage(followup2)]
+output = app.invoke({"messages": input_messages}, config)
 
-print(response.content)
+# print the last output
+output["messages"][-1].pretty_print()
 ```
 
 ### Retrieval Augmented Generation - Build a RAG
