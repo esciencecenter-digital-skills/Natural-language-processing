@@ -62,6 +62,8 @@ contact: 'team@carpentries.org'
 episodes:
 - 00-introduction.Rmd
 - 01-preprocessing.Rmd
+- 02-transformers.md
+
 
 # Information for Learners
 learners:
