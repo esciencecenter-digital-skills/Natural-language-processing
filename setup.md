@@ -49,7 +49,7 @@ For the episode 01: preprocessing and word embeddings (Word2Vec):
 
 - Download the [Algemeen Dagblad from July 21 1969](https://www.delpher.nl/nl/kranten/view?coll=ddd&query=&cql%5B%5D=%28date+_gte_+%2220-07-1969%22%29&redirect=true&sortfield=date&resultscoll=dddtitel&identifier=KBPERS01:002846018:mpeg21&rowid=3) as txt file from Delpher. To do so, click on the link and navigate to the right hand side of the web page. There you'll find an icon with an arrow pointing down:
 
-![arrow]('https://github.com/esciencecenter-digital-skills/Natural-language-processing/tree/main/learners/fig/setup_download_arrow.png')
+![arrow]('https://github.com/esciencecenter-digital-skills/Natural-language-processing/blob/main/learners/fig/setup_download_arrow.png')
 
 Click on this icon and select `txt` among the downloading options
 
