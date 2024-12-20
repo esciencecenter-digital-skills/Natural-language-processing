@@ -85,7 +85,7 @@ We cannot expect a machine to process human language and simply understand it as
 
 The image below shows you the building blocks of language and a few NLP applications that leverage this type of information.
 
-![Diagram showing building blocks of language](https://github.com/esciencecenter-digital-skills/Natural-language-processing/tree/episodes/fig/intro.pdf)
+![Diagram showing building blocks of language](fig/intro.pdf)
 
 Each building block of human language carries a large amount of information, which we process quickly and effortlessly. Some of this information is still being studied by scientists because it’s unclear how to measure it, whether the human brain uses it at all to aid understanding, and, if so, to what extent. A lot of research effort is spent on this problem in academia, and it's important to keep in mind that we are still far from solving it.
 
