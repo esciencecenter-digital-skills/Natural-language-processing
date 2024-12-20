@@ -1,5 +1,5 @@
 ---
-title: 'Episode 4: BERT and Transformers'
+title: 'Episode 2: BERT and Transformers'
 teaching: 10
 exercises: 0
 ---
