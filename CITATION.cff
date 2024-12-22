@@ -1,0 +1,49 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: 'Introduction to natural language processing '
+message: >-
+  Please cite this lesson using the information in this file
+  when you refer to it in publications, and/or if you
+  re-use, adapt, or expand on the content in your own
+  training material.
+type: dataset
+authors:
+  - given-names: Laura
+    family-names: Ootes
+    email: l.ootes@esciencecenter.nl
+    affiliation: Netherlands eScience center
+  - given-names: Eva
+    family-names: Viviani
+    email: e.viviani@esciencecenter.nl
+    affiliation: Netherlands eScience center
+  - given-names: Angel
+    family-names: Daza
+    email: j.daza@esciencecenter.nl
+    affiliation: Netherlands eScience center
+  - given-names: Thijs
+    family-names: Vroegh
+    email: t.vroegh@esciencecenter.nl
+    affiliation: Netherlands eScience center
+
+identifiers:
+  - type: url
+    value: >-
+      https://github.com/esciencecenter-digital-skills/Natural-language-processing
+    description: Repository-code
+repository-code: >-
+  https://github.com/esciencecenter-digital-skills/Natural-language-processing
+url: >-
+  https://esciencecenter-digital-skills.github.io/Natural-language-processing/
+abstract: >+
+  This lesson is about the fundamentals of Natural Language
+  Processing (NLP) in Python.
+
+keywords:
+  - nlp
+  - python
+license: CC-BY-4.0
+commit: first draft release
+version: 0.0.1
+date-released: '2024-04-29'
