@@ -12,11 +12,11 @@ exercises:
 - What are some real-world applications of LLMs?
 - How can LLMs generate, classify, and summarise text?
 
-...
 ::::::
 
 :::::: objectives
 After following this lesson, learners will be able to:
+
 - Understand what Large Language Models (LLMs) are and their role in NLP
 - Explain the Transformer architecture and why it is foundational for LLMs
 - Use prompt engineering to generate high-quality text responses
@@ -31,6 +31,7 @@ After following this lesson, learners will be able to:
 Large Language Models (LLMs) are a hot and a big topic these days, and are continuously in the news. Everybody heard of ChatGPT, many tried it out for a variety of purposes, or even incorporated these tools in their daily work. But what are these models exactly, how do they work 'under the hood', and how can you make use of them in the best possible way?
 
 In this episode, we will:
+
 - Explore LLMs, which represent a significant advancement in natural language processing (NLP). We will begin by defining what LLMs are and touching on their foundational architecture, particularly the Transformer model, which allows the LLM to understand and generate human-like text. 
 - Through practical examples, you will discover how to work with these models for specific tasks with content generation.
 - We'll also discuss real-world applications of LLMs, such as analyzing news articles and generating insights from large amounts of text data. 
