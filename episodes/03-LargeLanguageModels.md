@@ -283,7 +283,6 @@ display(Image(graph.get_graph().draw_mermaid_png()))
 
 ![workflow](./fig/workflow_llm.png)
 
-Define an memory id for the current conservation.
 ```python
 config = {"configurable": {"thread_id": "moonconversation"}}
 ```
