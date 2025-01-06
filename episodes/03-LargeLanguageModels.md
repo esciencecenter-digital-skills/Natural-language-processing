@@ -158,7 +158,10 @@ A list of LLMs:
 - Claude - Anthropic - (founded by former OpenAI employees)
 - Grok - xAI (Elon Musk)
 
-Training a large language model is extremely resource intensive; while you can train for example a simple classifier to identify if a sentence is positive or negative yourself, this is not possible for training a LLM. For example, llama's model Llama 3.1 405B is model that has 405 billion parameters, and that was trained on 15 trillion tokens, taking 31 million GPU hours (H100 gpus), and emitted almost 9000 tons of CO_2 (for the training process only). For GPT-4, there was not even information released on model specifics and training resources.
+Training a large language model is extremely resource intensive. For example, llama's model Llama 3.1 405B is a model that has 405 billion parameters. It was trained on 15 trillion tokens, uses 31 million GPU hours (H100 gpus), and emitted almost 9000 tons of CO_2 (for the training process only).
+
+Inference also consumes considerable resources and has a significant environmental impact. Large models require large memory for storing and loading the model weights (storing weights alone can require _hundreds_ of gigabytes), and need high-performance GPUs to achieve reasonable runtimes. As a result, many models operate on cloud-based servers, increasing power consumption, especially when scaled accomodate large numbers of users.
+
 
 Using a large language model at inference is also resource-intensive and has a significant environmental impact. For most models it is impossible to use them without specialised GPU hardware; it requires large amounts of memory to load model weights and process the inputs and it needs strong computational power to do parallel processing during inference. Additionally, the models requires up to hundreds of GBs to simply store the model. All in all, this means that for many models it is not feasible to run them locally on a consumer computer. 
 Instead many models rely on cloud serves hosted in large data centers. This means that we can use services as ChatGPT seamlessly, but also leads to high power consumption due to the massive computational requirement needed to scale inference for many users.
