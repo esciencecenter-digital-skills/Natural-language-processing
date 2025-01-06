@@ -118,6 +118,18 @@ To start Jupyter Lab, open a terminal (Mac/Linux) or Command Prompt (Windows) an
 jupyter lab
 ```
 
+## Ollama
+We will use Ollama to run large language models. It can be downloaded here:
+
+https://ollama.com/download
+
+Next, download the model that we will be using from a terminal (Mac/Linux) or Command Prompt (Windows) by typing the command:
+
+```shell
+ollama pull llama3.1:8b
+```
+
+
 ## Data Sets
 
 
