@@ -148,7 +148,7 @@ In practice, this attention mechanism helps LLMs produce coherent responses by e
 By leveraging self-attention to build meaningful relationships across tokens, transformers power LLMs to generate responses that feel relevant, accurate, and human-like.
 
 ## A zoo of Large Language Models
-The era of Large Language Models started with the release of the BERT model in 2018, created by Google, that was discussed in the previous episode. There are a number of big companies that keep improving on their models and releasing new ones rapidly. One of the most well-known is GPT, the model developed by OpenAI and that is used for ChatGPT. The first version of GPT was released in 2018. Since then various versions have been released, each improved in performance by using more parameters and a larger training data set.  While the first GPT model was open source, the recent versions are not. This means that the model architecture, number of parameters, and used training data is undisclosed. There are however many more competing models, some of which are more transparent of even fully open source. Llama is currently (2024) one of the best-performing open-source models.
+The era of Large Language Models gained momentum in 2018 with the release of Google’s BERT. Since then, many companies have rapidly developed newer and more powerful models. Among these are GPT (OpenAI), Llama (Meta), Mistral (Mistral AI), Gemini (Google DeepMind), Claude (Anthropic), and Grok (xAI). Some are open-source or more transparent than others, revealing their architectures, parameter counts, or training data and the collection thereof.
 
 A list of LLMs:
 - GPT - OpenAI
