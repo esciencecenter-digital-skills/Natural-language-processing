@@ -518,15 +518,7 @@ While LLMs are very powerful and provide us with many great possibilities and op
 - Hallucinations: LLMs tend to hallucinate. When it 'does not know the answer', it will often still try to provide an answer. You should therefore not blindly use the answers from an LLM, but still check the given information yourself.
 - Privacy: when using a language model locally, such as done above with Llama, your privacy is preserved. The model is only on your laptop, and the data you provide is not uploaded to any server. But when you for example use ChatGPT via the web interface, there is no privacy. Any information you provide, questions, provided context and so on will be used by ChatGPT. It will be used (ao) for improving the model, which may be considered a good thing, but other things it is used for are not necessarily known. This means that you should be careful in what you provide to the LLM. Never provide sensitive information or private data to an LLM that you do not run fully locally.
 
-:::::::::::: challenge 
-
-
-
-:::::: solution
-
-::::::
-
-::::::::::::
+::::::::::::::::::::::::::::::::::::: keypoints
 
 ## Key points to remember
 
@@ -536,3 +528,4 @@ While LLMs are very powerful and provide us with many great possibilities and op
 - *Real-world use cases*: LLMs can be applied to real-world problems like news classification, summarisation, and headline generation, improving efficiency in content management and delivery.
 
 
+:::::::::::::::::::::::::::::::::::::
