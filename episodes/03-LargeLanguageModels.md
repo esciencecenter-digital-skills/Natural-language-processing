@@ -27,7 +27,6 @@ After following this lesson, learners will be able to:
 
 ::::::
 
-## This episode
 Large Language Models (LLMs) are a hot and a big topic these days, and are continuously in the news. Everybody heard of ChatGPT, many tried it out for a variety of purposes, or even incorporated these tools in their daily work. But what are these models exactly, how do they work 'under the hood', and how can you make use of them in the best possible way?
 
 In this episode, we will:
@@ -38,7 +37,7 @@ In this episode, we will:
 
 This episode aims to equip you with both theoretical knowledge and practical skills, preparing you to harness the power of LLMs in your own projects and applications.
 
-## What are Large Language Models?
+# What are Large Language Models?
 Large language models (LLMs) represent a significant advancement in artificial intelligence, designed to process and interpret large-scale natural language data to generate responses to user queries. By being trained on extensive datasets through advanced machine learning algorithms, these models learn the intricate patterns, structures and nuances of human language. This enables them to produce coherent and natural-sounding language outputs across various inputs. As a result, large language models are becoming increasingly essential in a range of tasks such as text generation, text summarisation, rewriting, question answering, and language translation.
 
 The emergence of *ChatGPT*, powered by OpenAI's advanced LLMs, has brought these capabilities into the mainstream. With ChatGPT, users interact through natural language, enabling seamless conversations and performing complex tasks across various sectors, like customer service, education, and content creation. Models like GPT-4, BERT, and LLaMA are also used across various applications; from chatbots, virtual assistants, text analysis, translation, summarisation, and more.
@@ -162,12 +161,12 @@ Training a large language model is extremely resource intensive. For example, ll
 
 Inference also consumes considerable resources and has a significant environmental impact. Large models require large memory for storing and loading the model weights (storing weights alone can require _hundreds_ of gigabytes), and need high-performance GPUs to achieve reasonable runtimes. As a result, many models operate on cloud-based servers, increasing power consumption, especially when scaled accomodate large numbers of users.
 
-
+## Which one to chose when?
 
 With so many available models the question arises "which model you should use when"? One thing to consider here is whether you want to use an open source model or not. But another important aspect is that it depends on the task at hand. There are various leaderboards (for example: [HuggingFace](https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard#/, [HELM](https://crfm.stanford.edu/helm/lite/latest/)) that track which tasks specific models are good at, based on widely used benchmarks. Also, which language are you using? Most models are fully trained on English, not many models are trained on Dutch text. So if you are using Dutch texts, you may want to look for a model that is trained on or finetuned for Dutch. Additionally, some LLMs are multimodal models, meaning they can process various forms of input; text, images, timeseries, audio, videos and so on.
 With so many available models the question arises "which model you should use when"? One thing to consider here is whether you want to use an open source model or not. But another important aspect is that it depends on the task at hand. There are various leaderboards that track which tasks specific models are good at, based on widely used benchmarks. Also, which language are you using? Most models are fully trained on English, not many models are trained on Dutch text. So if you are using Dutch texts, you may want to look for a model that is trained on or finetuned for Dutch. Additionally, some LLMs are multimodal models, meaning they can process various forms of input; text, images, timeseries, audio, videos and so on.
 
-### Building a chatbot
+# Building a chatbot
 It is time to start using an LLM! We are not going to train our own LLM, but use Meta's open source Llama model to set up a chatbot. 
 
 #### Starting Ollama
@@ -326,7 +325,7 @@ output = app.invoke({"messages": input_messages}, config)
 output["messages"][-1].pretty_print()
 ```
 
-### Retrieval Augmented Generation - Build a RAG
+# Retrieval Augmented Generation - Build a RAG
 A chatbot tends to give quite generalised answers. A more specific chatbot can be made by building a Retrieval Augmented Generation agent. This is an information that you yourself provide with a knowledge base: a large number of documents. When prompted with a questions, the agent first retrieves relevant sections of the data that is in the knowledge base, and then generates and answer based on that data. In this way you can build an agent with very specific knowledge.
 
 The simplest form of a rag consists of two parts, a retriever and a generator. The retriever part will collect data from the provided data, so first a knowledge base has to be created for the retriever.
@@ -504,7 +503,7 @@ For example:
 
 This is the simplest form of a RAG, with a retriever and a generator. However, one can make the RAG more complex by adding more components and options to the workflow, for example one to check the relevance of the retrieved documents, removing those that turn out to be irrelevant to be used for the answer generation, or having a component that can  reformulate the question. Another example is to add a hallucination checker step after the generator that checks if the generated answer can actually be found in the provided context. 
 
-## Pitfalls, limitations, privacy
+# Pitfalls, limitations, privacy
 While LLMs are very powerful and provide us with many great possibilities and opportunities, they also have limitations. 
 
 - Training data: LLMs are trained on large data sets. These are often collected from the internet and books, but these come with downsides 
