@@ -23,6 +23,88 @@ you are ready to go as soon as the workshop begins.
 [Pip](https://pip.pypa.io/en/stable/) is the package management system built into Python.
 Pip should be available in your system once you installed Python successfully.
 
+
+Open a terminal (Mac/Linux) or Command Prompt (Windows) and run the following commands.
+
+1. Create a [virtual environment](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#create-and-use-virtual-environments) called `nlp_workshop`:
+
+::: spoiler
+
+### On Linux/macOs
+
+```shell
+python3 -m venv nlp_workshop
+```
+
+:::
+
+::: spoiler
+
+### On Windows
+
+```shell
+py -m venv nlp_workshop
+```
+
+:::
+
+2. Activate the newly created virtual environment:
+
+::: spoiler
+
+### On Linux/macOs
+
+```shell
+source nlp_workshop/bin/activate
+```
+
+:::
+
+::: spoiler
+
+### On Windows
+
+```shell
+nlp_workshop\Scripts\activate
+```
+
+:::
+
+Remember that you need to activate your environment every time you restart your terminal!
+
+3. Install the required packages:
+
+::: spoiler
+
+### On Windows
+
+```shell
+nlp_workshop\Scripts\activate
+```
+
+:::
+
+
+::: spoiler
+
+### On Linux/macOs
+
+```shell
+python3 -m pip install jupyter torch transformers scikit-learn spacy gensim langgraph langchain-ollama langchain-text-splitters langchain-nomic seqeval datasets wordcloud
+```
+
+:::
+
+::: spoiler
+
+### On Windows
+
+```shell
+py -m pip install install jupyter torch transformers scikit-learn spacy gensim langgraph langchain-ollama langchain-text-splitters langchain-nomic seqeval datasets wordcloud
+```
+
+:::
+
 ## Jupyter Lab
 
 We will teach using Python in [Jupyter Lab](http://jupyter.org/), a programming environment that runs in a web browser.
