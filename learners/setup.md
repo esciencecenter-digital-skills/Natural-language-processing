@@ -21,7 +21,7 @@ you are ready to go as soon as the workshop begins.
 ## Installing the required packages
 
 [Pip](https://pip.pypa.io/en/stable/) is the package management system built into Python.
-Pip should be available in your system once you installed Python successfully.
+Pip should be available in your system once you installed Python successfully. Please note that installing the packages can take some time, in particular on Windows.
 
 
 Open a terminal (Mac/Linux) or Command Prompt (Windows) and run the following commands.
@@ -90,7 +90,7 @@ nlp_workshop\Scripts\activate
 ### On Linux/macOs
 
 ```shell
-python3 -m pip install jupyter torch transformers scikit-learn spacy gensim langgraph langchain-ollama langchain-text-splitters langchain-nomic seqeval datasets wordcloud
+python3 -m pip install jupyter torch transformers scikit-learn spacy gensim langgraph langchain-ollama langchain-text-splitters langchain-nomic nomic[local] seqeval datasets wordcloud
 ```
 
 :::
