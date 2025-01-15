@@ -46,10 +46,8 @@ In this episode, we will build a workflow following these steps:
 
 Note that for step 5 we will cover only briefly the code to train your own model, but then we will load the output of already pretrained models. That is because training requires a large amount of data and considerable computing resources/time which are not suitable for a local laptop/computer.
 
-## 1. Formulate the problem
+## 1. Formulate the problem: semantic shift
 In this episode we will be using Dutch newspaper texts to train a Word2Vec model to investigate the notion of *semantic shift*. 
-
-## Semantic shift
 
 Semantic shift, as it is used here, refers to a pair of meanings A and B which are linked by some relation. Either
 diachronically (e.g., Latin *caput* "head" and Italian *capo* "chief") or synchronically, e.g. as two meanings that co-exist
@@ -106,7 +104,7 @@ Look at what the [Tubantia newspaper](https://resolver.kb.nl/resolve?urn=KBPERS0
 
 ::::::::::::::::::::::::::::::::::::::: 
 
-## 2. Download the data
+## 2. Download and inspect the data
 
 We download a page from the journal [Algemeen Dagblad](https://www.delpher.nl/nl/kranten/view?coll=ddd&query=&cql%5B%5D=%28date+_gte_+%2220-07-1969%22%29&redirect=true&sortfield=date&resultscoll=dddtitel&identifier=KBPERS01:002846018:mpeg21&rowid=3) of July 21, 1969 as `txt` and save it as `ad.txt`. We then load this file and store it in a variable called `corpus`.
 
@@ -119,8 +117,6 @@ with open(path) as myfile:
 ::: callout
 The `txt` file provides the text without formatting and images, and is the product of a technique called Optical Character Recognition (OCR). This is a technique in which text from an image is converted into text, and it's a necessary step for any scanned image to obtain plain text. Luckily for us, Delpher has already done this step for us so that we can directly use the txt. However, take into consideration that if you start from an image that contains text, you may need an additional preprocessing step.
 :::
-
-## Inspect the data
 
 We inspect the first line of the imported text:
 
@@ -149,7 +145,7 @@ Python tells us that `corpus` is a `str`, i.e. a string. This means that every s
 
 How do we teach our machine to *segment* the text and keep only the relevant words? This is where `data preprocessing` comes into play. It prepares the text for efficient processing by the model, allowing it to focus on the important parts of the text that contribute to understanding its meaning.
 
-## 3. Prepare data to be ingested by the model (preprocessing)
+## 3. Prepare the data to be ingested by the model (preprocessing)
 
 NLP models work by learning the statistical regularities within the constituent parts of the language (i.e, letters, digits, words and sentences) in a text. However, text contains also other type of information that humans find useful to convey meaning. To signal pauses, give emphasis and convey tone, for instance, we use punctuation. Articles, conjunctions and prepositions also alter the meaning of a sentence. The machine does not know the difference among all of these linguistic units, as it treats them all as equal. Also, the decision to remove or retain these parts of text is quite crucial for training our model, as it affects the quality of generated word vectors.
 
