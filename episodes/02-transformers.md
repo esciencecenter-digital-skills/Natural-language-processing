@@ -72,12 +72,7 @@ As in any basic NLP pipeline, the first step is to pre-process the raw text so i
 
 ## BERT Code
 
-Let's see how these components can be manipulated with code. For this we will be using the HugingFace's _transformers_ python library. We can install it with:
-
-```sh
-pip install transformers
-```
-
+Let's see how these components can be manipulated with code. For this we will be using the HugingFace's _transformers_ python library.
 The first two main components we need to initialize are the model and tokenizer. The HuggingFace hub contains thousands of models based on a Transformer architecture for dozens of tasks, data domains and also hundreds of languages. Here we will explore the vanilla English BERT which was how everything started. We can initialize this model with the next lines:
 
 ```python
@@ -506,10 +501,6 @@ The rest is more advanced content (still I leave it here just in case for now).
 ## Testing on CoNLL-03 Benchmark
 
 This model was trained on the CoNLL-03 dataset, therefore we can corroborate how it performs using the test portion of this dataset. To get the data we can use the `datasets` library which is also part of theHuggingFace landscape
-
-```
-pip install datasets
-```
 
 ```python
 from datasets import load_dataset

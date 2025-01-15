@@ -21,7 +21,89 @@ you are ready to go as soon as the workshop begins.
 ## Installing the required packages
 
 [Pip](https://pip.pypa.io/en/stable/) is the package management system built into Python.
-Pip should be available in your system once you installed Python successfully.
+Pip should be available in your system once you installed Python successfully. Please note that installing the packages can take some time, in particular on Windows.
+
+
+Open a terminal (Mac/Linux) or Command Prompt (Windows) and run the following commands.
+
+1. Create a [virtual environment](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#create-and-use-virtual-environments) called `nlp_workshop`:
+
+::: spoiler
+
+### On Linux/macOs
+
+```shell
+python3 -m venv nlp_workshop
+```
+
+:::
+
+::: spoiler
+
+### On Windows
+
+```shell
+py -m venv nlp_workshop
+```
+
+:::
+
+2. Activate the newly created virtual environment:
+
+::: spoiler
+
+### On Linux/macOs
+
+```shell
+source nlp_workshop/bin/activate
+```
+
+:::
+
+::: spoiler
+
+### On Windows
+
+```shell
+nlp_workshop\Scripts\activate
+```
+
+:::
+
+Remember that you need to activate your environment every time you restart your terminal!
+
+3. Install the required packages:
+
+::: spoiler
+
+### On Windows
+
+```shell
+nlp_workshop\Scripts\activate
+```
+
+:::
+
+
+::: spoiler
+
+### On Linux/macOs
+
+```shell
+python3 -m pip install jupyter torch transformers scikit-learn spacy gensim langgraph langchain-ollama langchain-text-splitters langchain-nomic nomic[local] seqeval datasets wordcloud
+```
+
+:::
+
+::: spoiler
+
+### On Windows
+
+```shell
+py -m pip install install jupyter torch transformers scikit-learn spacy gensim langgraph langchain-ollama langchain-text-splitters langchain-nomic seqeval datasets wordcloud
+```
+
+:::
 
 ## Jupyter Lab
 
@@ -36,6 +118,18 @@ To start Jupyter Lab, open a terminal (Mac/Linux) or Command Prompt (Windows) an
 jupyter lab
 ```
 
+## Ollama
+We will use Ollama to run large language models. It can be downloaded here:
+
+https://ollama.com/download
+
+Next, download the model that we will be using from a terminal (Mac/Linux) or Command Prompt (Windows) by typing the command:
+
+```shell
+ollama pull llama3.1:8b
+```
+
+
 ## Data Sets
 
 
@@ -45,14 +139,27 @@ FIXME: place any data you want learners to use in `episodes/data` and then use
        link to it, replacing the example.com link.
 -->
 
-For the episode 01: preprocessing and word embeddings (Word2Vec):
+### Delpher newspapers
 
-- Download the [Algemeen Dagblad from July 21 1969](https://www.delpher.nl/nl/kranten/view?coll=ddd&query=&cql%5B%5D=%28date+_gte_+%2220-07-1969%22%29&redirect=true&sortfield=date&resultscoll=dddtitel&identifier=KBPERS01:002846018:mpeg21&rowid=3) as txt file from Delpher. To do so, click on the link and navigate to the right hand side of the web page. There you'll find an icon with an arrow pointing down:
+Download the form page of the [Algemeen Dagblad from July 21 1969](https://www.delpher.nl/nl/kranten/view?coll=ddd&query=&cql%5B%5D=%28date+_gte_+%2220-07-1969%22%29&redirect=true&sortfield=date&resultscoll=dddtitel&identifier=KBPERS01:002846018:mpeg21&rowid=3) as txt file from Delpher. To do so, click on the link and navigate to the right hand side of the web page. There you'll find an icon with an arrow pointing down:
 
 ![arrow](fig/setup_download_arrow.png)
 
-Click on this icon and select `txt` among the downloading options
+Click on this icon and select `txt` among the downloading options. Save the file as `ad.txt` in the folder that you will be using for the workshop. 
 
+Similarly, download the following pages from <i>Amigoe di Curacao : weekblad voor de Curacaosche eilanden</i> as txt file
 
-- Download Word2Vec models trained on 6 national Dutch newspaper data spanning a time period from 1950 to 1989 (Wevers, M., 2019). These models are available on [Zenodo](https://zenodo.org/records/3237380).
+- [Page 1](https://www.delpher.nl/nl/kranten/view?query=the+moon&coll=ddd&identifier=ddd:010460545:mpeg21:p012&resultsidentifier=ddd:010460545:mpeg21:a0134&rowid=4)
+- [Page 2](https://www.delpher.nl/nl/kranten/view?query=moon+landing&coll=ddd&page=1&facets%5Bspatial%5D%5B%5D=Nederlandse+Antillen&identifier=ddd:010460616:mpeg21:a0146&resultsidentifier=ddd:010460616:mpeg21:a0146&rowid=1)
+- [Page 3](https://www.delpher.nl/nl/kranten/view?query=moon+landing&coll=ddd&page=1&facets%5Bspatial%5D%5B%5D=Nederlandse+Antillen&identifier=ddd:010460520:mpeg21:a0167&resultsidentifier=ddd:010460520:mpeg21:a0167&rowid=7)
+
+### Word2Vec
+Download Word2Vec models trained on 6 national Dutch newspaper data spanning a time period from 1950 to 1989 (Wevers, M., 2019). These models are available on [Zenodo](https://zenodo.org/records/3237380).
+
+### Spacy Dutch
+Download the [trained pipelines for Dutch from Spacy](https://spacy.io/models/nl/). To do so, open a terminal (Mac/Linux) or Command Prompt (Windows) and type the command:
+```shell
+python -m spacy download nl_core_news_sm
+```
+
 
