@@ -128,13 +128,13 @@ At the core of LLMs lies a framework known as the **transformer**; a concept alr
 
 LLMs are trained on large text datasets and later fine-tuned on specific tasks, which helps them adapt to a wide range of applications, from conversation to text classification. The result? A model that can chat, summarize, translate, and much more—all by leveraging these core mechanisms. LLM's rely on the following key concepts:
 
-- **Transformers and self-attention**: The transformer architecture, especially the self-attention mechanism, is at the heart of LLMs. Self-attention enables these models to understand the importance of each word in relation to others in a sequence, regardless of their position.
-- **Pretraining and fine-tuning**: LLMs are first pre-trained on large text datasets using tasks like predicting the next word in a sentence, learning language patterns. They are then fine-tuned on specific tasks (e.g., translation, summarization) to enhance performance for targeted applications.
-- **Generative vs. discriminative models**: LLMs can be applied to both generative tasks (e.g., text generation) and discriminative tasks (e.g., classification).
+- *Transformers and self-attention*: The transformer architecture, especially the self-attention mechanism, is at the heart of LLMs. Self-attention enables these models to understand the importance of each word in relation to others in a sequence, regardless of their position.
+- *Pretraining and fine-tuning*: LLMs are first pre-trained on large text datasets using tasks like predicting the next word in a sentence, learning language patterns. They are then fine-tuned on specific tasks (e.g., translation, summarization) to enhance performance for targeted applications.
+- *Generative vs. discriminative models*: LLMs can be applied to both generative tasks (e.g., text generation) and discriminative tasks (e.g., classification).
 
-Let’s see how this actually works with a hands-on example. We’ll use Hugging Face’s library to load a pretrained model and visualize the self-attention scores for a sentence.
 
-### How self-attention enables language models to generate responses
+
+
 
 In practice, this attention mechanism helps LLMs produce coherent responses by establishing relationships between words as each new token is generated. Here’s how it works: 
 
@@ -144,7 +144,7 @@ In practice, this attention mechanism helps LLMs produce coherent responses by e
 
 - *Structuring responses*. As each word is generated, the model assesses how each new token impacts the entire sentence, ensuring that responses are relevant, logically sound, and grammatically correct. This ability to “structure” language is why LLMs can produce responses that are contextually meaningful and well-organized.
   
-By leveraging self-attention to build meaningful relationships across tokens, transformers power LLMs to generate responses that feel relevant, accurate, and human-like.
+
 
 ## A zoo of Large Language Models
 The era of Large Language Models gained momentum in 2018 with the release of Google’s BERT. Since then, many companies have rapidly developed newer and more powerful models. Among these are GPT (OpenAI), Llama (Meta), Mistral (Mistral AI), Gemini (Google DeepMind), Claude (Anthropic), and Grok (xAI). Some are open-source or more transparent than others, revealing their architectures, parameter counts, or training data and the collection thereof.
@@ -188,10 +188,11 @@ from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage, SystemMessage
 ```
 
-Create a model instance. Here, `model` defines the LLM to be used, which is set to the model just downloaded, and `temperature` sets the randomness of the mode, using the value zero ensures that repeating a question will give the same model output (answer).
+### Create a model instance
 
+Here, `model` defines the LLM to be used, which is set to the model just downloaded, and `temperature` sets the randomness of the mode, using the value zero ensures that repeating a question will give the same model output (answer).
 ```
-llm = ChatOllama(model=llama3.1:8b, temperature=0)
+llm = ChatOllama(model="llama3.1:8b", temperature=0)
 ```
 
 Now that the model is set up, it can be invoked - ask it a question.
@@ -318,14 +319,14 @@ output["messages"][-1].pretty_print()
 # Followup instruction
 followup2 = "Translate the answer to Dutch"
 input_messages = [HumanMessage(followup2)]
-output = app.invoke({"messages": input_messages}, config)
+output = graph.invoke({"messages": input_messages}, config)
 
 # print the last output
 output["messages"][-1].pretty_print()
 ```
 
 ## Retrieval Augmented Generation - Build a RAG
-A chatbot tends to give quite generalised answers. A more specific chatbot can be made by building a Retrieval Augmented Generation agent. This is an information that you yourself provide with a knowledge base: a large number of documents. When prompted with a questions, the agent first retrieves relevant sections of the data that is in the knowledge base, and then generates and answer based on that data. In this way you can build an agent with very specific knowledge.
+A chatbot tends to give quite generic answers. A more specific chatbot can be made by building a Retrieval Augmented Generation agent. This is an information that you yourself provide with a knowledge base: a large number of documents. When prompted with a questions, the agent first retrieves relevant sections of the data that is in the knowledge base, and then generates and answer based on that data. In this way you can build an agent with very specific knowledge.
 
 The simplest form of a rag consists of two parts, a retriever and a generator. The retriever part will collect data from the provided data, so first a knowledge base has to be created for the retriever.
 
@@ -470,7 +471,7 @@ workflow.set_entry_point("retrieve")
 graph = workflow.compile()
 ```
 ```python
-display(Image(graph.get_graph().draw_mermaid_png()))
+display(Image(graph.get_graph().draw_mermaid_png()))https://scikit-learn.org/1.5/modules/grid_search.html
 ```
 
 ![workflow](./fig/workflow_rag.png)
