@@ -32,4 +32,3 @@ Check our [Contribution Guide](https://github.com/esciencecenter-digital-skills/
 
 ## Citation
 To cite this lesson, please consult with [CITATION.cff](https://github.com/esciencecenter-digital-skills/Natural-language-processing/blob/main/CITATION.cff). This also holds a list of contributors to the lesson.
-
