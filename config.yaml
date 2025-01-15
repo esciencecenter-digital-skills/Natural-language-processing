@@ -63,6 +63,7 @@ episodes:
 - 00-introduction.Rmd
 - 01-preprocessing.Rmd
 - 02-transformers.md
+- 04-LargeLanguageModels.md
 
 
 # Information for Learners
